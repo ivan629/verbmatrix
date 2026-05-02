@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { usePlayback } from "../context/Playback";
 
 const SPEEDS = [
@@ -43,23 +44,69 @@ function Segmented<T extends number>({ options, value, onChange }: SegmentedProp
   );
 }
 
+/**
+ * Collapsible playback panel. Collapsed by default to keep the sidebar
+ * minimal — the defaults (1× / 1×) are what most people want, and the
+ * controls are one click away when needed.
+ */
 export function PlaybackControls() {
   const { speed, repeat, setSpeed, setRepeat } = usePlayback();
+  const isDefault = speed === 1 && repeat === 1;
+  const [open, setOpen] = useState(!isDefault);
 
   return (
-    <div className="space-y-3">
-      <div>
-        <div className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-1.5">
-          Playback speed
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="
+          w-full flex items-center justify-between gap-2
+          font-mono text-[9.5px] uppercase tracking-[0.18em]
+          text-[var(--ink-4)] hover:text-[var(--ink-2)] transition-colors
+        "
+      >
+        <span>
+          Playback
+          {!isDefault && (
+            <span className="ml-2 text-[var(--gold)] normal-case tracking-normal">
+              {speed}× · ↻ {repeat}
+            </span>
+          )}
+        </span>
+        <svg
+          width="9"
+          height="9"
+          viewBox="0 0 9 9"
+          aria-hidden="true"
+          className={`transition-transform ${open ? "rotate-180" : ""}`}
+        >
+          <path
+            d="M1.5 3l3 3 3-3"
+            stroke="currentColor"
+            strokeWidth="1.4"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {open && (
+        <div className="mt-2 space-y-3">
+          <div>
+            <div className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-1.5">
+              Speed
+            </div>
+            <Segmented options={SPEEDS} value={speed} onChange={setSpeed} />
+          </div>
+          <div>
+            <div className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-1.5">
+              Repeat
+            </div>
+            <Segmented options={REPEATS} value={repeat} onChange={setRepeat} />
+          </div>
         </div>
-        <Segmented options={SPEEDS} value={speed} onChange={setSpeed} />
-      </div>
-      <div>
-        <div className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-1.5">
-          Repeat each click
-        </div>
-        <Segmented options={REPEATS} value={repeat} onChange={setRepeat} />
-      </div>
+      )}
     </div>
   );
 }

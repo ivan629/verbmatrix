@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { RO } from "./RO";
 import { NAV_GROUPS } from "../data/schedule";
 import { LanguageSelector } from "./LanguageSelector";
+import { PlaybackControls } from "./PlaybackControls";
 import { isAzureConfigured } from "../lib/tts-azure";
 import { AUDIO_MANIFEST } from "../data/audio-manifest";
 
@@ -128,9 +129,10 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Translate selector + voice indicator */}
-        <div className="border-t border-[var(--border)] px-5 py-4 space-y-3">
+        {/* Translate selector + Playback controls + voice indicator */}
+        <div className="border-t border-[var(--border)] px-5 py-4 space-y-4">
           <LanguageSelector />
+          <PlaybackControls />
           <div className="flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[var(--ink-4)]">
             <span
               className={`w-1.5 h-1.5 rounded-full ${

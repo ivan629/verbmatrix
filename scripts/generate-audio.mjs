@@ -6,8 +6,12 @@
  * files), calls ElevenLabs Multilingual v2, saves MP3s to public/audio/,
  * and rewrites src/data/audio-manifest.ts.
  *
- * Resumable: existing MP3s are skipped, so you can run on the free tier
- * across multiple months and the script will only generate what's missing.
+ * Resumable on two levels:
+ *   • If an MP3 for a given string already exists on disk, the API call
+ *     is skipped and the string is just recorded in the manifest.
+ *   • The script can run with NO API key — in that mode it just rebuilds
+ *     the manifest from whatever MP3s already exist (useful after pulling
+ *     a fresh project copy that wiped the manifest).
  *
  * Setup: put ELEVEN_API_KEY in .env (and optionally ELEVEN_VOICE_ID).
  *
@@ -34,19 +38,20 @@ const API_KEY = process.env.ELEVEN_API_KEY;
 const VOICE_ID = process.env.ELEVEN_VOICE_ID || "pNInz6obpgDQGcFmaJgB"; // Adam — neutral male
 const MODEL_ID = process.env.ELEVEN_MODEL_ID || "eleven_multilingual_v2";
 
-if (!API_KEY) {
-  console.error("\n❌ Missing ELEVEN_API_KEY in .env\n");
-  console.error("   1. Sign up at https://elevenlabs.io (free tier: 10K chars/month)");
-  console.error("   2. Profile menu → API Keys → create one");
-  console.error("   3. Add to .env:    ELEVEN_API_KEY=your_key_here\n");
-  console.error("   Optional: ELEVEN_VOICE_ID=...   (default: Adam, multilingual male)");
-  console.error("             ELEVEN_MODEL_ID=...   (default: eleven_multilingual_v2)\n");
-  process.exit(1);
-}
-
 const AUDIO_DIR = "public/audio";
 const MANIFEST_PATH = "src/data/audio-manifest.ts";
 mkdirSync(AUDIO_DIR, { recursive: true });
+
+if (!API_KEY) {
+  console.warn("\n⚠  No ELEVEN_API_KEY in .env\n");
+  console.warn("   Running in REBUILD-ONLY mode — the manifest will be rebuilt");
+  console.warn("   from MP3s that already exist on disk. No new audio will be");
+  console.warn("   generated.\n");
+  console.warn("   To generate new audio:");
+  console.warn("     1. Sign up at https://elevenlabs.io (free: 10K chars/month)");
+  console.warn("     2. Profile menu → API Keys → create one");
+  console.warn("     3. Add to .env:    ELEVEN_API_KEY=your_key_here\n");
+}
 
 // ─── 1. Walk source files and extract Romanian strings ──────────
 function walk(dir, exts, found = []) {
@@ -63,31 +68,20 @@ function walk(dir, exts, found = []) {
 function extractStrings(file, results) {
   const src = readFileSync(file, "utf8");
 
-  // <RO text="..."  or  text="..." (close enough — only used in JSX with RO context)
   for (const m of src.matchAll(/<RO\b[^>]*\btext=(?:"([^"]+)"|'([^']+)')/g)) {
     results.add(m[1] ?? m[2]);
   }
-
-  // ro: "..." (PhraseItem, VocabItem, DialogueLine, etc.)
   for (const m of src.matchAll(/\bro:\s*(?:"([^"]+)"|'([^']+)')/g)) {
     results.add(m[1] ?? m[2]);
   }
-
-  // ro: ["...", "..."]  (Matrix arrays)
   for (const m of src.matchAll(/\bro:\s*\[([^\]]+)\]/g)) {
     for (const sm of m[1].matchAll(/"([^"]+)"/g)) results.add(sm[1]);
   }
-
-  // Other Romanian-content fields used across the data files
   const FIELDS = ["word", "exampleWord", "infinitive", "euForm", "elForm", "participle"];
   for (const field of FIELDS) {
     const re = new RegExp(`\\b${field}:\\s*(?:"([^"]+)"|'([^']+)')`, "g");
-    for (const m of src.matchAll(re)) {
-      results.add(m[1] ?? m[2]);
-    }
+    for (const m of src.matchAll(re)) results.add(m[1] ?? m[2]);
   }
-
-  // Test answers ("answer: '...'")
   for (const m of src.matchAll(/\banswer:\s*(?:"([^"]+)"|'([^']+)')/g)) {
     results.add(m[1] ?? m[2]);
   }
@@ -102,8 +96,6 @@ const allFiles = [
 const strings = new Set();
 for (const f of allFiles) extractStrings(f, strings);
 
-// Clean up: trim, drop empties, drop strings that are clearly not Romanian
-// (no letters at all, or pure English-only short words used in test answers).
 const cleaned = [...strings]
   .map((s) => s.trim())
   .filter((s) => {
@@ -112,7 +104,6 @@ const cleaned = [...strings]
     return true;
   });
 cleaned.sort();
-
 console.log(`  found ${cleaned.length} unique strings\n`);
 
 // ─── 2. Hash each string ────────────────────────────────────────
@@ -120,7 +111,7 @@ function hashOf(text) {
   return createHash("sha1").update(text, "utf8").digest("hex").slice(0, 12);
 }
 
-// ─── 3. Generate MP3s for missing ones ──────────────────────────
+// ─── 3. Generate MP3s for missing ones (or rebuild manifest only) ──
 const manifest = {};
 let generated = 0;
 let skipped = 0;
@@ -157,17 +148,23 @@ async function synthesize(text) {
   return Buffer.from(await res.arrayBuffer());
 }
 
-console.log("→ Generating audio…\n");
+console.log(API_KEY ? "→ Generating audio…\n" : "→ Rebuilding manifest from existing MP3s…\n");
 const t0 = Date.now();
 
 for (let i = 0; i < cleaned.length; i++) {
   const text = cleaned[i];
   const hash = hashOf(text);
-  manifest[text] = hash;
-
   const filepath = path.join(AUDIO_DIR, `${hash}.mp3`);
+
   if (existsSync(filepath)) {
+    manifest[text] = hash; // file already on disk → record it
     skipped++;
+    continue;
+  }
+
+  if (!API_KEY) {
+    // Rebuild-only mode — record nothing, fall through to runtime fallback
+    failed++;
     continue;
   }
 
@@ -177,25 +174,23 @@ for (let i = 0; i < cleaned.length; i++) {
   try {
     const mp3 = await synthesize(text);
     writeFileSync(filepath, mp3);
+    manifest[text] = hash; // generated successfully → record it
     generated++;
     charsThisRun += text.length;
     process.stdout.write(`✓ ${(mp3.length / 1024).toFixed(1)}KB\n`);
   } catch (err) {
     failed++;
     process.stdout.write(`✗ ${err.message}\n`);
-    // Bail on auth errors so we don't burn the rest of the run
     if (/401|403/.test(String(err))) {
       console.error("\n⚠  Stopping — auth error suggests the key is wrong or quota is exhausted.");
       break;
     }
-    // Soft rate-limit: pause briefly and continue
     if (/429/.test(String(err))) {
       console.log("    (rate limited — sleeping 10s)");
       await new Promise((r) => setTimeout(r, 10_000));
     }
   }
 
-  // Tiny delay to be polite to the API
   await new Promise((r) => setTimeout(r, 60));
 }
 
@@ -223,10 +218,11 @@ writeFileSync(MANIFEST_PATH, manifestSource);
 
 const seconds = ((Date.now() - t0) / 1000).toFixed(1);
 console.log(`\n✓ Done in ${seconds}s`);
-console.log(`  generated: ${generated}`);
+console.log(`  in manifest: ${Object.keys(manifest).length} / ${cleaned.length}`);
+console.log(`  generated this run: ${generated}`);
 console.log(`  skipped (already on disk): ${skipped}`);
-if (failed) console.log(`  failed: ${failed}`);
-console.log(`  characters this run: ${charsThisRun.toLocaleString()}`);
+if (failed) console.log(`  missing: ${failed} ${API_KEY ? "(failed)" : "(no API key — runtime fallback will handle)"}`);
+if (charsThisRun) console.log(`  characters generated: ${charsThisRun.toLocaleString()}`);
 console.log(`  manifest: ${MANIFEST_PATH}`);
 console.log(`  audio:    ${AUDIO_DIR}/`);
 console.log("\n  Restart `npm run dev` to pick up the new manifest.\n");
