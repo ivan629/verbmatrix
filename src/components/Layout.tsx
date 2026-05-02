@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { RO } from "./RO";
 import { NAV_GROUPS } from "../data/schedule";
 import { LanguageSelector } from "./LanguageSelector";
+import { isAzureConfigured } from "../lib/tts-azure";
+import { AUDIO_MANIFEST } from "../data/audio-manifest";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -126,9 +128,28 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Translate selector */}
-        <div className="border-t border-[var(--border)] px-5 py-4">
+        {/* Translate selector + voice indicator */}
+        <div className="border-t border-[var(--border)] px-5 py-4 space-y-3">
           <LanguageSelector />
+          <div className="flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[var(--ink-4)]">
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${
+                Object.keys(AUDIO_MANIFEST).length > 0
+                  ? "bg-[var(--gold)]"
+                  : isAzureConfigured
+                  ? "bg-[var(--affirm)]"
+                  : "bg-[var(--ink-5)]"
+              }`}
+              aria-hidden="true"
+            />
+            <span>
+              {Object.keys(AUDIO_MANIFEST).length > 0
+                ? `Voice · Studio (${Object.keys(AUDIO_MANIFEST).length} clips)`
+                : isAzureConfigured
+                ? "Voice · Azure neural"
+                : "Voice · System"}
+            </span>
+          </div>
         </div>
       </aside>
     </>
