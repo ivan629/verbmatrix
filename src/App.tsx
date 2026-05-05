@@ -1,5 +1,5 @@
 import { LanguageProvider } from "./context/Language";
-import { PlaybackProvider } from "./context/Playback";
+import { ThemeProvider } from "./context/Theme";
 import { Sidebar, Hero, Footer } from "./components/Layout";
 import {
   LessonRules,
@@ -12,8 +12,8 @@ import {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <PlaybackProvider>
+    <ThemeProvider>
+      <LanguageProvider>
         <Sidebar />
         <div className="md:ml-[260px]">
           <div className="max-w-[880px] mx-auto px-6 md:px-12 lg:px-16">
@@ -46,7 +46,7 @@ export default function App() {
             <Footer />
           </div>
         </div>
-      </PlaybackProvider>
-    </LanguageProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

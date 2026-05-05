@@ -3,7 +3,7 @@ import {
   PrincipleGrid, PsychBox, SoundGrid, DataTable, MonoBlock,
 } from "../ui";
 import { RO } from "../RO";
-import { PETROV_PRINCIPLES, LIBERATING_TRUTHS } from "../../data/schedule";
+import { CORE_PRINCIPLES, LIBERATING_TRUTHS } from "../../data/schedule";
 
 // ─── Principles ─────────────────────────────────────────────────
 
@@ -11,10 +11,10 @@ export function LessonRules() {
   return (
     <LessonSection
       id="rules" num="★" tag="Foundation"
-      title="The seven Petrov principles"
+      title="The seven core principles"
       subtitle="Read these before any grammar. They define how the rest of the book works."
     >
-      <PrincipleGrid items={PETROV_PRINCIPLES} />
+      <PrincipleGrid items={CORE_PRINCIPLES} />
     </LessonSection>
   );
 }
@@ -36,7 +36,7 @@ export function Lesson0() {
           "Do I believe I’m “bad at languages” or “too old”?",
           "Have I been overwhelmed by grammar rules and textbooks?",
         ]}
-        footer="If you said yes — you are normal. By Lesson 4, Petrov’s students were speaking. By Lesson 16, they were holding real conversations."
+        footer="If you said yes — you are normal. By Lesson 4 you will be speaking. By Lesson 16 you will be holding real conversations."
       />
 
       <SectionHeading>The three liberating truths</SectionHeading>
