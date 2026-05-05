@@ -129,6 +129,7 @@ export function Lesson8() {
           ["his", "lui", "lui"],
           ["her", "ei", "ei"],
           ["our", "nostru", "noastră"],
+          ["your (pl. / formal)", "vostru", "voastră"],
           ["their", "lor", "lor"],
         ]}
         highlightCols={[1, 2]}
@@ -209,6 +210,8 @@ export function Lesson9() {
           ["3rd", "al treilea", "a treia", "al treilea rând — third row"],
           ["4th", "al patrulea", "a patra", ""],
           ["5th", "al cincilea", "a cincea", ""],
+          ["3rd to last", "antepenultimul", "antepenultima", "antepenultimul rând — third-to-last row"],
+          ["2nd to last", "penultimul", "penultima", "penultima zi — the second-to-last day"],
           ["last", "ultimul", "ultima", "ultima dată — last time"],
         ]}
         highlightCols={[1, 2]}

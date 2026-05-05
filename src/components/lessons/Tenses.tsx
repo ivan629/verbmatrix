@@ -212,18 +212,27 @@ export function Lesson15() {
       />
 
       <SectionHeading>If … then … (dacă)</SectionHeading>
-      <InfoBox variant="neutral" title="Three types of ‘if’ sentences">
-        <p style={{ marginBottom: 6 }}><b>Real (likely):</b></p>
+      <InfoBox variant="neutral" title="Three types of ‘if’ sentences — and their English equivalents">
+        <p style={{ marginBottom: 6 }}>
+          <b>Real / likely</b> — equivalent to the English <b>1st conditional</b>{" "}
+          (<i>If + present, will + verb</i>):
+        </p>
         <MonoBlock>
           <RO text="Dacă am timp, vin la tine." en="If I have time, I’ll come to your place." /><br />
-          <RO text="Dacă plouă, stau acasă." en="If it rains, I stay home." />
+          <RO text="Dacă plouă, stau acasă." en="If it rains, I (will) stay home." />
         </MonoBlock>
-        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Unreal (hypothetical):</b></p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}>
+          <b>Unreal / hypothetical</b> — equivalent to the English <b>2nd conditional</b>{" "}
+          (<i>If + past, would + verb</i>):
+        </p>
         <MonoBlock>
           <RO text="Dacă aș avea bani, aș călători." en="If I had money, I would travel." /><br />
           <RO text="Dacă aș fi tu, aș pleca." en="If I were you, I would leave." />
         </MonoBlock>
-        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Past unreal:</b></p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}>
+          <b>Past unreal</b> — equivalent to the English <b>3rd conditional</b>{" "}
+          (<i>If + past perfect, would have + verb</i>):
+        </p>
         <MonoBlock>
           <RO text="Dacă aș fi știut, aș fi venit." en="If I had known, I would have come." />
         </MonoBlock>

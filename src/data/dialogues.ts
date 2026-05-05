@@ -15,7 +15,7 @@ export const DIALOGUES: DialogueData[] = [
   {
     icon: "✦", title: "Meeting Someone",
     lines: [
-      { speaker: "A", ro: "Salut! Mă cheamă Ana. Tu cum te cheamă?", en: "Hi! I’m Ana. What’s your name?" },
+      { speaker: "A", ro: "Bună, mă cheamă Ana. Pe tine cum te cheamă?", en: "Hi! I’m Ana. What’s your name?" },
       { speaker: "B", ro: "Mă cheamă Mihai. Încântat!", en: "I’m Mihai. Nice to meet you!" },
       { speaker: "A", ro: "De unde ești?", en: "Where are you from?" },
       { speaker: "B", ro: "Sunt din Cluj. Dar tu?", en: "I’m from Cluj. You?" },
@@ -38,11 +38,13 @@ export const DIALOGUES: DialogueData[] = [
   {
     icon: "✦", title: "Taking a Taxi",
     lines: [
-      { speaker: "A", ro: "Bună! La aeroport, vă rog.", en: "To the airport, please." },
+      { speaker: "A", ro: "Bună ziua! La aeroport, vă rog.", en: "Good afternoon! To the airport, please." },
+      { speaker: "A", ro: "Cât timp credeți că facem până acolo?", en: "How much time do you think we do till there?" },
       { speaker: "B", ro: "Cam 30 de minute. Depinde de trafic.", en: "About 30 minutes. Depends on traffic." },
       { speaker: "A", ro: "Cât costă?", en: "How much?" },
       { speaker: "B", ro: "În jur de 50 de lei.", en: "Around 50 lei." },
       { speaker: "A", ro: "Puteți opri aici, vă rog?", en: "Can you stop here, please?" },
+      { speaker: "A", ro: "Mulțumesc! O zi bună!", en: "Thank you! Have a good day!" },
     ],
   },
   {
@@ -58,7 +60,7 @@ export const DIALOGUES: DialogueData[] = [
     icon: "✆", title: "Phone Call",
     lines: [
       { speaker: "A", ro: "Alo? Bună, sunt Ana.", en: "Hello? Hi, it’s Ana." },
-      { speaker: "B", ro: "Salut, Ana! Ce faci? N-am mai vorbit de mult.", en: "Hi Ana! How are you? We haven’t talked in a while." },
+      { speaker: "B", ro: "Bună, Ana! Ce faci? N-am mai vorbit de mult.", en: "Hi Ana! How are you? We haven’t talked in a while." },
       { speaker: "A", ro: "Bine, mulțumesc. Te sun pentru că vreau să ne vedem.", en: "Good, thanks. I’m calling because I want to meet up." },
       { speaker: "B", ro: "Super! Când ești liberă?", en: "Great! When are you free?" },
       { speaker: "A", ro: "Sâmbătă după-amiază? La cafeneaua din centru?", en: "Saturday afternoon? At the café downtown?" },
@@ -145,7 +147,7 @@ export const DIALOGUES: DialogueData[] = [
       { speaker: "B", ro: "Da, este. Doriți să-l vedeți?", en: "Yes, it is. Would you like to see it?" },
       { speaker: "A", ro: "Da, cât este chiria pe lună?", en: "Yes, how much is the rent per month?" },
       { speaker: "B", ro: "300 de euro. Utilitățile sunt separate.", en: "300 euros. Utilities are separate." },
-      { speaker: "A", ro: "Are mobilat? Și internet?", en: "Is it furnished? And internet?" },
+      { speaker: "A", ro: "Este mobilat? Și internet?", en: "Is it furnished? And internet?" },
       { speaker: "B", ro: "Da, complet mobilat. Internetul este inclus.", en: "Yes, fully furnished. Internet is included." },
     ],
   },

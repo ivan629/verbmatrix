@@ -56,9 +56,9 @@ export function Lesson0() {
 // ─── Lesson 1 — Sounds ──────────────────────────────────────────
 
 const SPECIAL_CHARS = [
-  { symbol: "ă", pronunciation: "“uh” — like the a in “about”", description: "", example: "băiat (boy)", exampleWord: "băiat" },
-  { symbol: "â", pronunciation: "deeper “uh” — no English equivalent", description: "", example: "câine (dog)", exampleWord: "câine" },
-  { symbol: "î", pronunciation: "same sound as â — different position", description: "", example: "în (in)", exampleWord: "în" },
+  { symbol: "ă / Ă", pronunciation: "“uh” — like the a in “about”", description: "", example: "băiat (boy)", exampleWord: "băiat" },
+  { symbol: "â / Â", pronunciation: "deeper “uh” — no English equivalent", description: "", example: "câine (dog)", exampleWord: "câine" },
+  { symbol: "î / Î", pronunciation: "same sound as â — different position", description: "", example: "în (in)", exampleWord: "în" },
   { symbol: "ș", pronunciation: "“sh” — as in “show”", description: "", example: "școală (school)", exampleWord: "școală" },
   { symbol: "ț", pronunciation: "“ts” — as in “cats”", description: "", example: "țară (country)", exampleWord: "țară" },
 ];
@@ -221,6 +221,22 @@ export function Lesson2() {
           <RO text="Ce înseamnă asta?" en="What does that mean?" /><br />
           <RO text="Vorbiți engleză?" en="Do you speak English?" />
         </MonoBlock>
+      </InfoBox>
+
+      <SectionHeading>Informal greetings — by gender</SectionHeading>
+      <InfoBox variant="gold" title="Salut! vs Bună! — who says what">
+        <p>
+          Among friends, family, colleagues, or people of similar age, Romanian uses two informal
+          greetings — and which one you pick depends on the genders of the people involved:
+        </p>
+        <MonoBlock>
+          two men → <RO text="Salut!" en="Hi! (man → man)" /><br />
+          two women → <RO text="Bună!" en="Hi! (woman → woman)" /><br />
+          a man and a woman → <RO text="Bună!" en="Hi! (mixed)" />
+        </MonoBlock>
+        <p style={{ marginTop: 8 }}>
+          For anyone older, a stranger, or in formal settings, use <b><RO text="Bună ziua!" en="Good day!" /></b> regardless of gender.
+        </p>
       </InfoBox>
 
       <TestBox title="Self-test" items={[

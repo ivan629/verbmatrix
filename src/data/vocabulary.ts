@@ -8,7 +8,7 @@ export const VOCAB_SECTIONS: VocabSection[] = [
       { ro: "copil", en: "child" }, { ro: "prieten / prietenă", en: "friend (m / f)" }, { ro: "familie", en: "family" },
       { ro: "mamă", en: "mother" }, { ro: "tată", en: "father" }, { ro: "frate", en: "brother" },
       { ro: "soră", en: "sister" }, { ro: "soț / soție", en: "husband / wife" }, { ro: "bunic / bunică", en: "grandfather / mother" },
-      { ro: "băiat", en: "boy" }, { ro: "fată", en: "girl" }, { ro: "nepot / nepoată", en: "nephew / niece" },
+      { ro: "băiat", en: "boy" }, { ro: "fată", en: "girl" }, { ro: "nepot / nepoată", en: "nephew / niece (also: grandson / granddaughter)" },
       { ro: "unchi / mătușă", en: "uncle / aunt" }, { ro: "văr / verișoară", en: "cousin (m / f)" },
       { ro: "vecin / vecină", en: "neighbour (m / f)" }, { ro: "coleg / colegă", en: "colleague (m / f)" },
       { ro: "șef / șefă", en: "boss (m / f)" }, { ro: "bebeluș", en: "baby" }, { ro: "adolescent", en: "teenager" },
@@ -59,7 +59,7 @@ export const VOCAB_SECTIONS: VocabSection[] = [
       { ro: "ciocolată", en: "chocolate" }, { ro: "prăjitură", en: "cake / pastry" }, { ro: "înghețată", en: "ice cream" },
       { ro: "miere", en: "honey" }, { ro: "compot", en: "compote" }, { ro: "mămăligă", en: "polenta" },
       { ro: "cozonac", en: "sweet bread" }, { ro: "plăcintă", en: "pie / pastry" },
-      { ro: "papanași", en: "cheese donuts" }, { ro: "țuică", en: "plum brandy" },
+      { ro: "papanași", en: "yogurt and jam donuts" }, { ro: "țuică", en: "plum brandy" },
       { ro: "suc", en: "juice" }, { ro: "apă plată", en: "still water" }, { ro: "apă minerală", en: "sparkling water" },
     ],
   },
@@ -69,7 +69,7 @@ export const VOCAB_SECTIONS: VocabSection[] = [
       { ro: "oraș", en: "city" }, { ro: "sat", en: "village" }, { ro: "stradă", en: "street" },
       { ro: "magazin", en: "store" }, { ro: "gară", en: "station" }, { ro: "aeroport", en: "airport" },
       { ro: "metrou", en: "metro" }, { ro: "bilet", en: "ticket" }, { ro: "spital", en: "hospital" },
-      { ro: "farmacie", en: "pharmacy" }, { ro: "piață", en: "market / square" }, { ro: "bancă", en: "bank" },
+      { ro: "farmacie", en: "pharmacy" }, { ro: "piață", en: "market / square" }, { ro: "bancă", en: "bank / bench" },
       { ro: "poștă", en: "post office" }, { ro: "parc", en: "park" }, { ro: "muzeu", en: "museum" },
       { ro: "teatru", en: "theatre" }, { ro: "cinema", en: "cinema" }, { ro: "bibliotecă", en: "library" },
       { ro: "biserică", en: "church" }, { ro: "pod", en: "bridge" },
@@ -102,12 +102,12 @@ export const VOCAB_SECTIONS: VocabSection[] = [
   {
     icon: "✦", label: "Nature & Weather",
     items: [
-      { ro: "munte", en: "mountain" }, { ro: "mare", en: "sea" }, { ro: "râu", en: "river" },
+      { ro: "munte", en: "mountain" }, { ro: "mare", en: "sea (also: big)" }, { ro: "râu", en: "river" },
       { ro: "lac", en: "lake" }, { ro: "pădure", en: "forest" }, { ro: "câmp", en: "field" },
       { ro: "cer", en: "sky" }, { ro: "soare", en: "sun" }, { ro: "lună", en: "moon" },
       { ro: "stea", en: "star" }, { ro: "nor", en: "cloud" }, { ro: "ploaie", en: "rain" },
       { ro: "zăpadă", en: "snow" }, { ro: "vânt", en: "wind" }, { ro: "furtună", en: "storm" },
-      { ro: "pământ", en: "earth / ground" }, { ro: "copac", en: "tree" }, { ro: "floare", en: "flower" },
+      { ro: "pământ", en: "earth / ground" }, { ro: "copac / pom", en: "tree" }, { ro: "floare", en: "flower" },
       { ro: "iarbă", en: "grass" }, { ro: "piatră", en: "stone" }, { ro: "vale", en: "valley" },
       { ro: "plajă", en: "beach" }, { ro: "insulă", en: "island" }, { ro: "izvor", en: "spring / source" },
     ],
@@ -180,11 +180,63 @@ export const VOCAB_SECTIONS: VocabSection[] = [
       { ro: "timp", en: "time" }, { ro: "oră", en: "hour" }, { ro: "minut", en: "minute" },
       { ro: "zi", en: "day" }, { ro: "săptămână", en: "week" }, { ro: "lună", en: "month" },
       { ro: "an", en: "year" }, { ro: "dimineață", en: "morning" }, { ro: "amiază", en: "noon" },
+      { ro: "după-amiază", en: "afternoon" },
       { ro: "seară", en: "evening" }, { ro: "noapte", en: "night" }, { ro: "viață", en: "life" },
-      { ro: "moarte", en: "death" }, { ro: "nume", en: "name" }, { ro: "treabă", en: "thing / task" },
+      { ro: "moarte", en: "death" }, { ro: "nume", en: "name" }, { ro: "treabă", en: "task / work to do" },
+      { ro: "lucru", en: "thing" },
       { ro: "problemă", en: "problem" }, { ro: "idee", en: "idea" }, { ro: "adevăr", en: "truth" },
       { ro: "greșeală", en: "mistake" }, { ro: "motiv", en: "reason" }, { ro: "răspuns", en: "answer" },
       { ro: "întrebare", en: "question" }, { ro: "loc", en: "place" },
+    ],
+  },
+  {
+    icon: "✦", label: "Directions",
+    items: [
+      { ro: "nord", en: "north" }, { ro: "sud", en: "south" },
+      { ro: "est", en: "east" }, { ro: "vest", en: "west" },
+      { ro: "stânga", en: "left" }, { ro: "dreapta", en: "right" },
+      { ro: "înainte", en: "straight ahead / straight on" }, { ro: "înapoi", en: "back" },
+      { ro: "fă la stânga", en: "turn left" }, { ro: "fă la dreapta", en: "turn right" },
+      { ro: "mergi înainte", en: "go straight" }, { ro: "întoarce-te", en: "go back" },
+      { ro: "oprește-te", en: "stop" },
+      { ro: "lângă", en: "next to" }, { ro: "în fața", en: "in front of" },
+      { ro: "în spatele", en: "behind" }, { ro: "vizavi", en: "opposite" },
+      { ro: "aproape", en: "near" }, { ro: "departe", en: "far" },
+    ],
+  },
+  {
+    icon: "✦", label: "Descriptive adjectives — size, shape, quality",
+    items: [
+      // Size
+      { ro: "mare", en: "big / large" }, { ro: "mic", en: "small / little" },
+      { ro: "foarte mic", en: "tiny" }, { ro: "foarte mare", en: "huge" },
+      { ro: "înalt", en: "tall" }, { ro: "scund", en: "short (height)" },
+      { ro: "lung", en: "long" }, { ro: "lat", en: "wide" }, { ro: "îngust", en: "narrow" },
+      // Shape
+      { ro: "rotund", en: "round" }, { ro: "pătrat", en: "square" },
+      { ro: "dreptunghiular", en: "rectangular" }, { ro: "plat", en: "flat" },
+      { ro: "curbat", en: "curved" }, { ro: "drept", en: "straight" },
+      // Thickness
+      { ro: "gros", en: "thick" }, { ro: "subțire", en: "thin" },
+      // Texture
+      { ro: "aspru", en: "rough" }, { ro: "fin", en: "smooth" },
+      { ro: "moale", en: "soft" }, { ro: "tare", en: "hard" },
+      { ro: "ud", en: "wet" }, { ro: "uscat", en: "dry" },
+      // Weight
+      { ro: "greu", en: "heavy" }, { ro: "ușor", en: "light" },
+      // Temperature
+      { ro: "cald", en: "hot" }, { ro: "rece", en: "cold" },
+      { ro: "călduț", en: "warm" }, { ro: "răcoros", en: "cool" },
+      // Body / appearance
+      { ro: "gras", en: "fat" }, { ro: "slab", en: "thin / weak" },
+      { ro: "suplu", en: "slim" }, { ro: "puternic", en: "strong" },
+      // Quality
+      { ro: "bun", en: "good" }, { ro: "rău", en: "bad" },
+      { ro: "drăguț", en: "nice" }, { ro: "frumos", en: "beautiful" },
+      { ro: "urât", en: "ugly" }, { ro: "curat", en: "clean" }, { ro: "murdar", en: "dirty" },
+      // Age
+      { ro: "nou", en: "new" }, { ro: "vechi", en: "old (things)" },
+      { ro: "tânăr", en: "young" }, { ro: "bătrân", en: "old (people)" },
     ],
   },
 ];

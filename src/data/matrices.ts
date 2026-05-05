@@ -130,7 +130,8 @@ export const FILLER_WORDS: FillerItem[] = [
   { word: "uite", meaning: "look, see", example: "Uite ce frumos!" },
   { word: "adică", meaning: "I mean, that is", example: "Adică, nu e chiar așa." },
   { word: "bine", meaning: "OK, fine, alright", example: "Bine, hai." },
-  { word: "na", meaning: "here, well", example: "Na, ia-l!" },
+  { word: "na", meaning: "well… (mid-sentence hesitation). Note: 'eeeh, na?' = what a surprise! / 'eeeh, na!' = whatever, doesn’t matter. (Avoid 'Na, ia-l!' for 'here, take this' — that sounds rural; use 'poftim' instead.)", example: "Am vorbit cu el, dar na, nu știu dacă a înțeles." },
+  { word: "poftim", meaning: "here, take it / pardon? — didn’t catch that (with question intonation)", example: "Poftim, ia cartea! · Poftim? Mai spuneți o dată." },
   { word: "mda", meaning: "yeah, I guess", example: "Mda, ai dreptate." },
   { word: "știi", meaning: "you know", example: "E complicat, știi?" },
 ];

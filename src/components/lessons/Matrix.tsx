@@ -69,14 +69,51 @@ export function Lesson3() {
 
       <SectionHeading>Contracted forms — how Romanians actually speak</SectionHeading>
       <InfoBox variant="neutral" title="Real-life contractions">
+        <p style={{ marginBottom: 6 }}><b>Negation + auxiliary</b> — the most frequent contractions:</p>
         <MonoBlock>
           nu am → <RO text="n-am" en="I don’t have" /> &nbsp;·&nbsp;
           nu ai → <RO text="n-ai" en="you don’t have" /> &nbsp;·&nbsp;
           nu are → <RO text="n-are" en="he/she doesn’t have" /><br />
-          este → <RO text="e" en="is" /> &nbsp;·&nbsp;
-          nu o să → <RO text="n-o să" en="will not" /><br />
+          nu este → <RO text="nu-i" en="it isn’t" /> &nbsp;·&nbsp;
+          nu o să → <RO text="n-o să" en="will not" /> &nbsp;·&nbsp;
+          este → <RO text="e" en="is" />
+        </MonoBlock>
+
+        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Pronoun + auxiliary</b> — almost always contracted in speech:</p>
+        <MonoBlock>
+          mă a → <RO text="m-a" en="he/she … me" /> &nbsp;·&nbsp;
+          te a → <RO text="te-a" en="he/she … you" /> &nbsp;·&nbsp;
+          îl am → <RO text="l-am" en="I … him/it" /><br />
+          îmi a → <RO text="mi-a" en="he/she … to me" /> &nbsp;·&nbsp;
+          îți am → <RO text="ți-am" en="I … to you" /> &nbsp;·&nbsp;
+          ne am → <RO text="ne-am" en="we … (ourselves)" /><br />
+          se a → <RO text="s-a" en="he/she/it … (reflexive)" /> &nbsp;·&nbsp;
+          v-am → <RO text="v-am" en="I … you (pl.)" /> &nbsp;·&nbsp;
+          i-am → <RO text="i-am" en="I … to him/her" />
+        </MonoBlock>
+
+        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Subjunctive shortcuts</b> — after <i>să</i> and <i>nu</i>:</p>
+        <MonoBlock>
+          să îl → <RO text="să-l" en="(to) … him" /> &nbsp;·&nbsp;
+          să o → <RO text="s-o" en="(to) … her" /> &nbsp;·&nbsp;
+          să îi → <RO text="să-i" en="(to) … him / them" /><br />
+          nu îl → <RO text="nu-l" en="not him" /> &nbsp;·&nbsp;
+          nu o → <RO text="n-o" en="not her / it" /> &nbsp;·&nbsp;
+          ce este → <RO text="ce-i" en="what is" />
+        </MonoBlock>
+
+        <p style={{ marginTop: 12, marginBottom: 6 }}><b>How they sound in real sentences:</b></p>
+        <MonoBlock>
           <RO text="N-am timp." en="I don’t have time." /> &nbsp;·&nbsp;
-          <RO text="S-a terminat." en="It’s over." />
+          <RO text="S-a terminat." en="It’s over. / It’s done." /><br />
+          <RO text="L-am văzut ieri." en="I saw him yesterday." /> &nbsp;·&nbsp;
+          <RO text="Mi-a spus adevărul." en="He/she told me the truth." /><br />
+          <RO text="Ne-am întâlnit la cafenea." en="We met at the café." /> &nbsp;·&nbsp;
+          <RO text="Ți-am zis!" en="I told you!" /><br />
+          <RO text="Vreau să-l ajut." en="I want to help him." /> &nbsp;·&nbsp;
+          <RO text="Nu-i bine." en="It’s not good." /><br />
+          <RO text="Ce-i asta?" en="What is this?" /> &nbsp;·&nbsp;
+          <RO text="V-am chemat de două ori." en="I called you (pl.) twice." />
         </MonoBlock>
       </InfoBox>
 
