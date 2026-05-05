@@ -1,6 +1,14 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import en from "../locales/en.json";
+import it from "../locales/it.json";
+import es from "../locales/es.json";
+import fr from "../locales/fr.json";
+import de from "../locales/de.json";
+import hu from "../locales/hu.json";
+import uk from "../locales/uk.json";
+import ru from "../locales/ru.json";
+import pl from "../locales/pl.json";
 
 const STORAGE_KEY = "ro-study-lang";
 
@@ -12,15 +20,17 @@ const STORAGE_KEY = "ro-study-lang";
  *   2. Import it at the top of this file
  *   3. Add it to the `resources` block below
  *   4. Add an entry here
- *
- * That's it — three small edits.
  */
 export const AVAILABLE_LANGUAGES: { code: string; label: string }[] = [
   { code: "en", label: "English" },
-  // { code: "it", label: "Italiano" },
-  // { code: "es", label: "Español" },
-  // { code: "de", label: "Deutsch" },
-  // ...etc
+  { code: "it", label: "Italiano" },
+  { code: "es", label: "Español" },
+  { code: "fr", label: "Français" },
+  { code: "de", label: "Deutsch" },
+  { code: "hu", label: "Magyar" },
+  { code: "uk", label: "Українська" },
+  { code: "ru", label: "Русский" },
+  { code: "pl", label: "Polski" },
 ];
 
 const stored = (() => {
@@ -35,9 +45,14 @@ const stored = (() => {
 i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
-    // To add a new language:
-    //   import it from "../locales/it.json";
-    //   it: { translation: it },
+    it: { translation: it },
+    es: { translation: es },
+    fr: { translation: fr },
+    de: { translation: de },
+    hu: { translation: hu },
+    uk: { translation: uk },
+    ru: { translation: ru },
+    pl: { translation: pl },
   },
   lng: stored && AVAILABLE_LANGUAGES.some((l) => l.code === stored) ? stored : "en",
   fallbackLng: "en",
