@@ -2,9 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { RO } from "./RO";
 import { NAV_GROUPS } from "../data/schedule";
 import { LanguageSelector } from "./LanguageSelector";
-import { PlaybackControls } from "./PlaybackControls";
-import { isAzureConfigured } from "../lib/tts-azure";
-import { AUDIO_MANIFEST } from "../data/audio-manifest";
+import { ThemeToggle } from "./ThemeToggle";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -36,6 +34,17 @@ function useActiveSection(ids: string[]): string {
   return active;
 }
 
+/**
+ * Pull the lesson number out of an anchor like "#L3" → "03".
+ * Returns null for non-lesson anchors (#vocab, #rules, etc.) so the
+ * caller can omit the number column for those.
+ */
+function lessonNumber(href: string): string | null {
+  const m = /^#L(\d+)$/.exec(href);
+  if (!m) return null;
+  return m[1].padStart(2, "0");
+}
+
 export function Sidebar() {
   const [open, setOpen] = useState(false);
   const allIds = useMemo(
@@ -46,11 +55,11 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
+      {/* Mobile toggle — 44px touch target */}
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="md:hidden fixed top-3 left-3 z-50 w-10 h-10 rounded-md bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--ink-2)] shadow-[var(--shadow-1)] no-print"
+        className="md:hidden fixed top-3 left-3 z-50 w-11 h-11 rounded-md bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--ink-2)] shadow-[var(--shadow-1)] no-print"
         aria-label={open ? "Close navigation" : "Open navigation"}
       >
         <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
@@ -66,7 +75,8 @@ export function Sidebar() {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="md:hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40 no-print"
+          className="md:hidden fixed inset-0 z-40 no-print backdrop-blur-sm"
+          style={{ background: "var(--backdrop)" }}
           aria-hidden="true"
         />
       )}
@@ -81,20 +91,20 @@ export function Sidebar() {
           flex flex-col
         `}
       >
-        {/* Brand */}
-        <a
-          href="#top"
-          onClick={() => setOpen(false)}
-          className="block px-7 pt-7 pb-5 border-b border-[var(--border)] hover:bg-[var(--surface-2)]/50 transition-colors"
-        >
-          <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
-            Romanian
-            <span className="text-[var(--ink-4)] ml-1.5 font-normal">Study</span>
-          </div>
-          <div className="mt-2 font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)]">
-            After Petrov · Polyglot 16
-          </div>
-        </a>
+        {/* Brand + theme toggle */}
+        <div className="flex items-center justify-between gap-2 pl-7 pr-3 pt-5 pb-4 border-b border-[var(--border)]">
+          <a
+            href="#top"
+            onClick={() => setOpen(false)}
+            className="block flex-1 hover:opacity-80 transition-opacity"
+          >
+            <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
+              Romanian
+              <span className="text-[var(--ink-4)] ml-1.5 font-normal">Study</span>
+            </div>
+          </a>
+          <ThemeToggle />
+        </div>
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-4 py-5 scrollbar-hide">
@@ -107,19 +117,29 @@ export function Sidebar() {
                 {group.links.map((link) => {
                   const id = link.href.slice(1);
                   const isActive = active === id;
+                  const num = lessonNumber(link.href);
                   return (
                     <li key={link.href}>
                       <a
                         href={link.href}
                         onClick={() => setOpen(false)}
                         className={`
-                          block px-3 py-1.5 text-[12.5px] rounded-md transition-colors
+                          grid grid-cols-[20px_1fr] items-baseline gap-2
+                          px-3 py-2.5 text-[13px] rounded-md transition-colors
                           ${isActive
                             ? "bg-[var(--surface-2)] text-[var(--ink)] font-medium"
-                            : "text-[var(--ink-3)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)]/60"}
+                            : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)]/60"}
                         `}
                       >
-                        {link.label}
+                        <span
+                          className={`font-mono text-[10.5px] tabular-nums ${
+                            isActive ? "text-[var(--gold)]" : "text-[var(--ink-4)]"
+                          }`}
+                          aria-hidden="true"
+                        >
+                          {num ?? "·"}
+                        </span>
+                        <span>{link.label}</span>
                       </a>
                     </li>
                   );
@@ -129,29 +149,9 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Translate selector + Playback controls + voice indicator */}
-        <div className="border-t border-[var(--border)] px-5 py-4 space-y-4">
+        {/* Bottom panel: language only */}
+        <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
           <LanguageSelector />
-          <PlaybackControls />
-          <div className="flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[var(--ink-4)]">
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                Object.keys(AUDIO_MANIFEST).length > 0
-                  ? "bg-[var(--gold)]"
-                  : isAzureConfigured
-                  ? "bg-[var(--affirm)]"
-                  : "bg-[var(--ink-5)]"
-              }`}
-              aria-hidden="true"
-            />
-            <span>
-              {Object.keys(AUDIO_MANIFEST).length > 0
-                ? `Voice · Studio (${Object.keys(AUDIO_MANIFEST).length} clips)`
-                : isAzureConfigured
-                ? "Voice · Azure neural"
-                : "Voice · System"}
-            </span>
-          </div>
         </div>
       </aside>
     </>
@@ -170,20 +170,10 @@ export function Hero() {
         Speak Romanian in sixteen lessons.
       </h1>
       <p className="text-[1.02rem] text-[var(--ink-2)] max-w-[600px] mb-10 leading-[1.65]">
-        From zero to confident conversation, after Dmitry Petrov’s polyglot framework.
-        Five hundred words. Thirty-two core verbs. Sixteen real-life dialogues. A
-        thirty-two-day pacing schedule.
+        From zero to confident conversation. Five hundred words. Thirty-two core
+        verbs. Sixteen real-life dialogues. A thirty-two-day pacing schedule.
       </p>
-      <blockquote className="max-w-[560px] py-2 pl-5 border-l-2 border-[var(--gold)]">
-        <p className="font-display italic text-[1rem] text-[var(--ink-2)] leading-[1.55]">
-          Freedom before correctness. First learn to speak a foreign language — then
-          learn to speak it correctly.
-        </p>
-        <cite className="block mt-2 not-italic font-mono text-[10px] text-[var(--ink-3)] uppercase tracking-[0.16em]">
-          Dmitry Petrov
-        </cite>
-      </blockquote>
-      <p className="mt-12 text-[0.85rem] text-[var(--ink-3)] max-w-[560px] leading-[1.65]">
+      <p className="mt-2 text-[0.9rem] text-[var(--ink-3)] max-w-[560px] leading-[1.65]">
         Hover any Romanian text for its meaning and pronunciation
         (e.g. <RO text="Bună ziua!" en="Hello / Good day" />). Click to hear it spoken.
         Use the language selector at the bottom of the sidebar to translate the
@@ -203,10 +193,6 @@ export function Footer() {
       </p>
       <p className="text-[0.82rem] text-[var(--ink-3)]">
         Sixteen lessons · thirty-two verbs · five hundred-plus vocabulary · sixteen dialogues.
-      </p>
-      <p className="text-[0.78rem] text-[var(--ink-4)] mt-4 italic max-w-[520px] leading-[1.55]">
-        Hover any Romanian text for translation and pronunciation. Click to listen.
-        Translations are fetched on first hover and cached in your browser.
       </p>
     </footer>
   );

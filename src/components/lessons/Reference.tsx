@@ -88,7 +88,7 @@ export function AboutMeSection() {
       title="The ‘About Me’ template"
       subtitle="Fill in the blanks with your own life. This becomes your first real paragraph in Romanian — read it aloud three times."
     >
-      <div className="bg-[var(--gold-soft)] border border-[#e8d9b6] rounded-[var(--radius-lg)] py-6 px-7 my-6">
+      <div className="bg-[var(--gold-soft)] border border-[var(--gold-border)] rounded-[var(--radius-lg)] py-6 px-7 my-6">
         <p className="font-mono text-[0.95rem] leading-[2.4] text-[var(--ink)]">
           <RO text="Bună! Mă cheamă" en="Hi! My name is" /> <Blank>name</Blank>.{" "}
           <RO text="Am" en="I have / I am" /> <Blank>age</Blank>{" "}

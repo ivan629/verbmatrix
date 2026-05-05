@@ -30,7 +30,7 @@ export function LessonSection({ id, num, tag, title, subtitle, children }: Lesso
         {title}
       </h2>
       {subtitle && <p className="text-[var(--ink-3)] text-[1.05rem] mb-8 max-w-[640px] leading-relaxed">{subtitle}</p>}
-      <div className="space-y-1">{children}</div>
+      <div>{children}</div>
     </section>
   );
 }
@@ -65,7 +65,7 @@ export function MonoBlock({ children }: { children: ReactNode }) {
 
 const BOX_STYLES: Record<BoxVariant, { bg: string; border: string; titleColor: string }> = {
   blue: { bg: "bg-[var(--question-bg)]", border: "border-[var(--question-border)]", titleColor: "text-[var(--question)]" },
-  gold: { bg: "bg-[var(--gold-soft)]", border: "border-[#e8d9b6]", titleColor: "text-[var(--gold)]" },
+  gold: { bg: "bg-[var(--gold-soft)]", border: "border-[var(--gold-border)]", titleColor: "text-[var(--gold)]" },
   green: { bg: "bg-[var(--affirm-bg)]", border: "border-[var(--affirm-border)]", titleColor: "text-[var(--affirm)]" },
   neutral: { bg: "bg-[var(--surface-2)]", border: "border-[var(--border)]", titleColor: "text-[var(--ink)]" },
 };
@@ -148,7 +148,7 @@ export function PhraseGrid({ items }: { items: PhraseItem[] }) {
           <div className="font-mono text-[var(--ink)] text-[0.92rem] mb-0.5 leading-snug">
             <RO text={p.ro} en={p.en} />
           </div>
-          <div className="text-[var(--ink-3)] text-[0.8rem] italic">{p.en}</div>
+          <div className="text-[var(--ink-2)] text-[0.84rem] italic">{p.en}</div>
         </div>
       ))}
     </div>
@@ -169,7 +169,7 @@ export function VocabGrid({ items }: { items: VocabItem[] }) {
           <span className="font-mono text-[var(--ink)]">
             <RO text={vocabSpeakable(v.ro)} en={v.en}>{v.ro}</RO>
           </span>
-          <span className="text-[var(--ink-3)] text-[0.82rem] text-right ml-2">{v.en}</span>
+          <span className="text-[var(--ink-2)] text-[0.85rem] text-right ml-2">{v.en}</span>
         </div>
       ))}
     </div>
@@ -214,7 +214,7 @@ export function SoundGrid({ items }: { items: SoundItem[] }) {
           </div>
           <div className="flex-1 text-[0.85rem]">
             <div className="text-[var(--ink)]">{s.pronunciation}</div>
-            <div className="text-[var(--ink-3)] text-[0.78rem] italic mt-0.5">
+            <div className="text-[var(--ink-2)] text-[0.82rem] italic mt-0.5">
               {s.example ? <RO text={s.exampleWord}>{s.example}</RO> : s.description}
             </div>
           </div>
@@ -237,13 +237,13 @@ export function DialogueBox({ dialogue }: { dialogue: DialogueData }) {
       </div>
       <div className="space-y-3">
         {dialogue.lines.map((line, i) => (
-          <div key={i} className="grid grid-cols-[24px_1fr] gap-3 text-[0.92rem]">
-            <span className={`font-mono font-semibold text-[0.78rem] ${line.speaker === "A" ? "text-[var(--gold)]" : "text-[var(--question)]"}`}>
+          <div key={i} className="grid grid-cols-[24px_1fr] gap-3 text-[0.95rem]">
+            <span className={`font-mono font-semibold text-[0.78rem] mt-0.5 ${line.speaker === "A" ? "text-[var(--gold)]" : "text-[var(--question)]"}`}>
               {line.speaker}
             </span>
             <div>
-              <div className="font-mono text-[var(--ink)]"><RO text={line.ro} en={line.en} /></div>
-              <div className="text-[var(--ink-3)] text-[0.82rem] italic mt-0.5">{line.en}</div>
+              <div className="text-[var(--ink)] leading-snug"><RO text={line.ro} en={line.en} /></div>
+              <div className="text-[var(--ink-2)] text-[0.84rem] italic mt-0.5">{line.en}</div>
             </div>
           </div>
         ))}
@@ -298,8 +298,8 @@ export function FillerGrid({ items }: { items: FillerItem[] }) {
           <div className="font-mono text-[1rem] font-semibold text-[var(--gold)] mb-0.5">
             <RO text={f.word} />
           </div>
-          <div className="text-[0.82rem] text-[var(--ink-2)] mb-1">{f.meaning}</div>
-          <div className="font-mono text-[0.8rem] text-[var(--ink-3)] italic">{f.example}</div>
+          <div className="text-[0.84rem] text-[var(--ink-2)] mb-1">{f.meaning}</div>
+          <div className="font-mono text-[0.82rem] text-[var(--ink-2)] italic">{f.example}</div>
         </div>
       ))}
     </div>
@@ -327,7 +327,7 @@ export function ContrastBox({ columns }: { columns: ContrastColumn[] }) {
             {col.items.map((item, j) => (
               <div key={j}>
                 <RO text={item.ro} en={item.en} />
-                <span className="text-[var(--ink-3)] not-italic text-[0.78rem] block">{item.en}</span>
+                <span className="text-[var(--ink-2)] not-italic text-[0.8rem] block">{item.en}</span>
               </div>
             ))}
           </div>
@@ -347,7 +347,7 @@ export function VerbCardGrid({ verbs }: { verbs: VerbDefinition[] }) {
           <div className="font-display text-[1.1rem] text-[var(--ink)] tracking-tight">
             <RO text={v.infinitive} en={v.meaning} />
           </div>
-          <div className="text-[0.78rem] text-[var(--ink-3)] mb-3 italic">{v.meaning}</div>
+          <div className="text-[var(--ink-2)] text-[0.82rem] mb-3 italic">{v.meaning}</div>
           <div className="space-y-1.5 text-[0.85rem]">
             <div className="flex items-baseline justify-between">
               <span className="text-[var(--ink-3)] font-mono text-[0.75rem]">eu</span>
@@ -408,7 +408,7 @@ export function TestBox({ title, items }: { title: string; items: TestItem[] }) 
 
 export function PsychBox({ title, questions, footer }: { title: string; questions: string[]; footer?: string }) {
   return (
-    <div className="bg-[var(--gold-soft)] border border-[#e8d9b6] rounded-[var(--radius-lg)] py-5 px-6 my-6">
+    <div className="bg-[var(--gold-soft)] border border-[var(--gold-border)] rounded-[var(--radius-lg)] py-5 px-6 my-6">
       <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--gold)] mb-3">{title}</h4>
       <ul className="space-y-2">
         {questions.map((q, i) => (
@@ -430,7 +430,10 @@ export function DrillBox({ title, children, examples }: { title: string; childre
       <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--affirm)] mb-2">{title}</h4>
       {children && <div className="text-[0.92rem] text-[var(--ink-2)] mb-3 leading-[1.65]">{children}</div>}
       {examples && (
-        <div className="font-mono text-[0.88rem] bg-white/70 border border-[var(--affirm-border)] rounded-[var(--radius)] py-3 px-4 leading-[2]">
+        <div
+          className="font-mono text-[0.88rem] border border-[var(--affirm-border)] rounded-[var(--radius)] py-3 px-4 leading-[2]"
+          style={{ background: "color-mix(in srgb, var(--surface) 70%, transparent)" }}
+        >
           {examples}
         </div>
       )}

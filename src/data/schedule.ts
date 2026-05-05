@@ -1,6 +1,6 @@
 import type { PrincipleItem, ScheduleItem, NavGroup } from "../types";
 
-export const PETROV_PRINCIPLES: PrincipleItem[] = [
+export const CORE_PRINCIPLES: PrincipleItem[] = [
   { num: "1", title: "Remove the fear", description: "Romanian is phonetic, Romance-based, full of cognates. The barrier is emotional, not intellectual." },
   { num: "2", title: "Freedom before correctness", description: "Speak from minute one. Wrong endings don't matter yet. Communication first, perfection later." },
   { num: "3", title: "The multiplication table", description: "Three tenses × three forms = nine sentence types. Master them, generate thousands of sentences." },
