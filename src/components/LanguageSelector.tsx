@@ -1,52 +1,28 @@
-import { useLanguage } from "../context/Language";
-
-interface LangOption {
-  code: string;
-  label: string;
-}
-
-/**
- * Tooltip translation targets. Codes are MyMemory-compatible (ISO 639-1
- * with regional suffixes for zh / pt). Labels in each language’s own script
- * so users can spot their language without reading English.
- */
-const LANGS: LangOption[] = [
-  { code: "en", label: "English" },
-  { code: "ar", label: "العربية" },
-  { code: "bg", label: "Български" },
-  { code: "de", label: "Deutsch" },
-  { code: "es", label: "Español" },
-  { code: "fr", label: "Français" },
-  { code: "hi", label: "हिन्दी" },
-  { code: "hu", label: "Magyar" },
-  { code: "it", label: "Italiano" },
-  { code: "ja", label: "日本語" },
-  { code: "ko", label: "한국어" },
-  { code: "nl", label: "Nederlands" },
-  { code: "pl", label: "Polski" },
-  { code: "pt-br", label: "Português" },
-  { code: "ru", label: "Русский" },
-  { code: "tr", label: "Türkçe" },
-  { code: "uk", label: "Українська" },
-  { code: "zh-cn", label: "中文" },
-];
+import { useTranslation } from "react-i18next";
+import { AVAILABLE_LANGUAGES } from "../lib/i18n";
 
 export function LanguageSelector() {
-  const { lang, setLang } = useLanguage();
+  const { i18n, t } = useTranslation();
+
+  // If only one language is available, hide the selector entirely — there's
+  // nothing to choose. The user will see the dropdown reappear automatically
+  // as soon as they add a second language to AVAILABLE_LANGUAGES.
+  if (AVAILABLE_LANGUAGES.length <= 1) return null;
+
   return (
     <div>
       <label
         htmlFor="ro-target-lang"
         className="block font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-2"
       >
-        Translate tooltips
+        {t("language_selector_label")}
       </label>
       <div className="relative">
         <select
           id="ro-target-lang"
-          value={lang}
-          onChange={(e) => setLang(e.target.value)}
-          aria-label="Translate tooltips to"
+          value={i18n.language}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          aria-label={t("language_selector_label")}
           className="
             appearance-none w-full bg-[var(--surface)] hover:bg-[var(--surface-2)]
             text-[var(--ink-2)] text-[12.5px] font-medium
@@ -55,7 +31,7 @@ export function LanguageSelector() {
             focus:outline-none focus:border-[var(--accent)]
           "
         >
-          {LANGS.map((l) => (
+          {AVAILABLE_LANGUAGES.map((l) => (
             <option key={l.code} value={l.code}>
               {l.label}
             </option>

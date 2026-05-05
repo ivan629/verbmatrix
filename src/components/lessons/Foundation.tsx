@@ -1,5 +1,5 @@
 import {
-  LessonSection, SectionHeading, Paragraph, InfoBox, DrillBox, TestBox,
+  LessonSection, SectionHeading, InfoBox, DrillBox, TestBox,
   PrincipleGrid, PsychBox, SoundGrid, DataTable, MonoBlock,
 } from "../ui";
 import { RO } from "../RO";
@@ -10,9 +10,9 @@ import { CORE_PRINCIPLES, LIBERATING_TRUTHS } from "../../data/schedule";
 export function LessonRules() {
   return (
     <LessonSection
-      id="rules" num="★" tag="Foundation"
-      title="The seven core principles"
-      subtitle="Read these before any grammar. They define how the rest of the book works."
+      id="rules" num="★" tag="lesson_rules_tag"
+      title="lesson_rules_title"
+      subtitle="lesson_rules_subtitle"
     >
       <PrincipleGrid items={CORE_PRINCIPLES} />
     </LessonSection>
@@ -24,29 +24,29 @@ export function LessonRules() {
 export function Lesson0() {
   return (
     <LessonSection
-      id="L0" num="0" tag="Mindset"
-      title="Breaking the barrier"
-      subtitle="Before a single grammar rule, address the real reason languages don’t stick — fear."
+      id="L0" num="0" tag="lesson_0_tag"
+      title="lesson_0_title"
+      subtitle="lesson_0_subtitle"
     >
       <PsychBox
-        title="Ask yourself honestly"
+        title="lesson_0_psych_title"
         questions={[
-          "What specifically has stopped me from learning a language before?",
-          "Am I afraid of sounding foolish? Of being judged?",
-          "Do I believe I’m “bad at languages” or “too old”?",
-          "Have I been overwhelmed by grammar rules and textbooks?",
+          "lesson_0_psych_q1",
+          "lesson_0_psych_q2",
+          "lesson_0_psych_q3",
+          "lesson_0_psych_q4",
         ]}
-        footer="If you said yes — you are normal. By Lesson 4 you will be speaking. By Lesson 16 you will be holding real conversations."
+        footer="lesson_0_psych_footer"
       />
 
-      <SectionHeading>The three liberating truths</SectionHeading>
+      <SectionHeading>lesson_0_truths_heading</SectionHeading>
       <PrincipleGrid items={LIBERATING_TRUTHS} />
 
-      <InfoBox variant="gold" title="Your contract with yourself">
+      <InfoBox variant="gold" title="lesson_0_contract_title">
         <p>“I will speak Romanian badly, bravely, and often — starting today.” Write it down. Sign it.</p>
       </InfoBox>
 
-      <InfoBox variant="blue" title="Why sixteen lessons work">
+      <InfoBox variant="blue" title="lesson_0_why_title">
         <p>The goal is a <b>fireproof foundation</b> — a structural skeleton so strong that even if you stop for months, it never fully disappears.</p>
       </InfoBox>
     </LessonSection>
@@ -77,21 +77,21 @@ const CONSONANT_COMBOS = [
 export function Lesson1() {
   return (
     <LessonSection
-      id="L1" num="1" tag="Pronunciation"
-      title="The sound system"
-      subtitle="Romanian is almost perfectly phonetic. Five special characters are all you need to learn."
+      id="L1" num="1" tag="lesson_1_tag"
+      title="lesson_1_title"
+      subtitle="lesson_1_subtitle"
     >
-      <SectionHeading>The five special characters</SectionHeading>
+      <SectionHeading>lesson_1_h_special</SectionHeading>
       <SoundGrid items={SPECIAL_CHARS} />
 
-      <InfoBox variant="blue" title="Â vs Î">
+      <InfoBox variant="blue" title="lesson_1_avi_title">
         <p><b>â</b> appears <i>inside</i> a word (<RO text="România" en="Romania" />). <b>î</b> appears at the <i>start or end</i> of a word (<RO text="în" en="in" />). They sound <b>exactly the same</b>.</p>
       </InfoBox>
 
-      <SectionHeading>Consonant combinations</SectionHeading>
+      <SectionHeading>lesson_1_h_combos</SectionHeading>
       <SoundGrid items={CONSONANT_COMBOS} />
 
-      <SectionHeading>Vowel sounds</SectionHeading>
+      <SectionHeading>lesson_1_h_vowels</SectionHeading>
       <DataTable
         headers={["Letter", "Sound", "Like English", "Example"]}
         rows={[
@@ -104,18 +104,18 @@ export function Lesson1() {
         speakableCols={[3]}
       />
 
-      <InfoBox variant="gold" title="Stress">
+      <InfoBox variant="gold" title="lesson_1_stress_title">
         <p>Generally on the <b>second-to-last syllable</b> (about 80% of words). Unlike French, <b>every letter is pronounced</b>.</p>
       </InfoBox>
 
-      <InfoBox variant="neutral" title="Common stress exceptions">
+      <InfoBox variant="neutral" title="lesson_1_exceptions_title">
         <MonoBlock>
           <RO text="copil" en="child" /> · <RO text="băiat" en="boy" /> · <RO text="cafea" en="coffee" /><br />
           <RO text="casă" en="house" /> · <RO text="fată" en="girl" /> · <RO text="masă" en="table" />
         </MonoBlock>
       </InfoBox>
 
-      <DrillBox title="Drill — Read these aloud" examples={
+      <DrillBox title="lesson_1_drill_title" examples={
         <>
           <RO text="mulțumesc" en="thank you" /> · <RO text="bună ziua" en="good day" /> · <RO text="vă rog" en="please" /><br />
           <RO text="da" en="yes" /> / <RO text="nu" en="no" /> · <RO text="România" en="Romania" /> · <RO text="București" en="Bucharest" />
@@ -143,11 +143,11 @@ const QUESTION_WORDS = [
 export function Lesson2() {
   return (
     <LessonSection
-      id="L2" num="2" tag="Building blocks"
-      title="Pronouns & question words"
-      subtitle="Two short tables that sit underneath every sentence you’ll ever say."
+      id="L2" num="2" tag="lesson_2_tag"
+      title="lesson_2_title"
+      subtitle="lesson_2_subtitle"
     >
-      <SectionHeading>Subject pronouns</SectionHeading>
+      <SectionHeading>lesson_2_h_subject</SectionHeading>
       <DataTable
         headers={["Romanian", "English", "Tip"]}
         rows={[
@@ -161,12 +161,12 @@ export function Lesson2() {
         speakableCols={[0]}
       />
 
-      <InfoBox variant="blue" title="Formal “you” — dumneavoastră">
+      <InfoBox variant="blue" title="lesson_2_formal_title">
         <p>Use <b><RO text="dumneavoastră" en="you (formal)" /></b> with strangers, older people, officials. It takes <b>voi</b> verb forms. Romanian formality is strict.</p>
         <MonoBlock><RO text="Dumneavoastră vorbiți românește?" en="Do you (formal) speak Romanian?" /></MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Object pronouns</SectionHeading>
+      <SectionHeading>lesson_2_h_object</SectionHeading>
       <DataTable
         headers={["Subject", "Direct object", "Indirect object", "After preposition"]}
         rows={[
@@ -180,8 +180,8 @@ export function Lesson2() {
         ]}
       />
 
-      <SectionHeading>“Pe” — the personal accusative</SectionHeading>
-      <InfoBox variant="neutral" title="Use “pe” before people">
+      <SectionHeading>lesson_2_h_pe</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_2_pe_title">
         <MonoBlock>
           <RO text="Îl văd pe Mihai." en="I see Mihai." /> ✓<br />
           <RO text="Văd mașina." en="I see the car." /> &nbsp;(no “pe” — it’s a thing)<br />
@@ -190,7 +190,7 @@ export function Lesson2() {
         <p style={{ marginTop: 8 }}>Person → use “pe.” Thing → no “pe.”</p>
       </InfoBox>
 
-      <SectionHeading>Demonstratives — this / that</SectionHeading>
+      <SectionHeading>lesson_2_h_demo</SectionHeading>
       <DataTable
         headers={["English", "Formal", "Spoken", "Example"]}
         rows={[
@@ -205,15 +205,15 @@ export function Lesson2() {
         ]}
         speakableCols={[2, 3]}
       />
-      <InfoBox variant="gold" title="In real life">
+      <InfoBox variant="gold" title="lesson_2_demo_title">
         <p>Nobody says “această” in conversation. Use <b>ăsta / asta / ăla / aia</b>.</p>
       </InfoBox>
 
-      <SectionHeading>Question words — the ten essentials</SectionHeading>
+      <SectionHeading>lesson_2_h_qwords</SectionHeading>
       <SoundGrid items={QUESTION_WORDS} />
 
-      <SectionHeading>Survival communication</SectionHeading>
-      <InfoBox variant="green" title="When you don’t understand">
+      <SectionHeading>lesson_2_h_survival</SectionHeading>
+      <InfoBox variant="green" title="lesson_2_dontunderstand_title">
         <MonoBlock>
           <RO text="Nu înțeleg." en="I don’t understand." /><br />
           <RO text="Puteți repeta, vă rog?" en="Can you repeat, please?" /><br />
@@ -223,8 +223,8 @@ export function Lesson2() {
         </MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Informal greetings — by gender</SectionHeading>
-      <InfoBox variant="gold" title="Salut! vs Bună! — who says what">
+      <SectionHeading>lesson_2_h_greetings</SectionHeading>
+      <InfoBox variant="gold" title="lesson_2_greetings_title">
         <p>
           Among friends, family, colleagues, or people of similar age, Romanian uses two informal
           greetings — and which one you pick depends on the genders of the people involved:
@@ -239,7 +239,7 @@ export function Lesson2() {
         </p>
       </InfoBox>
 
-      <TestBox title="Self-test" items={[
+      <TestBox title="lesson_2_test_title" items={[
         { question: "“What is your name?” (informal)", answer: "Cum te cheamă?" },
         { question: "“I see Maria.” (don’t forget pe!)", answer: "O văd pe Maria." },
         { question: "“Can you repeat, please?”", answer: "Puteți repeta, vă rog?" },

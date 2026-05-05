@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import type {
   BoxVariant, PhraseItem, VocabItem, NumberItem, SoundItem,
   PrincipleItem, ScheduleItem, FillerItem, TestItem, ContrastColumn, VerbDefinition,
@@ -17,28 +18,30 @@ interface LessonSectionProps {
 }
 
 export function LessonSection({ id, num, tag, title, subtitle, children }: LessonSectionProps) {
+  const { t } = useTranslation();
   return (
     <section id={id} className="mb-24 scroll-mt-20 fade-in">
       <div className="flex items-center gap-3 mb-3 text-[var(--ink-3)]">
         <span className="font-mono text-[11px] uppercase tracking-[0.12em] font-medium">
-          {num === "★" ? "✦" : `Lesson ${num}`}
+          {num === "★" ? "✦" : `${t("lesson_label")} ${num}`}
         </span>
         <span className="w-6 h-px bg-[var(--border-2)]" />
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em]">{tag}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.12em]">{t(tag)}</span>
       </div>
       <h2 className="font-display text-[2rem] md:text-[2.4rem] font-normal text-[var(--ink)] leading-[1.1] tracking-tight mb-3">
-        {title}
+        {t(title)}
       </h2>
-      {subtitle && <p className="text-[var(--ink-3)] text-[1.05rem] mb-8 max-w-[640px] leading-relaxed">{subtitle}</p>}
+      {subtitle && <p className="text-[var(--ink-3)] text-[1.05rem] mb-8 max-w-[640px] leading-relaxed">{t(subtitle)}</p>}
       <div>{children}</div>
     </section>
   );
 }
 
 export function SectionHeading({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   return (
     <h3 className="font-display text-[1.35rem] font-normal text-[var(--ink)] mt-12 mb-4 tracking-tight">
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </h3>
   );
 }
@@ -71,10 +74,11 @@ const BOX_STYLES: Record<BoxVariant, { bg: string; border: string; titleColor: s
 };
 
 export function InfoBox({ variant = "neutral", title, children }: { variant?: BoxVariant; title?: string; children: ReactNode }) {
+  const { t } = useTranslation();
   const s = BOX_STYLES[variant];
   return (
     <div className={`rounded-[var(--radius-lg)] py-5 px-6 my-6 border ${s.bg} ${s.border}`}>
-      {title && <h4 className={`mb-2 text-[12px] font-semibold uppercase tracking-[0.1em] ${s.titleColor}`}>{title}</h4>}
+      {title && <h4 className={`mb-2 text-[12px] font-semibold uppercase tracking-[0.1em] ${s.titleColor}`}>{t(title)}</h4>}
       <div className="text-[0.95rem] text-[var(--ink-2)] leading-[1.7] [&>p]:mb-2 [&>p:last-child]:mb-0">
         {children}
       </div>
@@ -141,6 +145,7 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
 // ─── PhraseGrid ─────────────────────────────────────────────────
 
 export function PhraseGrid({ items }: { items: PhraseItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 my-5">
       {items.map((p, i) => (
@@ -148,7 +153,7 @@ export function PhraseGrid({ items }: { items: PhraseItem[] }) {
           <div className="font-mono text-[var(--ink)] text-[0.92rem] mb-0.5 leading-snug">
             <RO text={p.ro} en={p.en} />
           </div>
-          <div className="text-[var(--ink-2)] text-[0.84rem] italic">{p.en}</div>
+          <div className="text-[var(--ink-2)] text-[0.84rem] italic">{t(p.en)}</div>
         </div>
       ))}
     </div>
@@ -162,6 +167,7 @@ function vocabSpeakable(ro: string): string {
 }
 
 export function VocabGrid({ items }: { items: VocabItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1 my-4">
       {items.map((v, i) => (
@@ -169,7 +175,7 @@ export function VocabGrid({ items }: { items: VocabItem[] }) {
           <span className="font-mono text-[var(--ink)]">
             <RO text={vocabSpeakable(v.ro)} en={v.en}>{v.ro}</RO>
           </span>
-          <span className="text-[var(--ink-2)] text-[0.85rem] text-right ml-2">{v.en}</span>
+          <span className="text-[var(--ink-2)] text-[0.85rem] text-right ml-2">{t(v.en)}</span>
         </div>
       ))}
     </div>
@@ -177,10 +183,11 @@ export function VocabGrid({ items }: { items: VocabItem[] }) {
 }
 
 export function VocabSectionLabel({ icon, label }: { icon: string; label: string }) {
+  const { t } = useTranslation();
   return (
     <div className="flex items-baseline gap-2 mt-10 mb-3 pt-1">
       <span className="text-[1.1rem]">{icon}</span>
-      <span className="font-display text-[1.15rem] text-[var(--ink)] tracking-tight">{label}</span>
+      <span className="font-display text-[1.15rem] text-[var(--ink)] tracking-tight">{t(`vocab_section_label_${label}`)}</span>
     </div>
   );
 }
@@ -229,11 +236,12 @@ export function SoundGrid({ items }: { items: SoundItem[] }) {
 import type { DialogueData } from "../types";
 
 export function DialogueBox({ dialogue }: { dialogue: DialogueData }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius-lg)] py-5 px-6 my-6 shadow-[var(--shadow-1)]">
       <div className="flex items-baseline gap-2 mb-4 pb-3 border-b border-[var(--border)]">
         <span className="text-[1rem]">{dialogue.icon}</span>
-        <span className="font-display text-[1.1rem] text-[var(--ink)] tracking-tight">{dialogue.title}</span>
+        <span className="font-display text-[1.1rem] text-[var(--ink)] tracking-tight">{t(dialogue.title)}</span>
       </div>
       <div className="space-y-3">
         {dialogue.lines.map((line, i) => (
@@ -243,7 +251,7 @@ export function DialogueBox({ dialogue }: { dialogue: DialogueData }) {
             </span>
             <div>
               <div className="text-[var(--ink)] leading-snug"><RO text={line.ro} en={line.en} /></div>
-              <div className="text-[var(--ink-2)] text-[0.84rem] italic mt-0.5">{line.en}</div>
+              <div className="text-[var(--ink-2)] text-[0.84rem] italic mt-0.5">{t(line.en)}</div>
             </div>
           </div>
         ))}
@@ -255,15 +263,16 @@ export function DialogueBox({ dialogue }: { dialogue: DialogueData }) {
 // ─── PrincipleGrid ──────────────────────────────────────────────
 
 export function PrincipleGrid({ items }: { items: PrincipleItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-5">
       {items.map((p, i) => (
         <div key={i} className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius)] py-4 px-5 hover:border-[var(--border-2)] transition-colors">
           <div className="flex items-baseline gap-3 mb-1.5">
             <span className="font-mono text-[var(--gold)] text-[0.85rem] font-semibold">{p.num}</span>
-            <span className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight">{p.title}</span>
+            <span className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight">{t(p.title)}</span>
           </div>
-          <p className="text-[var(--ink-2)] text-[0.88rem] leading-[1.55]">{p.description}</p>
+          <p className="text-[var(--ink-2)] text-[0.88rem] leading-[1.55]">{t(p.description)}</p>
         </div>
       ))}
     </div>
@@ -273,14 +282,15 @@ export function PrincipleGrid({ items }: { items: PrincipleItem[] }) {
 // ─── ScheduleGrid ───────────────────────────────────────────────
 
 export function ScheduleGrid({ items }: { items: ScheduleItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 my-5">
       {items.map((s, i) => (
         <div key={i} className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius)] py-3 px-4">
-          <div className="font-mono text-[var(--gold)] text-[0.72rem] font-semibold uppercase tracking-[0.1em] mb-1">{s.days}</div>
+          <div className="font-mono text-[var(--gold)] text-[0.72rem] font-semibold uppercase tracking-[0.1em] mb-1">{t(s.days)}</div>
           <div
             className="text-[0.86rem] text-[var(--ink-2)] leading-snug"
-            dangerouslySetInnerHTML={{ __html: s.task.replace(/\*\*(.*?)\*\*/g, '<b class="text-[var(--ink)] font-medium">$1</b>') }}
+            dangerouslySetInnerHTML={{ __html: t(s.task).replace(/\*\*(.*?)\*\*/g, '<b class="text-[var(--ink)] font-medium">$1</b>') }}
           />
         </div>
       ))}
@@ -291,6 +301,7 @@ export function ScheduleGrid({ items }: { items: ScheduleItem[] }) {
 // ─── FillerGrid ─────────────────────────────────────────────────
 
 export function FillerGrid({ items }: { items: FillerItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 my-5">
       {items.map((f, i) => (
@@ -298,7 +309,7 @@ export function FillerGrid({ items }: { items: FillerItem[] }) {
           <div className="font-mono text-[1rem] font-semibold text-[var(--gold)] mb-0.5">
             <RO text={f.word} />
           </div>
-          <div className="text-[0.84rem] text-[var(--ink-2)] mb-1">{f.meaning}</div>
+          <div className="text-[0.84rem] text-[var(--ink-2)] mb-1">{t(f.meaning)}</div>
           <div className="font-mono text-[0.82rem] text-[var(--ink-2)] italic">{f.example}</div>
         </div>
       ))}
@@ -309,6 +320,7 @@ export function FillerGrid({ items }: { items: FillerItem[] }) {
 // ─── ContrastBox ────────────────────────────────────────────────
 
 export function ContrastBox({ columns }: { columns: ContrastColumn[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-5">
       {columns.map((col, i) => (
@@ -321,13 +333,13 @@ export function ContrastBox({ columns }: { columns: ContrastColumn[] }) {
           }`}
         >
           <h5 className={`text-[10.5px] uppercase tracking-[0.1em] font-semibold mb-2 ${col.type === "yes" ? "text-[var(--affirm)]" : "text-[var(--neg)]"}`}>
-            {col.title}
+            {t(col.title)}
           </h5>
           <div className="font-mono text-[0.86rem] leading-[1.85] space-y-1">
             {col.items.map((item, j) => (
               <div key={j}>
                 <RO text={item.ro} en={item.en} />
-                <span className="text-[var(--ink-2)] not-italic text-[0.8rem] block">{item.en}</span>
+                <span className="text-[var(--ink-2)] not-italic text-[0.8rem] block">{t(item.en)}</span>
               </div>
             ))}
           </div>
@@ -340,6 +352,7 @@ export function ContrastBox({ columns }: { columns: ContrastColumn[] }) {
 // ─── VerbCardGrid ───────────────────────────────────────────────
 
 export function VerbCardGrid({ verbs }: { verbs: VerbDefinition[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 my-6">
       {verbs.map((v, i) => (
@@ -347,7 +360,7 @@ export function VerbCardGrid({ verbs }: { verbs: VerbDefinition[] }) {
           <div className="font-display text-[1.1rem] text-[var(--ink)] tracking-tight">
             <RO text={v.infinitive} en={v.meaning} />
           </div>
-          <div className="text-[var(--ink-2)] text-[0.82rem] mb-3 italic">{v.meaning}</div>
+          <div className="text-[var(--ink-2)] text-[0.82rem] mb-3 italic">{t(v.meaning)}</div>
           <div className="space-y-1.5 text-[0.85rem]">
             <div className="flex items-baseline justify-between">
               <span className="text-[var(--ink-3)] font-mono text-[0.75rem]">eu</span>
@@ -373,6 +386,7 @@ export function VerbCardGrid({ verbs }: { verbs: VerbDefinition[] }) {
 // ─── TestBox (collapsible self-test) ────────────────────────────
 
 function TestRow({ item }: { item: TestItem }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-[var(--border)] last:border-b-0 py-3">
@@ -381,7 +395,7 @@ function TestRow({ item }: { item: TestItem }) {
         className="w-full text-left text-[0.92rem] text-[var(--ink-2)] hover:text-[var(--ink)] transition-colors flex items-baseline gap-2"
       >
         <span className="text-[var(--ink-4)] font-mono text-[0.78rem] mt-0.5">{open ? "−" : "+"}</span>
-        <span className="flex-1">{item.question}</span>
+        <span className="flex-1">{t(item.question)}</span>
       </button>
       {open && (
         <div className="ml-5 mt-2 font-mono text-[0.92rem] text-[var(--gold)] fade-in">
@@ -393,10 +407,11 @@ function TestRow({ item }: { item: TestItem }) {
 }
 
 export function TestBox({ title, items }: { title: string; items: TestItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius-lg)] py-5 px-6 my-6 shadow-[var(--shadow-1)]">
-      <h4 className="font-mono text-[11px] font-semibold text-[var(--ink-3)] uppercase tracking-[0.12em] mb-2">{title}</h4>
-      <p className="text-[0.78rem] text-[var(--ink-4)] mb-2 italic">Try translating, then click to reveal.</p>
+      <h4 className="font-mono text-[11px] font-semibold text-[var(--ink-3)] uppercase tracking-[0.12em] mb-2">{t(title)}</h4>
+      <p className="text-[0.78rem] text-[var(--ink-4)] mb-2 italic">{t("test_helper")}</p>
       <div>
         {items.map((item, i) => <TestRow key={i} item={item} />)}
       </div>
@@ -407,17 +422,18 @@ export function TestBox({ title, items }: { title: string; items: TestItem[] }) 
 // ─── PsychBox ───────────────────────────────────────────────────
 
 export function PsychBox({ title, questions, footer }: { title: string; questions: string[]; footer?: string }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[var(--gold-soft)] border border-[var(--gold-border)] rounded-[var(--radius-lg)] py-5 px-6 my-6">
-      <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--gold)] mb-3">{title}</h4>
+      <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--gold)] mb-3">{t(title)}</h4>
       <ul className="space-y-2">
         {questions.map((q, i) => (
           <li key={i} className="text-[0.95rem] text-[var(--ink-2)] italic leading-[1.6] pl-4 border-l-2 border-[var(--gold)]/40">
-            {q}
+            {t(q)}
           </li>
         ))}
       </ul>
-      {footer && <p className="mt-4 text-[0.88rem] text-[var(--gold)] font-medium">{footer}</p>}
+      {footer && <p className="mt-4 text-[0.88rem] text-[var(--gold)] font-medium">{t(footer)}</p>}
     </div>
   );
 }
@@ -425,9 +441,10 @@ export function PsychBox({ title, questions, footer }: { title: string; question
 // ─── Drill Box (study tip, not interactive) ─────────────────────
 
 export function DrillBox({ title, children, examples }: { title: string; children?: ReactNode; examples?: ReactNode }) {
+  const { t } = useTranslation();
   return (
     <div className="bg-[var(--affirm-bg)] border border-[var(--affirm-border)] rounded-[var(--radius-lg)] py-5 px-6 my-6">
-      <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--affirm)] mb-2">{title}</h4>
+      <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--affirm)] mb-2">{t(title)}</h4>
       {children && <div className="text-[0.92rem] text-[var(--ink-2)] mb-3 leading-[1.65]">{children}</div>}
       {examples && (
         <div

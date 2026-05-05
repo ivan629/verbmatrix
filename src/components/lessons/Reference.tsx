@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, InfoBox,
   VocabSectionLabel, VocabGrid, PhraseGrid, DialogueBox,
@@ -11,22 +12,23 @@ import { SCHEDULE_ITEMS, DAILY_PRACTICE } from "../../data/schedule";
 // ─── Vocabulary ─────────────────────────────────────────────────
 
 export function VocabularySection() {
+  const { t } = useTranslation();
   return (
     <LessonSection
-      id="vocab" num="★" tag="Reference"
-      title="500+ core vocabulary"
-      subtitle="The high-frequency words. Hover for translation, click to hear them. Read aloud, in chunks of twenty."
+      id="vocab" num="★" tag="vocab_section_tag"
+      title="vocab_section_title"
+      subtitle="vocab_section_subtitle"
     >
       {VOCAB_SECTIONS.map((section, i) => (
         <div key={i}>
           <VocabSectionLabel icon={section.icon} label={section.label} />
           <VocabGrid items={section.items} />
           {section.label === "Body & Health" && (
-            <InfoBox variant="green" title="Saying ‘it hurts’">
+            <InfoBox variant="green" title="vocab_health_title">
               <MonoBlock>
                 {HEALTH_PHRASES.map((p, j) => (
                   <span key={j}>
-                    <RO text={p.ro} en={p.en} /> — {p.en}<br />
+                    <RO text={p.ro} en={p.en} /> — {t(p.en)}<br />
                   </span>
                 ))}
               </MonoBlock>
@@ -46,9 +48,9 @@ export function VocabularySection() {
 export function DialoguesSection() {
   return (
     <LessonSection
-      id="dialogues" num="★" tag="Practice"
-      title="Sixteen mini-conversations"
-      subtitle="Read aloud — both roles. Cover the English column with your hand and try the Romanian first."
+      id="dialogues" num="★" tag="dialogues_section_tag"
+      title="dialogues_section_title"
+      subtitle="dialogues_section_subtitle"
     >
       {DIALOGUES.map((d, i) => <DialogueBox key={i} dialogue={d} />)}
     </LessonSection>
@@ -60,12 +62,12 @@ export function DialoguesSection() {
 export function ScheduleSection() {
   return (
     <LessonSection
-      id="schedule" num="★" tag="Study plan"
-      title="A 32-day pacing schedule"
-      subtitle="A suggested rhythm. Adjust it to your life — but keep the daily micro-practice intact."
+      id="schedule" num="★" tag="schedule_section_tag"
+      title="schedule_section_title"
+      subtitle="schedule_section_subtitle"
     >
       <ScheduleGrid items={SCHEDULE_ITEMS} />
-      <SectionHeading>Daily micro-practice (forever)</SectionHeading>
+      <SectionHeading>schedule_section_h_daily</SectionHeading>
       <PrincipleGrid items={DAILY_PRACTICE} />
     </LessonSection>
   );
@@ -73,10 +75,11 @@ export function ScheduleSection() {
 
 // ─── About-Me Template ──────────────────────────────────────────
 
-function Blank({ children }: { children: string }) {
+function Blank({ tKey }: { tKey: string }) {
+  const { t } = useTranslation();
   return (
     <span className="inline-block border-b border-dashed border-[var(--gold)] min-w-[80px] text-[var(--gold)] font-medium px-1 mx-0.5">
-      {children}
+      {t(tKey)}
     </span>
   );
 }
@@ -84,26 +87,26 @@ function Blank({ children }: { children: string }) {
 export function AboutMeSection() {
   return (
     <LessonSection
-      id="aboutme" num="★" tag="Your first paragraph"
-      title="The ‘About Me’ template"
-      subtitle="Fill in the blanks with your own life. This becomes your first real paragraph in Romanian — read it aloud three times."
+      id="aboutme" num="★" tag="aboutme_section_tag"
+      title="aboutme_section_title"
+      subtitle="aboutme_section_subtitle"
     >
       <div className="bg-[var(--gold-soft)] border border-[var(--gold-border)] rounded-[var(--radius-lg)] py-6 px-7 my-6">
         <p className="font-mono text-[0.95rem] leading-[2.4] text-[var(--ink)]">
-          <RO text="Bună! Mă cheamă" en="Hi! My name is" /> <Blank>name</Blank>.{" "}
-          <RO text="Am" en="I have / I am" /> <Blank>age</Blank>{" "}
+          <RO text="Bună! Mă cheamă" en="Hi! My name is" /> <Blank tKey="aboutme_blank_name" />.{" "}
+          <RO text="Am" en="I have / I am" /> <Blank tKey="aboutme_blank_age" />{" "}
           <RO text="de ani." en="years old." /><br />
-          <RO text="Sunt din" en="I am from" /> <Blank>country</Blank>.{" "}
-          <RO text="Locuiesc în" en="I live in" /> <Blank>city</Blank>.<br />
-          <RO text="Lucrez ca" en="I work as" /> <Blank>job</Blank>.{" "}
+          <RO text="Sunt din" en="I am from" /> <Blank tKey="aboutme_blank_country" />.{" "}
+          <RO text="Locuiesc în" en="I live in" /> <Blank tKey="aboutme_blank_city" />.<br />
+          <RO text="Lucrez ca" en="I work as" /> <Blank tKey="aboutme_blank_job" />.{" "}
           <RO text="Și acum învăț româna." en="And now I’m learning Romanian." /><br />
-          <RO text="Îmi place" en="I like" /> <Blank>hobby</Blank>.{" "}
+          <RO text="Îmi place" en="I like" /> <Blank tKey="aboutme_blank_hobby" />.{" "}
           <RO text="România este foarte frumoasă." en="Romania is very beautiful." /><br />
           <RO text="Încântat(ă) de cunoștință!" en="Pleased to meet you!" />
         </p>
       </div>
 
-      <SectionHeading>Completed example</SectionHeading>
+      <SectionHeading>aboutme_h_completed</SectionHeading>
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius-lg)] py-6 px-7 my-5 shadow-[var(--shadow-1)]">
         <p className="font-mono text-[0.95rem] leading-[2.4] text-[var(--ink)]">
           <RO text="Bună! Mă cheamă Sarah. Am treizeci și doi de ani." en="Hi! My name is Sarah. I’m thirty-two years old." /><br />
@@ -115,7 +118,7 @@ export function AboutMeSection() {
         </p>
       </div>
 
-      <InfoBox variant="gold" title="Now write yours">
+      <InfoBox variant="gold" title="aboutme_write_title">
         <p>
           Replace the blanks with your own information. Read it aloud three times.
           This is your first real paragraph in Romanian.

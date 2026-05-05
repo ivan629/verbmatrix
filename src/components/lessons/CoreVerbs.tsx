@@ -12,14 +12,14 @@ import { CORE_VERBS } from "../../data/verbs";
 export function Lesson4() {
   return (
     <LessonSection
-      id="L4" num="4" tag="The verb to be"
-      title="A fi — the most important verb"
-      subtitle="“A fi” is irregular but indispensable: identity, descriptions, professions, locations, states."
+      id="L4" num="4" tag="lesson_4_tag"
+      title="lesson_4_title"
+      subtitle="lesson_4_subtitle"
     >
-      <SectionHeading>Full matrix</SectionHeading>
+      <SectionHeading>lesson_4_h_matrix</SectionHeading>
       <Matrix data={MATRIX_FI} />
 
-      <SectionHeading>Using a fi</SectionHeading>
+      <SectionHeading>lesson_4_h_using</SectionHeading>
       <PhraseGrid items={[
         { ro: "Eu sunt student.", en: "I am a student." },
         { ro: "Ea este frumoasă.", en: "She is beautiful." },
@@ -29,14 +29,14 @@ export function Lesson4() {
         { ro: "Cine este el?", en: "Who is he?" },
       ]} />
 
-      <InfoBox variant="gold" title="Shortcut: ‘e’ = ‘este’">
+      <InfoBox variant="gold" title="lesson_4_shortcut_title">
         <p>
           In speech, <b>este</b> shrinks to <b>e</b>. So <RO text="El e student." en="He is a student." />{" "}
           means the same as <RO text="El este student." en="He is a student." />
         </p>
       </InfoBox>
 
-      <TestBox title="Self-test" items={[
+      <TestBox title="lesson_4_test_title" items={[
         { question: "I am from England.", answer: "Eu sunt din Anglia." },
         { question: "She was not happy.", answer: "Ea nu a fost fericită." },
         { question: "It will be fine.", answer: "O să fie bine." },
@@ -50,14 +50,14 @@ export function Lesson4() {
 export function Lesson5() {
   return (
     <LessonSection
-      id="L5" num="5" tag="The verb to have"
-      title="A avea — possession, age, and the past-tense helper"
-      subtitle="“A avea” expresses possession AND is the auxiliary that builds every past tense."
+      id="L5" num="5" tag="lesson_5_tag"
+      title="lesson_5_title"
+      subtitle="lesson_5_subtitle"
     >
-      <SectionHeading>Full matrix</SectionHeading>
+      <SectionHeading>lesson_5_h_matrix</SectionHeading>
       <Matrix data={MATRIX_AVEA} />
 
-      <SectionHeading>Using a avea</SectionHeading>
+      <SectionHeading>lesson_5_h_using</SectionHeading>
       <PhraseGrid items={[
         { ro: "Am o mașină nouă.", en: "I have a new car." },
         { ro: "Câți ani ai?", en: "How old are you? (lit. how many years do you have?)" },
@@ -67,8 +67,8 @@ export function Lesson5() {
         { ro: "Am avut noroc.", en: "I was lucky." },
       ]} />
 
-      <SectionHeading>“Îmi place” — how ‘to like’ works</SectionHeading>
-      <InfoBox variant="neutral" title="Backwards, like Spanish ‘gustar’">
+      <SectionHeading>lesson_5_h_imi_place</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_5_imi_place_title">
         <MonoBlock>
           <RO text="Îmi place cafeaua." en="I like coffee. (lit. coffee is pleasing to me)" /><br />
           <RO text="Îți place România?" en="Do you like Romania?" /><br />
@@ -81,7 +81,7 @@ export function Lesson5() {
         </p>
       </InfoBox>
 
-      <SectionHeading>Past participle formation</SectionHeading>
+      <SectionHeading>lesson_5_h_participles</SectionHeading>
       <DataTable
         headers={["Group", "Infinitive ends in", "Participle ends in", "Example"]}
         rows={[
@@ -93,7 +93,7 @@ export function Lesson5() {
         highlightCols={[2]}
       />
 
-      <InfoBox variant="blue" title="Forming the past — perfect compus">
+      <InfoBox variant="blue" title="lesson_5_perfect_title">
         <p>
           Conjugated form of <b>a avea</b> + past participle. <br />
           <MonoBlock>
@@ -115,9 +115,9 @@ export function Lesson5() {
 export function Lesson6() {
   return (
     <LessonSection
-      id="L6" num="6" tag="The thirty-two magic verbs"
-      title="The verbs that cover daily life"
-      subtitle="Infinitive, the “eu” form, the “el / ea” form, and the past participle. Drill each one through the matrix."
+      id="L6" num="6" tag="lesson_6_tag"
+      title="lesson_6_title"
+      subtitle="lesson_6_subtitle"
     >
       <Paragraph>
         Memorise these and you have access to almost any everyday situation. Hover any form to see

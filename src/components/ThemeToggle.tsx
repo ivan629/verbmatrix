@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/Theme";
 
 /**
@@ -10,15 +11,17 @@ import { useTheme } from "../context/Theme";
  * (To return to system tracking, clear localStorage.)
  */
 export function ThemeToggle() {
+  const { t } = useTranslation();
   const { resolved, setPreference } = useTheme();
   const next = resolved === "dark" ? "light" : "dark";
+  const label = t("theme_switch_to_label", { mode: t(next === "dark" ? "theme_dark" : "theme_light") });
 
   return (
     <button
       type="button"
       onClick={() => setPreference(next)}
-      aria-label={`Switch to ${next} theme`}
-      title={`Switch to ${next} theme`}
+      aria-label={label}
+      title={label}
       className="
         w-9 h-9 rounded-md
         flex items-center justify-center

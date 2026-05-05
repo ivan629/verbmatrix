@@ -3,14 +3,14 @@ import {
   type MouseEvent, type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import { useTTS } from "../lib/tts";
 import { pronounce } from "../lib/pronounce";
-import { useTranslated } from "../lib/useTranslated";
 
 interface ROProps {
   /** The Romanian text. Used for TTS, pronunciation, and (if no children) display. */
   text: string;
-  /** Optional English meaning — also serves as the canonical source for translation. */
+  /** Optional English meaning — looked up via i18next, so non-English locales translate it. */
   en?: string;
   /** Optional pronunciation override; otherwise auto-generated. */
   pron?: string;
@@ -26,8 +26,12 @@ interface ROProps {
 /**
  * `<RO />` — wraps Romanian text with:
  *   • dotted underline on hover
- *   • tooltip showing meaning (in selected target language) + pronunciation
+ *   • tooltip showing the meaning (in the active i18n language) + pronunciation
  *   • click → TTS
+ *
+ * The English `en` prop is used as the i18next key for the meaning. In English,
+ * `t(en)` returns the key itself (so the original meaning is shown). In other
+ * languages, the translation file maps the English string to the localised one.
  *
  * The tooltip is rendered via a React portal to `document.body` so it escapes
  * every `overflow: hidden` / `overflow: auto` ancestor in the page (matrix
@@ -36,25 +40,17 @@ interface ROProps {
 export function RO({
   text, en, pron, children, bare = false, speakAs, className = "",
 }: ROProps) {
+  const { t } = useTranslation();
   const speak = useTTS();
   const triggerRef = useRef<HTMLSpanElement>(null);
   const [active, setActive] = useState(false);
   const tapTimeoutRef = useRef<number | undefined>(undefined);
 
-  // Translation source preference: English meaning if we have it, else the Romanian itself.
-  const englishTranslation = useTranslated(en, "en");
-  const romanianTranslation = useTranslated(en ? undefined : text, "ro");
-  const meaning = en ? englishTranslation.display : romanianTranslation.display;
-
-  const triggerTranslation = useCallback(() => {
-    englishTranslation.trigger();
-    romanianTranslation.trigger();
-  }, [englishTranslation, romanianTranslation]);
+  const meaning = en ? t(en) : undefined;
 
   const handleEnter = useCallback(() => {
     setActive(true);
-    triggerTranslation();
-  }, [triggerTranslation]);
+  }, []);
 
   const handleLeave = useCallback(() => {
     if (tapTimeoutRef.current) {
@@ -73,10 +69,9 @@ export function RO({
         if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
         tapTimeoutRef.current = window.setTimeout(() => setActive(false), 2400);
       }
-      triggerTranslation();
       speak(speakAs ?? text, e.currentTarget);
     },
-    [speak, text, speakAs, triggerTranslation]
+    [speak, text, speakAs]
   );
 
   useEffect(() => {
@@ -116,14 +111,12 @@ export function RO({
         onMouseLeave={handleLeave}
         onFocus={handleEnter}
         onBlur={handleLeave}
-        onTouchStart={triggerTranslation}
         className={`ro ${className}`}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            triggerTranslation();
             speak(speakAs ?? text, triggerRef.current);
           }
         }}

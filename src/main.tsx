@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles/globals.css";
+import "./lib/i18n";
 
 // ─── Theme: prevent FOUC ────────────────────────────────────────
 // Resolve the user's theme BEFORE React renders, so the page paints

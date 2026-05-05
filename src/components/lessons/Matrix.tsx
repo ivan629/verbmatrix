@@ -10,21 +10,21 @@ import { MATRIX_VORBI_EU, MATRIX_LUCRA_FULL, MATRIX_FACE_FULL } from "../../data
 export function Lesson3() {
   return (
     <LessonSection
-      id="L3" num="3" tag="The most important lesson"
-      title="The verb matrix"
-      subtitle="Three tenses × three forms = nine sentence types. Master one verb across this grid and you can already say almost anything."
+      id="L3" num="3" tag="lesson_3_tag"
+      title="lesson_3_title"
+      subtitle="lesson_3_subtitle"
     >
-      <InfoBox variant="green" title="Don’t panic">
+      <InfoBox variant="green" title="lesson_3_dont_panic_title">
         <p>
           Start with just the <b>“eu” (I)</b> row. Once that feels natural, add <b>tu</b> and <b>el / ea</b>.
           Aim for <b>speed</b>, not perfection.
         </p>
       </InfoBox>
 
-      <SectionHeading>The three key patterns</SectionHeading>
+      <SectionHeading>lesson_3_h_patterns</SectionHeading>
       <PrincipleGrid items={KEY_PATTERNS} />
 
-      <InfoBox variant="blue" title="The three tenses you actually need">
+      <InfoBox variant="blue" title="lesson_3_three_tenses_title">
         <p>
           <b>Future (colloquial)</b> = <RO text="o să" en="will" /> + subjunctive verb. &nbsp;
           <b>Present</b> = the conjugated verb. &nbsp;
@@ -41,7 +41,7 @@ export function Lesson3() {
       <Matrix data={MATRIX_LUCRA_FULL} />
       <Matrix data={MATRIX_FACE_FULL} />
 
-      <SectionHeading>Formal future — “voi” + infinitive</SectionHeading>
+      <SectionHeading>lesson_3_h_formal_future</SectionHeading>
       <DataTable
         headers={["Pronoun", "Marker", "a face", "a merge", "a vorbi"]}
         rows={[
@@ -55,8 +55,8 @@ export function Lesson3() {
         highlightCols={[1]}
       />
 
-      <SectionHeading>Word order is flexible</SectionHeading>
-      <InfoBox variant="neutral" title="Order changes emphasis, not meaning">
+      <SectionHeading>lesson_3_h_word_order</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_3_word_order_title">
         <MonoBlock>
           <RO text="Eu merg la școală." en="I go to school. (neutral)" /><br />
           <RO text="La școală merg eu." en="It’s ME who goes to school. (emphasis)" /><br />
@@ -67,8 +67,8 @@ export function Lesson3() {
         </p>
       </InfoBox>
 
-      <SectionHeading>Contracted forms — how Romanians actually speak</SectionHeading>
-      <InfoBox variant="neutral" title="Real-life contractions">
+      <SectionHeading>lesson_3_h_contracted</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_3_contracted_title">
         <p style={{ marginBottom: 6 }}><b>Negation + auxiliary</b> — the most frequent contractions:</p>
         <MonoBlock>
           nu am → <RO text="n-am" en="I don’t have" /> &nbsp;·&nbsp;
@@ -118,7 +118,7 @@ export function Lesson3() {
       </InfoBox>
 
       <DrillBox
-        title="Drill — build sentences from the matrix"
+        title="lesson_3_drill_title"
         examples={
           <>
             <b>a vorbi:</b> &nbsp;

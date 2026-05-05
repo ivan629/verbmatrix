@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { NAV_GROUPS } from "../data/schedule";
 import { LanguageSelector } from "./LanguageSelector";
@@ -36,8 +37,7 @@ function useActiveSection(ids: string[]): string {
 
 /**
  * Pull the lesson number out of an anchor like "#L3" → "03".
- * Returns null for non-lesson anchors (#vocab, #rules, etc.) so the
- * caller can omit the number column for those.
+ * Returns null for non-lesson anchors (#vocab, #rules, etc.).
  */
 function lessonNumber(href: string): string | null {
   const m = /^#L(\d+)$/.exec(href);
@@ -46,6 +46,7 @@ function lessonNumber(href: string): string | null {
 }
 
 export function Sidebar() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const allIds = useMemo(
     () => NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href.slice(1))),
@@ -60,7 +61,7 @@ export function Sidebar() {
         type="button"
         onClick={() => setOpen(!open)}
         className="md:hidden fixed top-3 left-3 z-50 w-11 h-11 rounded-md bg-[var(--surface)] border border-[var(--border)] flex items-center justify-center text-[var(--ink-2)] shadow-[var(--shadow-1)] no-print"
-        aria-label={open ? "Close navigation" : "Open navigation"}
+        aria-label={open ? t("nav_close") : t("nav_open")}
       >
         <svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true">
           {open ? (
@@ -99,8 +100,8 @@ export function Sidebar() {
             className="block flex-1 hover:opacity-80 transition-opacity"
           >
             <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
-              Romanian
-              <span className="text-[var(--ink-4)] ml-1.5 font-normal">Study</span>
+              {t("app_brand")}
+              <span className="text-[var(--ink-4)] ml-1.5 font-normal">{t("app_brand_suffix")}</span>
             </div>
           </a>
           <ThemeToggle />
@@ -111,7 +112,7 @@ export function Sidebar() {
           {NAV_GROUPS.map((group) => (
             <div key={group.label} className="mb-5 last:mb-0">
               <div className="px-3 mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)]">
-                {group.label}
+                {t(`nav_groups_${group.label}`)}
               </div>
               <ul className="space-y-px">
                 {group.links.map((link) => {
@@ -139,7 +140,7 @@ export function Sidebar() {
                         >
                           {num ?? "·"}
                         </span>
-                        <span>{link.label}</span>
+                        <span>{t(`nav_links_${link.label}`)}</span>
                       </a>
                     </li>
                   );
@@ -149,7 +150,7 @@ export function Sidebar() {
           ))}
         </nav>
 
-        {/* Bottom panel: language only */}
+        {/* Bottom panel: language selector (hidden when only one language exists) */}
         <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
           <LanguageSelector />
         </div>
@@ -161,23 +162,22 @@ export function Sidebar() {
 // ─── Hero ───────────────────────────────────────────────────────
 
 export function Hero() {
+  const { t } = useTranslation();
   return (
     <header id="top" className="pt-20 pb-20 md:pt-24 md:pb-24">
       <div className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[var(--ink-3)] mb-7">
-        A study guide
+        {t("hero_kicker")}
       </div>
       <h1 className="font-display text-[clamp(2.2rem,4.4vw,3.4rem)] font-light text-[var(--ink)] leading-[1.08] tracking-[-0.02em] mb-6 max-w-[640px]">
-        Speak Romanian in sixteen lessons.
+        {t("hero_title")}
       </h1>
       <p className="text-[1.02rem] text-[var(--ink-2)] max-w-[600px] mb-10 leading-[1.65]">
-        From zero to confident conversation. Five hundred words. Thirty-two core
-        verbs. Sixteen real-life dialogues. A thirty-two-day pacing schedule.
+        {t("hero_subtitle")}
       </p>
       <p className="mt-2 text-[0.9rem] text-[var(--ink-3)] max-w-[560px] leading-[1.65]">
-        Hover any Romanian text for its meaning and pronunciation
-        (e.g. <RO text="Bună ziua!" en="Hello / Good day" />). Click to hear it spoken.
-        Use the language selector at the bottom of the sidebar to translate the
-        tooltips into your language.
+        {t("hero_tooltip_help_prefix")}
+        <RO text="Bună ziua!" en="Hello / Good day" />
+        {t("hero_tooltip_help_suffix")}
       </p>
     </header>
   );
@@ -186,13 +186,14 @@ export function Hero() {
 // ─── Footer ─────────────────────────────────────────────────────
 
 export function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="mt-16 py-12 border-t border-[var(--border)] no-print">
       <p className="font-display italic text-[1.05rem] text-[var(--ink-2)] mb-3 tracking-tight">
-        <RO text="Mult succes!" en="Much success — Good luck!" />
+        <RO text="Mult succes!" en={t("footer_blessing_meaning")} />
       </p>
       <p className="text-[0.82rem] text-[var(--ink-3)]">
-        Sixteen lessons · thirty-two verbs · five hundred-plus vocabulary · sixteen dialogues.
+        {t("footer_summary")}
       </p>
     </footer>
   );

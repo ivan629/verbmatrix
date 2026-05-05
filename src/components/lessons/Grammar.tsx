@@ -1,5 +1,5 @@
 import {
-  LessonSection, SectionHeading, Paragraph, InfoBox, TestBox,
+  LessonSection, SectionHeading, InfoBox, TestBox,
   PhraseGrid, VocabGrid, NumberGrid, SoundGrid, DataTable,
   MonoBlock, ContrastBox,
 } from "../ui";
@@ -17,11 +17,11 @@ import {
 export function Lesson7() {
   return (
     <LessonSection
-      id="L7" num="7" tag="Articles, gender, plural"
-      title="How Romanian nouns work"
-      subtitle="Three genders. The definite article attaches to the END of the word — unique among Romance languages."
+      id="L7" num="7" tag="lesson_7_tag"
+      title="lesson_7_title"
+      subtitle="lesson_7_subtitle"
     >
-      <SectionHeading>Indefinite articles (a, an)</SectionHeading>
+      <SectionHeading>lesson_7_h_indef</SectionHeading>
       <DataTable
         headers={["Gender", "Singular", "Plural", "Example"]}
         rows={[
@@ -33,7 +33,7 @@ export function Lesson7() {
         speakableCols={[3]}
       />
 
-      <SectionHeading>Definite articles (the) — attached to the end</SectionHeading>
+      <SectionHeading>lesson_7_h_def</SectionHeading>
       <DataTable
         headers={["Gender", "Ending", "Without ‘the’", "With ‘the’"]}
         rows={[
@@ -47,14 +47,14 @@ export function Lesson7() {
         speakableCols={[3]}
       />
 
-      <InfoBox variant="blue" title="Gender quick guide">
+      <InfoBox variant="blue" title="lesson_7_gender_title">
         <p>
           Consonant ending → usually masculine. <b>-ă</b> or <b>-e</b> → usually feminine.
           Neuter behaves like masculine in the singular and feminine in the plural.
         </p>
       </InfoBox>
 
-      <SectionHeading>Genitive / dative — “of” / “to”</SectionHeading>
+      <SectionHeading>lesson_7_h_gendat</SectionHeading>
       <DataTable
         headers={["Gender", "Nominative", "Gen. / dat. sg.", "Gen. / dat. pl."]}
         rows={[
@@ -70,8 +70,8 @@ export function Lesson7() {
         { ro: "Cartea profesorului.", en: "The teacher’s book." },
       ]} />
 
-      <SectionHeading>The vocative — calling someone</SectionHeading>
-      <InfoBox variant="green" title="How Romanians address each other">
+      <SectionHeading>lesson_7_h_voc</SectionHeading>
+      <InfoBox variant="green" title="lesson_7_voc_title">
         <MonoBlock>
           mamă → <RO text="Mamo!" en="Mom!" /> &nbsp;·&nbsp;
           Maria → <RO text="Mario!" en="Maria!" /> &nbsp;·&nbsp;
@@ -80,7 +80,7 @@ export function Lesson7() {
         </MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Common nouns with their articles</SectionHeading>
+      <SectionHeading>lesson_7_h_nouns</SectionHeading>
       <VocabGrid items={NOUNS_WITH_ARTICLES} />
     </LessonSection>
   );
@@ -91,11 +91,11 @@ export function Lesson7() {
 export function Lesson8() {
   return (
     <LessonSection
-      id="L8" num="8" tag="Adjectives, adverbs, possessives"
-      title="Describing things, actions, and ownership"
-      subtitle="Adjectives agree with the noun in gender and number. Possessives come AFTER the noun."
+      id="L8" num="8" tag="lesson_8_tag"
+      title="lesson_8_title"
+      subtitle="lesson_8_subtitle"
     >
-      <SectionHeading>Adjective agreement</SectionHeading>
+      <SectionHeading>lesson_8_h_agreement</SectionHeading>
       <DataTable
         headers={["English", "M. sg.", "F. sg.", "M. pl.", "F. pl."]}
         rows={[
@@ -114,13 +114,13 @@ export function Lesson8() {
         speakableCols={[1]}
       />
 
-      <SectionHeading>Key adverbs</SectionHeading>
+      <SectionHeading>lesson_8_h_adverbs</SectionHeading>
       <VocabGrid items={ADVERBS} />
 
-      <SectionHeading>Colors</SectionHeading>
+      <SectionHeading>lesson_8_h_colors</SectionHeading>
       <VocabGrid items={COLORS} />
 
-      <SectionHeading>Possessives</SectionHeading>
+      <SectionHeading>lesson_8_h_possessives</SectionHeading>
       <DataTable
         headers={["English", "Before m. noun", "Before f. noun"]}
         rows={[
@@ -135,7 +135,7 @@ export function Lesson8() {
         highlightCols={[1, 2]}
         speakableCols={[1, 2]}
       />
-      <InfoBox variant="blue" title="Word order">
+      <InfoBox variant="blue" title="lesson_8_word_order_title">
         <p>
           Noun (with article) <b>+</b> possessive: <RO text="casa mea" en="my house" />,{" "}
           <RO text="fratele meu" en="my brother" />, <RO text="prietenii noștri" en="our friends" />.
@@ -150,15 +150,15 @@ export function Lesson8() {
 export function Lesson9() {
   return (
     <LessonSection
-      id="L9" num="9" tag="Numbers, time, calendar"
-      title="Counting, telling time, talking about dates"
-      subtitle="The trickiest part is the teens — and the rule that puts ‘de’ before nouns when the number is twenty or higher."
+      id="L9" num="9" tag="lesson_9_tag"
+      title="lesson_9_title"
+      subtitle="lesson_9_subtitle"
     >
-      <SectionHeading>Numbers 0–10</SectionHeading>
+      <SectionHeading>lesson_9_h_0_10</SectionHeading>
       <NumberGrid items={NUMBERS_0_10} />
 
-      <SectionHeading>Numbers 11–19 — the “spre zece” pattern</SectionHeading>
-      <InfoBox variant="neutral" title="How they’re built">
+      <SectionHeading>lesson_9_h_11_19</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_9_built_title">
         <p>
           11–19 literally mean “X toward ten” → number + <b>spre</b> + <b>zece</b>. Some forms
           contract: <i>paisprezece</i> (not <i>patrusprezece</i>), <i>șaisprezece</i> (not{" "}
@@ -167,7 +167,7 @@ export function Lesson9() {
       </InfoBox>
       <NumberGrid items={NUMBERS_11_19} />
 
-      <InfoBox variant="gold" title="Twelve has a feminine form">
+      <InfoBox variant="gold" title="lesson_9_twelve_title">
         <p>
           <b><RO text="doisprezece" en="twelve (m)" /></b> is masculine; <b><RO text="douăsprezece" en="twelve (f)" /></b> is
           feminine. Use the feminine when counting feminine nouns and when telling time —{" "}
@@ -176,10 +176,10 @@ export function Lesson9() {
         </p>
       </InfoBox>
 
-      <SectionHeading>Tens (20–100)</SectionHeading>
+      <SectionHeading>lesson_9_h_tens</SectionHeading>
       <NumberGrid items={NUMBERS_TENS} />
 
-      <InfoBox variant="blue" title="Combining numbers">
+      <InfoBox variant="blue" title="lesson_9_combining_title">
         <MonoBlock>
           21 = <RO text="douăzeci și unu" en="twenty-one" /> &nbsp;·&nbsp;
           35 = <RO text="treizeci și cinci" en="thirty-five" /><br />
@@ -191,7 +191,7 @@ export function Lesson9() {
         </MonoBlock>
       </InfoBox>
 
-      <InfoBox variant="neutral" title="The ‘de’ rule — numbers 20 and above">
+      <InfoBox variant="neutral" title="lesson_9_de_title">
         <p>After numbers <b>20 and above</b>, insert <b>de</b> before the noun:</p>
         <MonoBlock>
           <RO text="doi lei" en="two lei" /> ✓ &nbsp;(no “de”)<br />
@@ -201,7 +201,7 @@ export function Lesson9() {
         <p style={{ marginTop: 8 }}>1–19 → no “de.” &nbsp; 20+ → always “de.”</p>
       </InfoBox>
 
-      <SectionHeading>Ordinal numbers</SectionHeading>
+      <SectionHeading>lesson_9_h_ordinals</SectionHeading>
       <DataTable
         headers={["Number", "Masculine", "Feminine", "Example"]}
         rows={[
@@ -218,8 +218,8 @@ export function Lesson9() {
         speakableCols={[1, 2]}
       />
 
-      <SectionHeading>Telling time</SectionHeading>
-      <InfoBox variant="green" title="‘E ora …’ — it is … o’clock">
+      <SectionHeading>lesson_9_h_time</SectionHeading>
+      <InfoBox variant="green" title="lesson_9_time_title">
         <MonoBlock>
           <RO text="Cât e ceasul?" en="What time is it?" /><br />
           <RO text="E ora trei." en="It is three o’clock." /><br />
@@ -230,13 +230,13 @@ export function Lesson9() {
         </MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Days of the week</SectionHeading>
+      <SectionHeading>lesson_9_h_days</SectionHeading>
       <VocabGrid items={DAYS} />
 
-      <SectionHeading>Months of the year</SectionHeading>
+      <SectionHeading>lesson_9_h_months</SectionHeading>
       <VocabGrid items={MONTHS} />
 
-      <SectionHeading>Seasons</SectionHeading>
+      <SectionHeading>lesson_9_h_seasons</SectionHeading>
       <SoundGrid items={SEASONS.map((s) => ({
         symbol: s.icon,
         pronunciation: s.ro,
@@ -244,7 +244,7 @@ export function Lesson9() {
         example: "",
         exampleWord: s.ro,
       }))} />
-      <InfoBox variant="gold" title="Talking about seasons and months">
+      <InfoBox variant="gold" title="lesson_9_seasons_title">
         <MonoBlock>
           <RO text="în primăvară" en="in spring" /> &nbsp;·&nbsp;
           <RO text="vara trecută" en="last summer" /><br />
@@ -253,13 +253,13 @@ export function Lesson9() {
         </MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Time expressions</SectionHeading>
+      <SectionHeading>lesson_9_h_time_expr</SectionHeading>
       <VocabGrid items={TIME_EXPRESSIONS} />
 
-      <SectionHeading>Weather</SectionHeading>
+      <SectionHeading>lesson_9_h_weather</SectionHeading>
       <PhraseGrid items={WEATHER_PHRASES} />
 
-      <TestBox title="Self-test — numbers and time" items={[
+      <TestBox title="lesson_9_test_title" items={[
         { question: "Say “17” in Romanian.", answer: "șaptesprezece" },
         { question: "“It’s 3:30.”", answer: "E ora trei și jumătate." },
         { question: "“25 lei” — remember the ‘de’ rule.", answer: "douăzeci și cinci de lei" },
@@ -274,11 +274,11 @@ export function Lesson9() {
 export function Lesson10() {
   return (
     <LessonSection
-      id="L10" num="10" tag="Prepositions and connectors"
-      title="Linking words, places, directions"
-      subtitle="A small set of prepositions does most of the work. Learn the “în vs la” distinction first."
+      id="L10" num="10" tag="lesson_10_tag"
+      title="lesson_10_title"
+      subtitle="lesson_10_subtitle"
     >
-      <SectionHeading>Essential prepositions</SectionHeading>
+      <SectionHeading>lesson_10_h_prepositions</SectionHeading>
       <DataTable
         headers={["Romanian", "English", "Example"]}
         rows={[
@@ -298,11 +298,11 @@ export function Lesson10() {
         speakableCols={[0, 2]}
       />
 
-      <SectionHeading>“În” vs “la”</SectionHeading>
+      <SectionHeading>lesson_10_h_in_vs_la</SectionHeading>
       <ContrastBox columns={[
         {
           type: "yes",
-          title: "în — physically inside",
+          title: "lesson_10_in_inside",
           items: [
             { ro: "în București", en: "in Bucharest" },
             { ro: "în România", en: "in Romania" },
@@ -311,7 +311,7 @@ export function Lesson10() {
         },
         {
           type: "no",
-          title: "la — at / to a destination",
+          title: "lesson_10_la_destination",
           items: [
             { ro: "la hotel", en: "at the hotel" },
             { ro: "la birou", en: "at the office" },
@@ -320,7 +320,7 @@ export function Lesson10() {
         },
       ]} />
 
-      <SectionHeading>Conjunctions</SectionHeading>
+      <SectionHeading>lesson_10_h_conjunctions</SectionHeading>
       <VocabGrid items={CONJUNCTIONS} />
     </LessonSection>
   );
@@ -331,11 +331,11 @@ export function Lesson10() {
 export function Lesson11() {
   return (
     <LessonSection
-      id="L11" num="11" tag="Modals and comparatives"
-      title="Can, must, should — and how to compare"
-      subtitle="Modals all use the same structure: modal + să + verb. Comparatives use ‘mai’ and ‘decât’."
+      id="L11" num="11" tag="lesson_11_tag"
+      title="lesson_11_title"
+      subtitle="lesson_11_subtitle"
     >
-      <SectionHeading>Modal verbs</SectionHeading>
+      <SectionHeading>lesson_11_h_modals</SectionHeading>
       <DataTable
         headers={["Modal", "Meaning", "Pattern", "Example"]}
         rows={[
@@ -349,8 +349,8 @@ export function Lesson11() {
         speakableCols={[0, 3]}
       />
 
-      <SectionHeading>“Hai să …” — let’s …!</SectionHeading>
-      <InfoBox variant="neutral" title="The most common Romanian invitation">
+      <SectionHeading>lesson_11_h_hai</SectionHeading>
+      <InfoBox variant="neutral" title="lesson_11_hai_title">
         <MonoBlock>
           <RO text="Hai să mergem!" en="Let’s go!" /> &nbsp;·&nbsp;
           <RO text="Hai să mâncăm!" en="Let’s eat!" /><br />
@@ -358,7 +358,7 @@ export function Lesson11() {
         </MonoBlock>
       </InfoBox>
 
-      <SectionHeading>Comparatives</SectionHeading>
+      <SectionHeading>lesson_11_h_comparatives</SectionHeading>
       <DataTable
         headers={["Type", "Pattern", "Example"]}
         rows={[
