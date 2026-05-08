@@ -1,4 +1,4 @@
-import type { VerbDefinition } from "../types";
+import type { VerbDefinition } from "../../../types";
 
 export const CORE_VERBS: VerbDefinition[] = [
   { infinitive: "a fi", meaning: "to be", euForm: "sunt", elForm: "este (e)", participle: "fost" },

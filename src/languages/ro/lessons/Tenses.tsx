@@ -1,12 +1,12 @@
 import {
   LessonSection, SectionHeading, InfoBox, TestBox, DrillBox,
   PhraseGrid, DataTable, MonoBlock, FillerGrid, VocabGrid, ContrastBox,
-} from "../ui";
-import { RO } from "../RO";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
 import {
   FILLER_WORDS, EXPRESSIONS, COMPLEX_SENTENCES, GRAND_REVIEW_TESTS,
-} from "../../data/matrices";
-import { COGNATES } from "../../data/vocabulary";
+} from "../data/matrices";
+import { COGNATES } from "../data/vocabulary";
 
 // ─── Lesson 12 — Imperfect ──────────────────────────────────────
 

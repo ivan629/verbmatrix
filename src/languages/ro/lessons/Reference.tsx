@@ -3,11 +3,11 @@ import {
   LessonSection, SectionHeading, InfoBox,
   VocabSectionLabel, VocabGrid, PhraseGrid, DialogueBox,
   ScheduleGrid, PrincipleGrid, MonoBlock,
-} from "../ui";
-import { RO } from "../RO";
-import { VOCAB_SECTIONS, SURVIVAL_PHRASES, HEALTH_PHRASES } from "../../data/vocabulary";
-import { DIALOGUES } from "../../data/dialogues";
-import { SCHEDULE_ITEMS, DAILY_PRACTICE } from "../../data/schedule";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
+import { VOCAB_SECTIONS, SURVIVAL_PHRASES, HEALTH_PHRASES } from "../data/vocabulary";
+import { DIALOGUES } from "../data/dialogues";
+import { SCHEDULE_ITEMS, DAILY_PRACTICE } from "../data/schedule";
 
 // ─── Vocabulary ─────────────────────────────────────────────────
 

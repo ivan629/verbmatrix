@@ -2,15 +2,15 @@ import {
   LessonSection, SectionHeading, InfoBox, TestBox,
   PhraseGrid, VocabGrid, NumberGrid, SoundGrid, DataTable,
   MonoBlock, ContrastBox,
-} from "../ui";
-import { RO } from "../RO";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
 import {
   NUMBERS_0_10, NUMBERS_11_19, NUMBERS_TENS, SEASONS, WEATHER_PHRASES,
-} from "../../data/numbers";
+} from "../data/numbers";
 import {
   ADVERBS, COLORS, NOUNS_WITH_ARTICLES,
   DAYS, MONTHS, TIME_EXPRESSIONS, CONJUNCTIONS,
-} from "../../data/vocabulary";
+} from "../data/vocabulary";
 
 // ─── Lesson 7 — Articles ────────────────────────────────────────
 

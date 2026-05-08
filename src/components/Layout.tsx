@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
-import { NAV_GROUPS } from "../data/schedule";
 import { LanguageSelector } from "./LanguageSelector";
+import { TargetLanguageSelector } from "./TargetLanguageSelector";
 import { ThemeToggle } from "./ThemeToggle";
+import { useTargetLanguage } from "../context/TargetLanguage";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -47,10 +48,13 @@ function lessonNumber(href: string): string | null {
 
 export function Sidebar() {
     const { t } = useTranslation();
+    const { module } = useTargetLanguage();
+    const navGroups = module.navGroups;
+
     const [open, setOpen] = useState(false);
     const allIds = useMemo(
-        () => NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href.slice(1))),
-        []
+        () => navGroups.flatMap((g) => g.links.map((l) => l.href.slice(1))),
+        [navGroups]
     );
     const active = useActiveSection(allIds);
 
@@ -109,7 +113,7 @@ export function Sidebar() {
 
                 {/* Nav */}
                 <nav className="flex-1 overflow-y-auto px-4 py-5 scrollbar-hide">
-                    {NAV_GROUPS.map((group) => (
+                    {navGroups.map((group) => (
                         <div key={group.label} className="mb-5 last:mb-0">
                             <div className="px-3 mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)]">
                                 {t(`nav_groups_${group.label}`)}
@@ -170,8 +174,12 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                {/* Bottom panel: language selector (hidden when only one language exists) */}
-                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
+                {/* Bottom panel: target-language picker (auto-hidden until 2+
+                    learning languages are registered) above the UI-language
+                    picker (auto-hidden when only 1 UI language exists). When
+                    both are hidden, the panel collapses to nothing. */}
+                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom space-y-3">
+                    <TargetLanguageSelector />
                     <LanguageSelector />
                 </div>
             </aside>
@@ -183,6 +191,7 @@ export function Sidebar() {
 
 export function Hero() {
     const { t } = useTranslation();
+    const { module } = useTargetLanguage();
     return (
         <header id="top" className="pt-20 pb-20 md:pt-24 md:pb-24">
             <div className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[var(--ink-3)] mb-7">
@@ -196,7 +205,7 @@ export function Hero() {
             </p>
             <p className="mt-2 text-[0.9rem] text-[var(--ink-3)] max-w-[560px] leading-[1.65]">
                 {t("hero_tooltip_help_prefix")}
-                <RO text="Bună ziua!" en="Hello / Good day" />
+                <RO text={module.heroExample.text} en={module.heroExample.en} />
                 {t("hero_tooltip_help_suffix")}
             </p>
         </header>
@@ -207,10 +216,11 @@ export function Hero() {
 
 export function Footer() {
     const { t } = useTranslation();
+    const { module } = useTargetLanguage();
     return (
         <footer className="mt-16 py-12 border-t border-[var(--border)] no-print">
             <p className="font-display italic text-[1.05rem] text-[var(--ink-2)] mb-3 tracking-tight">
-                <RO text="Mult succes!" en={t("footer_blessing_meaning")} />
+                <RO text={module.footerBlessing.text} en={module.footerBlessing.en} />
             </p>
             <p className="text-[0.82rem] text-[var(--ink-3)]">
                 {t("footer_summary")}

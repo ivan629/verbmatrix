@@ -1,4 +1,4 @@
-import type { NumberItem, PhraseItem } from "../types";
+import type { NumberItem, PhraseItem } from "../../../types";
 
 export const NUMBERS_0_10: NumberItem[] = [
   { num: 0, word: "zero" }, { num: 1, word: "unu / una" }, { num: 2, word: "doi / două" },

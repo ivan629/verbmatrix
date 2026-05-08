@@ -1,4 +1,4 @@
-import type { PrincipleItem, ScheduleItem, NavGroup } from "../types";
+import type { PrincipleItem, ScheduleItem, NavGroup } from "../../../types";
 
 export const CORE_PRINCIPLES: PrincipleItem[] = [
   { num: "1", title: "Remove the fear", description: "Romanian is phonetic, Romance-based, full of cognates. The barrier is emotional, not intellectual." },

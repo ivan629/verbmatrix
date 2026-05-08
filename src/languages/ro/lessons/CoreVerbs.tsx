@@ -1,11 +1,11 @@
 import {
   LessonSection, SectionHeading, Paragraph, InfoBox, TestBox,
   PhraseGrid, DataTable, MonoBlock, VerbCardGrid,
-} from "../ui";
-import { RO } from "../RO";
-import { Matrix } from "../Matrix";
-import { MATRIX_FI, MATRIX_AVEA } from "../../data/matrices";
-import { CORE_VERBS } from "../../data/verbs";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
+import { Matrix } from "../../../components/Matrix";
+import { MATRIX_FI, MATRIX_AVEA } from "../data/matrices";
+import { CORE_VERBS } from "../data/verbs";
 
 // ─── Lesson 4 — A FI ────────────────────────────────────────────
 

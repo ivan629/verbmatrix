@@ -1,4 +1,4 @@
-import type { MatrixData, MatrixRow } from "../types";
+import type { MatrixData, MatrixRow } from "../../../types";
 
 // ─── Conjugation data ───────────────────────────────────────────
 //

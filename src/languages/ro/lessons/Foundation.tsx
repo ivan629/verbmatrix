@@ -1,9 +1,9 @@
 import {
   LessonSection, SectionHeading, InfoBox, DrillBox, TestBox,
   PrincipleGrid, PsychBox, SoundGrid, DataTable, MonoBlock,
-} from "../ui";
-import { RO } from "../RO";
-import { CORE_PRINCIPLES, LIBERATING_TRUTHS } from "../../data/schedule";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
+import { CORE_PRINCIPLES, LIBERATING_TRUTHS } from "../data/schedule";
 
 // ─── Principles ─────────────────────────────────────────────────
 

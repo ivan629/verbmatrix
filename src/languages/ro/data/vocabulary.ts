@@ -1,4 +1,4 @@
-import type { VocabSection, PhraseItem, VocabItem } from "../types";
+import type { VocabSection, PhraseItem, VocabItem } from "../../../types";
 
 export const VOCAB_SECTIONS: VocabSection[] = [
   {

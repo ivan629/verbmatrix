@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Matrix } from "./Matrix";
-import { LessonSection, InfoBox } from "./ui";
+import { Matrix } from "../../components/Matrix";
+import { LessonSection, InfoBox } from "../../components/ui";
 import {
     ALL_CONJUGATIONS,
     buildMatrix,
     type VerbConjugation,
-} from "../data/conjugations";
+} from "./data/conjugations";
 
 // ─── Custom verb dropdown ───────────────────────────────────────
 //

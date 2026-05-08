@@ -1,11 +1,11 @@
 import {
   LessonSection, SectionHeading, Paragraph, InfoBox, DrillBox,
   PrincipleGrid, DataTable, MonoBlock,
-} from "../ui";
-import { RO } from "../RO";
-import { Matrix } from "../Matrix";
-import { KEY_PATTERNS } from "../../data/schedule";
-import { MATRIX_VORBI_EU, MATRIX_LUCRA_FULL, MATRIX_FACE_FULL } from "../../data/matrices";
+} from "../../../components/ui";
+import { RO } from "../../../components/RO";
+import { Matrix } from "../../../components/Matrix";
+import { KEY_PATTERNS } from "../data/schedule";
+import { MATRIX_VORBI_EU, MATRIX_LUCRA_FULL, MATRIX_FACE_FULL } from "../data/matrices";
 
 export function Lesson3() {
   return (

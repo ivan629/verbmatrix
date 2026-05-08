@@ -1,4 +1,4 @@
-import type { MatrixData, FillerItem, PhraseItem, TestItem } from "../types";
+import type { MatrixData, FillerItem, PhraseItem, TestItem } from "../../../types";
 
 // ─── Lesson 3 Matrices ──────────────────────────────────────────
 

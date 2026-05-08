@@ -1,4 +1,4 @@
-import type { DialogueData } from "../types";
+import type { DialogueData } from "../../../types";
 
 export const DIALOGUES: DialogueData[] = [
   {
