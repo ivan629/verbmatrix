@@ -101,6 +101,9 @@ export type BoxVariant = "blue" | "gold" | "green" | "neutral";
 export interface NavLink {
   href: string;
   label: string;
+  /** When true, the sidebar renders this link with the gold "core engine"
+   *  treatment — used to mark the Practice Matrix as the heart of the app. */
+  featured?: boolean;
 }
 
 export interface NavGroup {

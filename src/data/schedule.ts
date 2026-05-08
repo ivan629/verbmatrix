@@ -48,6 +48,15 @@ export const DAILY_PRACTICE: PrincipleItem[] = [
 ];
 
 export const NAV_GROUPS: NavGroup[] = [
+  // ── The Practice group sits at the very top, on its own. The single
+  //    `featured` link is the live drill engine the rest of the resource
+  //    points back to. Visually distinct from every other nav item.
+  {
+    label: "Practice",
+    links: [
+      { href: "#matrix", label: "Practice Matrix", featured: true },
+    ],
+  },
   {
     label: "Foundations",
     links: [

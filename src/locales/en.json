@@ -13,12 +13,14 @@
   "nav_open": "Open navigation",
   "nav_close": "Close navigation",
 
+  "nav_groups_Practice": "Practice",
   "nav_groups_Foundations": "Foundations",
   "nav_groups_Verbs": "Verbs",
   "nav_groups_Grammar": "Grammar",
   "nav_groups_Tenses": "Tenses",
   "nav_groups_Reference": "Reference",
 
+  "nav_links_Practice Matrix": "Practice Matrix",
   "nav_links_Principles": "Principles",
   "nav_links_Mindset": "Mindset",
   "nav_links_Sounds": "Sounds",
@@ -56,6 +58,15 @@
   "footer_blessing_meaning": "Much success — Good luck!",
 
   "test_helper": "Try translating, then click to reveal.",
+
+  "matrix_section_tag": "Core engine",
+  "matrix_section_title": "The practice matrix",
+  "matrix_section_subtitle": "Pick any verb. The grid populates with all nine cells — three tenses by three forms. Click any line to hear it. This is the engine the rest of the resource feeds into.",
+  "matrix_choose_verb": "Choose a verb",
+  "matrix_random": "Random verb",
+  "matrix_random_aria": "Pick a random verb",
+  "matrix_drill_title": "How to drill",
+  "matrix_drill_body": "Pick a verb. Read every cell aloud — twenty to thirty seconds total. Repeat with five more verbs. Do this five times a day at different times. Within a few days the structure fires automatically — that's the whole point of the matrix.",
 
   "lesson_rules_tag": "Foundation",
   "lesson_rules_title": "The seven core principles",
