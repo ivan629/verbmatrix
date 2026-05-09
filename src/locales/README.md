@@ -1,82 +1,44 @@
 # Translations
 
-This folder holds one JSON file per language. Right now only **English** (`en.json`) is here, but the i18n system is fully wired and ready for more.
+Two layers of locale files now exist:
+
+## 1. Engine chrome — `src/locales/`
+
+Tiny set of strings that exist regardless of which target language is being learned:
+
+- `language_selector_label`, `theme_*`, `nav_open`/`nav_close`, `lesson_label`, `test_helper`
+
+That's it. Adding a new interface language (e.g. Italian) for the chrome means creating `src/locales/it.json` and registering it in `src/lib/i18n.ts` (see `AVAILABLE_LANGUAGES`).
+
+## 2. Per learning-language locales — `src/languages/<code>/locales/`
+
+Everything else — the brand, hero, footer, all `lesson_*` titles/subtitles/headings, navigation labels, vocab section labels, and every inline phrase gloss — lives inside the language module that owns those lessons.
+
+For Romanian this is `src/languages/ro/locales/{en,uk}.json`.
+
+When you switch the active learning language, `<TargetLanguageProvider>` deep-merges the active module's locale resources into the live i18n bundle (overlaying the engine chrome). When you switch to a different module, its keys take over.
 
 ## How keys work
 
-There are two kinds of keys in `en.json`:
+The i18n config has `keySeparator: false` and `nsSeparator: false`, so dots and colons in keys are literal. Two key conventions coexist:
 
-1. **Hierarchical keys** like `lesson_3_title`, `nav_groups_Foundations`, `hero_title`. These are the chrome of the app — section titles, subtitles, navigation labels, infobox titles, etc.
+1. **Hierarchical keys** like `lesson_3_title`, `nav_groups_Foundations`, `hero_title`. UI chrome of a lesson.
+2. **English-as-key** for inline phrase glosses. When a phrase has `<RO text="Bună ziua!" en="Good day!" />`, the string `"Good day!"` is the i18n key. Other-language locale files map it to the local equivalent.
 
-2. **English-as-key** for inline phrase translations. When a Romanian phrase has an `en` prop like `<RO text="Bună ziua!" en="Good day!" />`, the string `"Good day!"` is itself the key. Other-language JSON files map `"Good day!"` → the local equivalent.
+## Adding a new interface language to existing learning languages
 
-The i18next config has `keySeparator: false`, so dots and colons inside keys are treated as literal characters, not hierarchy.
+For example, adding Italian:
 
-## How to add a new language (e.g. Italian)
-
-It's three steps:
-
-### 1. Create the file
-
-Copy `en.json` to `it.json` and translate every value. Keep all the keys exactly as they are — only translate the values on the right side of each `:`.
-
-```json
-{
-  "app_brand": "Rumeno",
-  "app_brand_suffix": "Studio",
-  "hero_title": "Parla rumeno in sedici lezioni.",
-  ...
-}
-```
-
-### 2. Register it in `src/lib/i18n.ts`
-
-Open `src/lib/i18n.ts` and:
-
-- Import the new file at the top:
-  ```ts
-  import it from "../locales/it.json";
-  ```
-
-- Add it to the `resources` block:
-  ```ts
-  resources: {
-    en: { translation: en },
-    it: { translation: it },
-  },
-  ```
-
-- Add it to `AVAILABLE_LANGUAGES`:
-  ```ts
-  export const AVAILABLE_LANGUAGES = [
-    { code: "en", label: "English" },
-    { code: "it", label: "Italiano" },
-  ];
-  ```
-
-### 3. Done.
-
-The language picker in the sidebar will appear automatically (it's hidden when only one language exists). Pick Italian, the whole app translates.
-
-## Translating inline phrase glosses
-
-The English `en` props on `<RO />`, `PhraseGrid` items, `VocabGrid` items, and `DialogueBox` lines are the i18n keys for those tooltips and gloss lines. Add entries to `it.json` (and other language files) like:
-
-```json
-{
-  "Good day!": "Buongiorno!",
-  "I have a new car.": "Ho una macchina nuova.",
-  "Hello! My name is": "Ciao! Mi chiamo",
-  ...
-}
-```
+1. Create `src/locales/it.json` (engine chrome).
+2. Register it in `src/lib/i18n.ts` under `resources` and `AVAILABLE_LANGUAGES`.
+3. For each existing learning language module, create `src/languages/<code>/locales/it.json` and translate the per-language strings.
 
 If a translation is missing for a key, i18next falls back to English (the key itself), so an incomplete language file still works gracefully.
 
-## Translating long lesson body prose (optional)
+## Adding a new learning language
 
-The instructional paragraphs inside `<InfoBox>` bodies — the long explanatory prose — are still inline JSX (because they contain embedded `<RO />` components and formatting). They display in English regardless of the active language.
-
-To translate those too, wrap each one with i18next's `<Trans>` component and add a matching key. The `en.json` file already contains placeholder keys like `lesson_1_avi_body`, `lesson_3_dont_panic_body`, etc. that you can wire up when you're ready.
-
-This is optional. The chrome (titles, subtitles, navigation, tooltips, table headers, vocabulary, dialogues) all translate the moment you add a language file — that's already 80% of the visible UI.
+1. Create `src/languages/<new-code>/` with `data/`, `lessons/`, `locales/`, `pronounce.ts`, `audio-manifest.ts`, and an `index.ts` that exports a `LanguageModule`.
+2. Register it in `src/languages/index.ts` by adding it to the `LANGUAGES` array.
+3. Switching between learning languages happens at the home page (URL `/`),
+   reachable via the sidebar brand link. Each registered language renders
+   as a card in the picker.

@@ -6,13 +6,22 @@ import uk from "../locales/uk.json";
 const STORAGE_KEY = "ro-study-lang";
 
 /**
- * AVAILABLE_LANGUAGES — the list shown in the sidebar dropdown.
+ * AVAILABLE_LANGUAGES — the list shown in the sidebar dropdown for the
+ * **interface** language (English / Українська / …).
  *
- * To add a new language:
+ * NOTE: This is the language the UI is *displayed in*, NOT the language
+ * the user is *learning*. The learning language is managed by
+ * `<TargetLanguageProvider>` and is independent.
+ *
+ * To add a new interface language:
  *   1. Create `src/locales/<code>.json` (copy `en.json` and translate)
  *   2. Import it at the top of this file
  *   3. Add it to the `resources` block below
  *   4. Add an entry here
+ *
+ * Each learning-language module (under `src/languages/<code>/locales/`)
+ * also ships its own translations for the same set of UI codes — those
+ * get merged into this bundle at runtime by `<TargetLanguageProvider>`.
  */
 export const AVAILABLE_LANGUAGES: { code: string; label: string }[] = [
   { code: "en", label: "English" },
@@ -32,7 +41,6 @@ i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
     uk: { translation: uk },
-
   },
   lng: stored && AVAILABLE_LANGUAGES.some((l) => l.code === stored) ? stored : "en",
   fallbackLng: "en",

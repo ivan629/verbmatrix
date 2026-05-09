@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
-import { NAV_GROUPS } from "../data/schedule";
-import { LanguageSelector } from "./LanguageSelector";
 import { ThemeToggle } from "./ThemeToggle";
+import { useTargetLanguage } from "../context/TargetLanguage";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -47,10 +46,13 @@ function lessonNumber(href: string): string | null {
 
 export function Sidebar() {
     const { t } = useTranslation();
+    const { module, goHome } = useTargetLanguage();
+    const navGroups = module.navGroups;
+
     const [open, setOpen] = useState(false);
     const allIds = useMemo(
-        () => NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href.slice(1))),
-        []
+        () => navGroups.flatMap((g) => g.links.map((l) => l.href.slice(1))),
+        [navGroups]
     );
     const active = useActiveSection(allIds);
 
@@ -92,24 +94,27 @@ export function Sidebar() {
           flex flex-col
         `}
             >
-                {/* Brand + theme toggle */}
+                {/* Brand + theme toggle. The brand text is the universal
+                    "home" affordance — clicking it returns to "/" where the
+                    language picker lives. */}
                 <div className="flex items-center justify-between gap-2 pl-7 pr-3 pt-5 pb-4 border-b border-[var(--border)]">
-                    <a
-                        href="#top"
-                        onClick={() => setOpen(false)}
-                        className="block flex-1 hover:opacity-80 transition-opacity"
+                    <button
+                        type="button"
+                        onClick={() => { goHome(); setOpen(false); }}
+                        aria-label={t("nav_go_home")}
+                        className="block flex-1 text-left hover:opacity-80 transition-opacity cursor-pointer"
                     >
                         <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
                             {t("app_brand")}
                             <span className="text-[var(--ink-4)] ml-1.5 font-normal">{t("app_brand_suffix")}</span>
                         </div>
-                    </a>
+                    </button>
                     <ThemeToggle />
                 </div>
 
                 {/* Nav */}
                 <nav className="flex-1 overflow-y-auto px-4 py-5 scrollbar-hide">
-                    {NAV_GROUPS.map((group) => (
+                    {navGroups.map((group) => (
                         <div key={group.label} className="mb-5 last:mb-0">
                             <div className="px-3 mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)]">
                                 {t(`nav_groups_${group.label}`)}
@@ -170,10 +175,11 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                {/* Bottom panel: language selector (hidden when only one language exists) */}
-                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
-                    <LanguageSelector />
-                </div>
+                {/* Interface-language toggle now floats in the top-right
+                    corner of the viewport — see <FloatingUILanguage />. The
+                    sidebar holds only navigation; switching learning
+                    languages happens at the home page ("/"), reachable via
+                    the brand link at the top of this sidebar. */}
             </aside>
         </>
     );
@@ -183,6 +189,7 @@ export function Sidebar() {
 
 export function Hero() {
     const { t } = useTranslation();
+    const { module } = useTargetLanguage();
     return (
         <header id="top" className="pt-20 pb-20 md:pt-24 md:pb-24">
             <div className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[var(--ink-3)] mb-7">
@@ -196,7 +203,7 @@ export function Hero() {
             </p>
             <p className="mt-2 text-[0.9rem] text-[var(--ink-3)] max-w-[560px] leading-[1.65]">
                 {t("hero_tooltip_help_prefix")}
-                <RO text="Bună ziua!" en="Hello / Good day" />
+                <RO text={module.heroExample.text} en={module.heroExample.en} />
                 {t("hero_tooltip_help_suffix")}
             </p>
         </header>
@@ -207,14 +214,38 @@ export function Hero() {
 
 export function Footer() {
     const { t } = useTranslation();
+    const { module } = useTargetLanguage();
+
+    function handleReplayIntro() {
+        try {
+            localStorage.removeItem(`study-onboarded:${module.code}`);
+        } catch {
+            /* private browsing / quota — degrade silently */
+        }
+        // Reload so the gate in <AppContent> re-evaluates from a fresh
+        // mount. The onboarding flow then renders for the current language.
+        window.location.reload();
+    }
+
     return (
         <footer className="mt-16 py-12 border-t border-[var(--border)] no-print">
             <p className="font-display italic text-[1.05rem] text-[var(--ink-2)] mb-3 tracking-tight">
-                <RO text="Mult succes!" en={t("footer_blessing_meaning")} />
+                <RO text={module.footerBlessing.text} en={module.footerBlessing.en} />
             </p>
-            <p className="text-[0.82rem] text-[var(--ink-3)]">
+            <p className="text-[0.82rem] text-[var(--ink-3)] mb-6">
                 {t("footer_summary")}
             </p>
+            {/* Replay intro — a quiet affordance for re-running the 5-step
+                first-contact flow for whichever language is currently active.
+                Each language has its own seen-flag; this clears the one for
+                the active code and reloads. */}
+            <button
+                type="button"
+                onClick={handleReplayIntro}
+                className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-[var(--ink-4)] hover:text-[var(--ink-2)] transition-colors"
+            >
+                {t("footer_replay_intro")}
+            </button>
         </footer>
     );
 }

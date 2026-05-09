@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import { isAzureConfigured, fetchAzureSpeech } from "./tts-azure";
 import { lookupAudio } from "./audio-cache";
+import { tryGetActiveLanguage } from "./active-language";
 import { getPlaybackSettings } from "../context/Playback";
 
 /**
- * Romanian speech synthesis with three quality tiers:
+ * Speech synthesis with three quality tiers:
  *
  *   1. **Pre-generated MP3** (best — typically ElevenLabs Multilingual v2,
  *      generated once by `npm run generate-audio` and shipped as static files)
@@ -12,6 +13,9 @@ import { getPlaybackSettings } from "../context/Playback";
  *   3. **Browser SpeechSynthesis** (universal fallback)
  *
  * Honours the global Playback settings (speed + repeat) on every tier.
+ *
+ * The browser-fallback BCP-47 tag (`ro-RO`, `es-ES`, …) comes from the active
+ * language module so this works the same across every learning language.
  *
  * The calling component gets the same `speak(text, el)` callback regardless
  * of which tier is active.
@@ -68,14 +72,20 @@ function playBrowserOnce(text: string, rate: number, token: number): Promise<voi
     if (typeof window === "undefined" || !window.speechSynthesis) return resolve();
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "ro-RO";
+
+    // BCP-47 tag of the current learning language (e.g. ro-RO).
+    // Falls back to ro-RO if the provider hasn't mounted yet (shouldn't
+    // happen in practice — the provider wraps the entire app).
+    const speechLang = tryGetActiveLanguage()?.speechLang ?? "ro-RO";
+    u.lang = speechLang;
     u.rate = Math.max(0.4, rate * 0.95); // browsers vary; nudge slightly slower
     u.pitch = 1;
     const voices = synth.getVoices();
-    const ro =
-      voices.find((v) => v.lang === "ro-RO") ??
-      voices.find((v) => v.lang.startsWith("ro"));
-    if (ro) u.voice = ro;
+    const langPrefix = speechLang.split("-")[0];
+    const matchVoice =
+      voices.find((v) => v.lang === speechLang) ??
+      voices.find((v) => v.lang.startsWith(langPrefix));
+    if (matchVoice) u.voice = matchVoice;
     u.onend = () => resolve();
     u.onerror = () => resolve();
     synth.speak(u);
