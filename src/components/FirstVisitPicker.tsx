@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useTargetLanguage } from "../context/TargetLanguage";
-import { AVAILABLE_LANGUAGES } from "../lib/i18n";
 
 /**
  * Home page (URL "/"). Renders for both first-time and returning visitors.
  *
  * Structure:
- *   - top bar: brand mark on the left, interface-language toggle on the right.
+ *   - top bar: brand mark on the left. (Interface-language toggle floats
+ *     in the top-right corner of the viewport — see <FloatingUILanguage />.)
  *     **No back button** — this is the destination, not a transient overlay.
  *   - hero: large display question with a warm subtitle.
  *   - card grid: each registered language presenting itself.
@@ -18,40 +18,20 @@ import { AVAILABLE_LANGUAGES } from "../lib/i18n";
  * for one — the user is at home.
  */
 export function FirstVisitPicker() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { available, setCode, lastPickedCode } = useTargetLanguage();
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* ─── Top bar ─────────────────────────────────────────────
-          Brand on the left, UI-language toggle on the right.
-          The brand sits as plain text — clicking it would be a
-          self-link (we're already home), so it's not interactive. */}
-      <header className="flex items-center justify-between px-6 md:px-12 py-5">
+          Brand on the left. The right side is intentionally empty —
+          the floating UI-language chip occupies that area visually
+          via fixed positioning, rendered at the App level. */}
+      <header className="flex items-center px-6 md:px-12 py-5">
         <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
           {t("app_brand")}
           <span className="text-[var(--ink-4)] ml-1.5 font-normal">{t("app_brand_suffix")}</span>
         </div>
-
-        {AVAILABLE_LANGUAGES.length > 1 && (
-          <select
-            value={i18n.language}
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-            aria-label={t("language_selector_label")}
-            className="
-              appearance-none bg-transparent text-[var(--ink-3)] hover:text-[var(--ink)]
-              text-[12px] font-mono cursor-pointer
-              border-none focus:outline-none
-              pr-1
-            "
-          >
-            {AVAILABLE_LANGUAGES.map((lng) => (
-              <option key={lng.code} value={lng.code}>
-                {lng.label}
-              </option>
-            ))}
-          </select>
-        )}
       </header>
 
       {/* ─── Body ─────────────────────────────────────────────── */}

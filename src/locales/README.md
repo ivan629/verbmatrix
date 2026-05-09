@@ -39,4 +39,6 @@ If a translation is missing for a key, i18next falls back to English (the key it
 
 1. Create `src/languages/<new-code>/` with `data/`, `lessons/`, `locales/`, `pronounce.ts`, `audio-manifest.ts`, and an `index.ts` that exports a `LanguageModule`.
 2. Register it in `src/languages/index.ts` by adding it to the `LANGUAGES` array.
-3. The `<TargetLanguageSelector>` in the sidebar bottom panel auto-appears the moment two or more languages are registered.
+3. Switching between learning languages happens at the home page (URL `/`),
+   reachable via the sidebar brand link. Each registered language renders
+   as a card in the picker.

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
-import { LanguageSelector } from "./LanguageSelector";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTargetLanguage } from "../context/TargetLanguage";
 
@@ -176,13 +175,11 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                {/* Bottom panel: interface-language picker (auto-hides when
-                    only one interface language is registered). Switching
-                    learning languages happens at the home page (URL "/") —
-                    reachable via the brand link at the top of this sidebar. */}
-                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
-                    <LanguageSelector />
-                </div>
+                {/* Interface-language toggle now floats in the top-right
+                    corner of the viewport — see <FloatingUILanguage />. The
+                    sidebar holds only navigation; switching learning
+                    languages happens at the home page ("/"), reachable via
+                    the brand link at the top of this sidebar. */}
             </aside>
         </>
     );
