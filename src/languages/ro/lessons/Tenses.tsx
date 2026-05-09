@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, InfoBox, TestBox, DrillBox,
   PhraseGrid, DataTable, MonoBlock, FillerGrid, VocabGrid, ContrastBox,
@@ -11,6 +12,7 @@ import { COGNATES } from "../data/vocabulary";
 // ─── Lesson 12 — Imperfect ──────────────────────────────────────
 
 export function Lesson12() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="L12" num="12" tag="lesson_12_tag"
@@ -33,10 +35,7 @@ export function Lesson12() {
       />
 
       <InfoBox variant="blue" title="lesson_12_pattern_title">
-        <p>
-          Take the verb stem and add the endings <b>-am, -ai, -a, -am, -ați, -au</b>. Works for
-          almost every verb in the language.
-        </p>
+        <p><Trans i18nKey="lesson_12_pattern_body" components={[<b />]} /></p>
       </InfoBox>
 
       <SectionHeading>lesson_12_h_compare</SectionHeading>
@@ -76,7 +75,7 @@ export function Lesson12() {
           </>
         }
       >
-        <p>Complete these sentences about your own childhood. Read aloud, three times each.</p>
+        <p>{t("lesson_12_drill_body")}</p>
       </DrillBox>
 
       <TestBox title="lesson_12_test_title" items={[
@@ -141,12 +140,7 @@ export function Lesson14() {
       subtitle="lesson_14_subtitle"
     >
       <InfoBox variant="blue" title="lesson_14_when_title">
-        <p>
-          After: <b>vreau</b> (I want), <b>trebuie</b> (must), <b>pot</b> (I can),{" "}
-          <b>o să</b> (will), <b>hai</b> (let’s), <b>sper</b> (I hope), <b>cred</b> (I think).
-          Only the <b>third person</b> (he / she / they) takes a special form — the rest mostly
-          look like the present.
-        </p>
+        <p><Trans i18nKey="lesson_14_when_body" components={[<b />]} /></p>
       </InfoBox>
 
       <DataTable
@@ -214,24 +208,21 @@ export function Lesson15() {
       <SectionHeading>lesson_15_h_if</SectionHeading>
       <InfoBox variant="neutral" title="lesson_15_if_title">
         <p style={{ marginBottom: 6 }}>
-          <b>Real / likely</b> — equivalent to the English <b>1st conditional</b>{" "}
-          (<i>If + present, will + verb</i>):
+          <Trans i18nKey="lesson_15_if_real_intro" components={[<b />, <i />]} />
         </p>
         <MonoBlock>
           <RO text="Dacă am timp, vin la tine." en="If I have time, I’ll come to your place." /><br />
           <RO text="Dacă plouă, stau acasă." en="If it rains, I (will) stay home." />
         </MonoBlock>
         <p style={{ marginTop: 12, marginBottom: 6 }}>
-          <b>Unreal / hypothetical</b> — equivalent to the English <b>2nd conditional</b>{" "}
-          (<i>If + past, would + verb</i>):
+          <Trans i18nKey="lesson_15_if_unreal_intro" components={[<b />, <i />]} />
         </p>
         <MonoBlock>
           <RO text="Dacă aș avea bani, aș călători." en="If I had money, I would travel." /><br />
           <RO text="Dacă aș fi tu, aș pleca." en="If I were you, I would leave." />
         </MonoBlock>
         <p style={{ marginTop: 12, marginBottom: 6 }}>
-          <b>Past unreal</b> — equivalent to the English <b>3rd conditional</b>{" "}
-          (<i>If + past perfect, would have + verb</i>):
+          <Trans i18nKey="lesson_15_if_past_unreal_intro" components={[<b />, <i />]} />
         </p>
         <MonoBlock>
           <RO text="Dacă aș fi știut, aș fi venit." en="If I had known, I would have come." />
@@ -322,12 +313,7 @@ export function Lesson16() {
 
       <SectionHeading>lesson_16_h_cognates</SectionHeading>
       <InfoBox variant="gold" title="lesson_16_cognates_title">
-        <p>
-          <b>-tion → -ție</b>: information → informație, situation → situație<br />
-          <b>-ty → -tate</b>: university → universitate, quality → calitate<br />
-          <b>-ture → -tură</b>: nature → natură, culture → cultură<br />
-          <b>-ment → -ment</b>: moment → moment, apartment → apartament
-        </p>
+        <p><Trans i18nKey="lesson_16_cognates_body" components={[<b />]} /></p>
       </InfoBox>
       <VocabGrid items={COGNATES} />
     </LessonSection>
@@ -345,11 +331,7 @@ export function Lesson17() {
     >
       <TestBox title="lesson_17_test_title" items={GRAND_REVIEW_TESTS} />
       <InfoBox variant="gold" title="lesson_17_next_title">
-        <p>
-          You now have the complete foundation. The most useful next step is exposure: Romanian
-          YouTube, ProTV, Digi24, Romanian podcasts, native speakers. The skeleton you’ve drilled
-          here doesn’t fully disappear — even after months away, a few drills bring it back fast.
-        </p>
+        <p><Trans i18nKey="lesson_17_next_body" /></p>
       </InfoBox>
     </LessonSection>
   );

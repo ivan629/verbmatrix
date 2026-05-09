@@ -1,15 +1,17 @@
 {
   "_comment_for_translators": "This file holds engine-level UI chrome only — labels that exist regardless of which target language is active. Per-language strings (lesson titles, hero/footer text, vocab labels, inline phrase glosses) live in src/languages/<code>/locales/.",
-
   "language_selector_label": "Language",
-
+  "target_language_selector_label": "I'm learning",
+  "target_language_selector_aria": "Language I'm learning",
+  "matrix_col_question": "Question",
+  "matrix_col_affirmative": "Affirmative",
+  "matrix_col_negative": "Negative",
   "theme_switch_to_label": "Switch to {{mode}} theme",
   "theme_light": "light",
   "theme_dark": "dark",
-
   "nav_open": "Open navigation",
   "nav_close": "Close navigation",
-
   "lesson_label": "Lesson",
-  "test_helper": "Try translating, then click to reveal."
+  "test_helper": "Try translating, then click to reveal.",
+  "verbcard_past": "past"
 }

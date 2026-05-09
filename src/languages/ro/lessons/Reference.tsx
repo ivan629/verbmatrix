@@ -85,6 +85,7 @@ function Blank({ tKey }: { tKey: string }) {
 }
 
 export function AboutMeSection() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="aboutme" num="★" tag="aboutme_section_tag"
@@ -119,10 +120,7 @@ export function AboutMeSection() {
       </div>
 
       <InfoBox variant="gold" title="aboutme_write_title">
-        <p>
-          Replace the blanks with your own information. Read it aloud three times.
-          This is your first real paragraph in Romanian.
-        </p>
+        <p>{t("aboutme_write_body")}</p>
       </InfoBox>
     </LessonSection>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useTargetLanguage } from "../context/TargetLanguage";
 
 /**
@@ -7,14 +8,9 @@ import { useTargetLanguage } from "../context/TargetLanguage";
  * The moment a second module appears in `src/languages/index.ts`, this
  * dropdown auto-renders next to the UI-language selector. No code changes
  * needed elsewhere; the registry drives everything.
- *
- * Label intentionally not run through i18n — until a second learning
- * language exists this never renders, and once it does the label "I'm
- * learning" is universal enough to live as a hardcoded English string.
- * If you want it translated, add a key to the engine locales and switch
- * to `t(...)`.
  */
 export function TargetLanguageSelector() {
+  const { t } = useTranslation();
   const { code, setCode, available } = useTargetLanguage();
 
   if (available.length <= 1) return null;
@@ -25,14 +21,14 @@ export function TargetLanguageSelector() {
         htmlFor="ro-learning-lang"
         className="block font-mono text-[9.5px] uppercase tracking-[0.18em] text-[var(--ink-4)] mb-2"
       >
-        I'm learning
+        {t("target_language_selector_label")}
       </label>
       <div className="relative">
         <select
           id="ro-learning-lang"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          aria-label="Language I'm learning"
+          aria-label={t("target_language_selector_aria")}
           className="
             appearance-none w-full bg-[var(--surface)] hover:bg-[var(--surface-2)]
             text-[var(--ink-2)] text-[12.5px] font-medium

@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, Paragraph, InfoBox, DrillBox,
   PrincipleGrid, DataTable, MonoBlock,
@@ -8,6 +9,7 @@ import { KEY_PATTERNS } from "../data/schedule";
 import { MATRIX_VORBI_EU, MATRIX_LUCRA_FULL, MATRIX_FACE_FULL } from "../data/matrices";
 
 export function Lesson3() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="L3" num="3" tag="lesson_3_tag"
@@ -15,10 +17,7 @@ export function Lesson3() {
       subtitle="lesson_3_subtitle"
     >
       <InfoBox variant="green" title="lesson_3_dont_panic_title">
-        <p>
-          Start with just the <b>“eu” (I)</b> row. Once that feels natural, add <b>tu</b> and <b>el / ea</b>.
-          Aim for <b>speed</b>, not perfection.
-        </p>
+        <p><Trans i18nKey="lesson_3_dont_panic_body" components={[<b />]} /></p>
       </InfoBox>
 
       <SectionHeading>lesson_3_h_patterns</SectionHeading>
@@ -26,14 +25,16 @@ export function Lesson3() {
 
       <InfoBox variant="blue" title="lesson_3_three_tenses_title">
         <p>
-          <b>Future (colloquial)</b> = <RO text="o să" en="will" /> + subjunctive verb. &nbsp;
-          <b>Present</b> = the conjugated verb. &nbsp;
-          <b>Past</b> = <RO text="am" en="have" /> + past participle. &nbsp;
-          That’s ninety percent of daily speech.
+          <Trans
+            i18nKey="lesson_3_three_tenses_p1"
+            components={[<b />, <RO text="o să" en="will" />, <RO text="am" en="have" />]}
+          />
         </p>
         <p>
-          Formal future uses <b><RO text="voi" en="will (formal aux.)" /> + infinitive</b> (e.g.{" "}
-          <RO text="Voi vorbi." en="I will speak." />) — for news, books, and formal writing.
+          <Trans
+            i18nKey="lesson_3_three_tenses_p2"
+            components={[<b />, <RO text="voi" en="will (formal aux.)" />, <RO text="Voi vorbi." en="I will speak." />]}
+          />
         </p>
       </InfoBox>
 
@@ -63,13 +64,13 @@ export function Lesson3() {
           <RO text="Merg la școală." en="(I) go to school. (subject dropped)" />
         </MonoBlock>
         <p style={{ marginTop: 8 }}>
-          Romanian often <b>drops the subject pronoun</b> — the verb ending already says who is speaking.
+          <Trans i18nKey="lesson_3_word_order_footer" components={[<b />]} />
         </p>
       </InfoBox>
 
       <SectionHeading>lesson_3_h_contracted</SectionHeading>
       <InfoBox variant="neutral" title="lesson_3_contracted_title">
-        <p style={{ marginBottom: 6 }}><b>Negation + auxiliary</b> — the most frequent contractions:</p>
+        <p style={{ marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_negation" components={[<b />]} /></p>
         <MonoBlock>
           nu am → <RO text="n-am" en="I don’t have" /> &nbsp;·&nbsp;
           nu ai → <RO text="n-ai" en="you don’t have" /> &nbsp;·&nbsp;
@@ -79,7 +80,7 @@ export function Lesson3() {
           este → <RO text="e" en="is" />
         </MonoBlock>
 
-        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Pronoun + auxiliary</b> — almost always contracted in speech:</p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_pronoun" components={[<b />]} /></p>
         <MonoBlock>
           mă a → <RO text="m-a" en="he/she … me" /> &nbsp;·&nbsp;
           te a → <RO text="te-a" en="he/she … you" /> &nbsp;·&nbsp;
@@ -92,7 +93,7 @@ export function Lesson3() {
           i-am → <RO text="i-am" en="I … to him/her" />
         </MonoBlock>
 
-        <p style={{ marginTop: 12, marginBottom: 6 }}><b>Subjunctive shortcuts</b> — after <i>să</i> and <i>nu</i>:</p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_subjunctive" components={[<b />, <i />]} /></p>
         <MonoBlock>
           să îl → <RO text="să-l" en="(to) … him" /> &nbsp;·&nbsp;
           să o → <RO text="s-o" en="(to) … her" /> &nbsp;·&nbsp;
@@ -102,7 +103,7 @@ export function Lesson3() {
           ce este → <RO text="ce-i" en="what is" />
         </MonoBlock>
 
-        <p style={{ marginTop: 12, marginBottom: 6 }}><b>How they sound in real sentences:</b></p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_real" components={[<b />]} /></p>
         <MonoBlock>
           <RO text="N-am timp." en="I don’t have time." /> &nbsp;·&nbsp;
           <RO text="S-a terminat." en="It’s over. / It’s done." /><br />
@@ -134,11 +135,7 @@ export function Lesson3() {
           </>
         }
       >
-        <Paragraph>
-          Pick any verb. Run it through all nine cells aloud. Twenty to thirty seconds per verb.
-          Repeat five times daily, ideally at different times. Within two or three days, the structure
-          fires automatically — that’s the whole point.
-        </Paragraph>
+        <Paragraph>{t("lesson_3_drill_body")}</Paragraph>
       </DrillBox>
     </LessonSection>
   );

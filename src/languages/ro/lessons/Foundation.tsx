@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, InfoBox, DrillBox, TestBox,
   PrincipleGrid, PsychBox, SoundGrid, DataTable, MonoBlock,
@@ -43,11 +44,11 @@ export function Lesson0() {
       <PrincipleGrid items={LIBERATING_TRUTHS} />
 
       <InfoBox variant="gold" title="lesson_0_contract_title">
-        <p>“I will speak Romanian badly, bravely, and often — starting today.” Write it down. Sign it.</p>
+        <p><Trans i18nKey="lesson_0_contract_body" /></p>
       </InfoBox>
 
       <InfoBox variant="blue" title="lesson_0_why_title">
-        <p>The goal is a <b>fireproof foundation</b> — a structural skeleton so strong that even if you stop for months, it never fully disappears.</p>
+        <p><Trans i18nKey="lesson_0_why_body" components={{ b: <b /> }} /></p>
       </InfoBox>
     </LessonSection>
   );
@@ -85,7 +86,12 @@ export function Lesson1() {
       <SoundGrid items={SPECIAL_CHARS} />
 
       <InfoBox variant="blue" title="lesson_1_avi_title">
-        <p><b>â</b> appears <i>inside</i> a word (<RO text="România" en="Romania" />). <b>î</b> appears at the <i>start or end</i> of a word (<RO text="în" en="in" />). They sound <b>exactly the same</b>.</p>
+        <p>
+          <Trans
+            i18nKey="lesson_1_avi_body"
+            components={[<b />, <i />, <RO text="România" en="Romania" />, <RO text="în" en="in" />]}
+          />
+        </p>
       </InfoBox>
 
       <SectionHeading>lesson_1_h_combos</SectionHeading>
@@ -105,7 +111,7 @@ export function Lesson1() {
       />
 
       <InfoBox variant="gold" title="lesson_1_stress_title">
-        <p>Generally on the <b>second-to-last syllable</b> (about 80% of words). Unlike French, <b>every letter is pronounced</b>.</p>
+        <p><Trans i18nKey="lesson_1_stress_body" components={[<b />]} /></p>
       </InfoBox>
 
       <InfoBox variant="neutral" title="lesson_1_exceptions_title">
@@ -141,6 +147,7 @@ const QUESTION_WORDS = [
 ];
 
 export function Lesson2() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="L2" num="2" tag="lesson_2_tag"
@@ -162,7 +169,12 @@ export function Lesson2() {
       />
 
       <InfoBox variant="blue" title="lesson_2_formal_title">
-        <p>Use <b><RO text="dumneavoastră" en="you (formal)" /></b> with strangers, older people, officials. It takes <b>voi</b> verb forms. Romanian formality is strict.</p>
+        <p>
+          <Trans
+            i18nKey="lesson_2_formal_body"
+            components={[<RO text="dumneavoastră" en="you (formal)" />, <b />]}
+          />
+        </p>
         <MonoBlock><RO text="Dumneavoastră vorbiți românește?" en="Do you (formal) speak Romanian?" /></MonoBlock>
       </InfoBox>
 
@@ -184,10 +196,10 @@ export function Lesson2() {
       <InfoBox variant="neutral" title="lesson_2_pe_title">
         <MonoBlock>
           <RO text="Îl văd pe Mihai." en="I see Mihai." /> ✓<br />
-          <RO text="Văd mașina." en="I see the car." /> &nbsp;(no “pe” — it’s a thing)<br />
+          <RO text="Văd mașina." en="I see the car." /> &nbsp;{t("lesson_2_pe_thing_inline")}<br />
           <RO text="Pe cine cauți?" en="Who are you looking for?" />
         </MonoBlock>
-        <p style={{ marginTop: 8 }}>Person → use “pe.” Thing → no “pe.”</p>
+        <p style={{ marginTop: 8 }}>{t("lesson_2_pe_footer")}</p>
       </InfoBox>
 
       <SectionHeading>lesson_2_h_demo</SectionHeading>
@@ -206,7 +218,7 @@ export function Lesson2() {
         speakableCols={[2, 3]}
       />
       <InfoBox variant="gold" title="lesson_2_demo_title">
-        <p>Nobody says “această” in conversation. Use <b>ăsta / asta / ăla / aia</b>.</p>
+        <p><Trans i18nKey="lesson_2_demo_body" components={[<b />]} /></p>
       </InfoBox>
 
       <SectionHeading>lesson_2_h_qwords</SectionHeading>
@@ -225,17 +237,17 @@ export function Lesson2() {
 
       <SectionHeading>lesson_2_h_greetings</SectionHeading>
       <InfoBox variant="gold" title="lesson_2_greetings_title">
-        <p>
-          Among friends, family, colleagues, or people of similar age, Romanian uses two informal
-          greetings — and which one you pick depends on the genders of the people involved:
-        </p>
+        <p>{t("lesson_2_greetings_intro")}</p>
         <MonoBlock>
-          two men → <RO text="Salut!" en="Hi! (man → man)" /><br />
-          two women → <RO text="Bună!" en="Hi! (woman → woman)" /><br />
-          a man and a woman → <RO text="Bună!" en="Hi! (mixed)" />
+          {t("lesson_2_greetings_two_men")}<RO text="Salut!" en="Hi! (man → man)" /><br />
+          {t("lesson_2_greetings_two_women")}<RO text="Bună!" en="Hi! (woman → woman)" /><br />
+          {t("lesson_2_greetings_mixed")}<RO text="Bună!" en="Hi! (mixed)" />
         </MonoBlock>
         <p style={{ marginTop: 8 }}>
-          For anyone older, a stranger, or in formal settings, use <b><RO text="Bună ziua!" en="Good day!" /></b> regardless of gender.
+          <Trans
+            i18nKey="lesson_2_greetings_formal"
+            components={[<b><RO text="Bună ziua!" en="Good day!" /></b>]}
+          />
         </p>
       </InfoBox>
 
