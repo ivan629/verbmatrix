@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, Paragraph, InfoBox, TestBox,
   PhraseGrid, DataTable, MonoBlock, VerbCardGrid,
@@ -31,8 +32,10 @@ export function Lesson4() {
 
       <InfoBox variant="gold" title="lesson_4_shortcut_title">
         <p>
-          In speech, <b>este</b> shrinks to <b>e</b>. So <RO text="El e student." en="He is a student." />{" "}
-          means the same as <RO text="El este student." en="He is a student." />
+          <Trans
+            i18nKey="lesson_4_shortcut_body"
+            components={[<b />, <RO text="El e student." en="He is a student." />, <RO text="El este student." en="He is a student." />]}
+          />
         </p>
       </InfoBox>
 
@@ -73,11 +76,11 @@ export function Lesson5() {
           <RO text="Îmi place cafeaua." en="I like coffee. (lit. coffee is pleasing to me)" /><br />
           <RO text="Îți place România?" en="Do you like Romania?" /><br />
           <RO text="Ne plac sarmalele." en="We like sarmale." /> &nbsp;
-          <span className="text-[var(--ink-3)]">(plural object → <b>plac</b>!)</span><br />
+          <span className="text-[var(--ink-3)]"><Trans i18nKey="lesson_5_imi_place_plural_note" components={[<b />]} /></span><br />
           <RO text="Mi-a plăcut filmul." en="I liked the movie. (past)" />
         </MonoBlock>
         <p style={{ marginTop: 8 }}>
-          Singular object → <b>place</b>. Plural object → <b>plac</b>. Past → <b>a plăcut</b>.
+          <Trans i18nKey="lesson_5_imi_place_footer" components={[<b />]} />
         </p>
       </InfoBox>
 
@@ -85,17 +88,17 @@ export function Lesson5() {
       <DataTable
         headers={["Group", "Infinitive ends in", "Participle ends in", "Example"]}
         rows={[
-          ["I", "-a", "-at", "a lucra → lucrat"],
-          ["II", "-ea", "-ut", "a avea → avut"],
-          ["III", "-e", "-ut / -s", "a face → făcut · a merge → mers"],
-          ["IV", "-i / -î", "-it / -ât", "a vorbi → vorbit · a coborî → coborât"],
+          ["Group I", "-a", "-at", "a lucra → lucrat"],
+          ["Group II", "-ea", "-ut", "a avea → avut"],
+          ["Group III", "-e", "-ut / -s", "a face → făcut · a merge → mers"],
+          ["Group IV", "-i / -î", "-it / -ât", "a vorbi → vorbit · a coborî → coborât"],
         ]}
         highlightCols={[2]}
       />
 
       <InfoBox variant="blue" title="lesson_5_perfect_title">
         <p>
-          Conjugated form of <b>a avea</b> + past participle. <br />
+          <Trans i18nKey="lesson_5_perfect_body" components={[<b />]} /> <br />
           <MonoBlock>
             <RO text="Eu am vorbit." en="I spoke." /> &nbsp;·&nbsp;
             <RO text="Tu ai vorbit." en="You spoke." /> &nbsp;·&nbsp;
@@ -113,16 +116,14 @@ export function Lesson5() {
 // ─── Lesson 6 — 32 verbs ────────────────────────────────────────
 
 export function Lesson6() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="L6" num="6" tag="lesson_6_tag"
       title="lesson_6_title"
       subtitle="lesson_6_subtitle"
     >
-      <Paragraph>
-        Memorise these and you have access to almost any everyday situation. Hover any form to see
-        its meaning, click to hear it.
-      </Paragraph>
+      <Paragraph>{t("lesson_6_intro")}</Paragraph>
       <VerbCardGrid verbs={CORE_VERBS} />
     </LessonSection>
   );

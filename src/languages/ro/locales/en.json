@@ -1,16 +1,13 @@
 {
   "_comment_for_translators": "Romanian module strings. Keys with underscores are hierarchical UI strings. Keys that look like English sentences are inline phrase glosses (the English meaning of a Romanian phrase). Translate the values, keep the keys exactly as they are.",
-
   "app_brand": "Romanian",
   "app_brand_suffix": "Study",
-
   "nav_groups_Practice": "Practice",
   "nav_groups_Foundations": "Foundations",
   "nav_groups_Verbs": "Verbs",
   "nav_groups_Grammar": "Grammar",
   "nav_groups_Tenses": "Tenses",
   "nav_groups_Reference": "Reference",
-
   "nav_links_Practice Matrix": "Practice Matrix",
   "nav_links_Principles": "Principles",
   "nav_links_Mindset": "Mindset",
@@ -35,17 +32,14 @@
   "nav_links_Dialogues": "Dialogues",
   "nav_links_Study Plan": "Study Plan",
   "nav_links_About Me": "About Me",
-
   "hero_kicker": "A study guide",
   "hero_title": "Speak Romanian in sixteen lessons.",
   "hero_subtitle": "From zero to confident conversation. Five hundred words. Thirty-two core verbs. Sixteen real-life dialogues. A thirty-two-day pacing schedule.",
   "hero_tooltip_help_prefix": "Hover any Romanian text for its meaning and pronunciation (e.g. ",
   "hero_tooltip_help_suffix": "). Click to hear it spoken. Use the language selector at the bottom of the sidebar to translate the interface into your language.",
   "hero_tooltip_help_example_en": "Hello / Good day",
-
   "footer_summary": "Sixteen lessons · thirty-two verbs · five hundred-plus vocabulary · sixteen dialogues.",
   "footer_blessing_meaning": "Much success — Good luck!",
-
   "matrix_section_tag": "Core engine",
   "matrix_section_title": "The practice matrix",
   "matrix_section_subtitle": "Pick any verb. The grid populates with all nine cells — three tenses by three forms. Click any line to hear it. This is the engine the rest of the resource feeds into.",
@@ -54,11 +48,9 @@
   "matrix_random_aria": "Pick a random verb",
   "matrix_drill_title": "How to drill",
   "matrix_drill_body": "Pick a verb. Read every cell aloud — twenty to thirty seconds total. Repeat with five more verbs. Do this five times a day at different times. Within a few days the structure fires automatically — that's the whole point of the matrix.",
-
   "lesson_rules_tag": "Foundation",
   "lesson_rules_title": "The seven core principles",
   "lesson_rules_subtitle": "Read these before any grammar. They define how the rest of the book works.",
-
   "lesson_0_tag": "Mindset",
   "lesson_0_title": "Breaking the barrier",
   "lesson_0_subtitle": "Before a single grammar rule, address the real reason languages don't stick — fear.",
@@ -73,7 +65,6 @@
   "lesson_0_contract_body": "\"I will speak Romanian badly, bravely, and often — starting today.\" Write it down. Sign it.",
   "lesson_0_why_title": "Why sixteen lessons work",
   "lesson_0_why_body": "The goal is a <b>fireproof foundation</b> — a structural skeleton so strong that even if you stop for months, it never fully disappears.",
-
   "lesson_1_tag": "Pronunciation",
   "lesson_1_title": "The sound system",
   "lesson_1_subtitle": "Romanian is almost perfectly phonetic. Five special characters are all you need to learn.",
@@ -86,7 +77,6 @@
   "lesson_1_stress_body": "Generally on the <0>second-to-last syllable</0> (about 80% of words). Unlike French, <0>every letter is pronounced</0>.",
   "lesson_1_exceptions_title": "Common stress exceptions",
   "lesson_1_drill_title": "Drill — Read these aloud",
-
   "lesson_2_tag": "Building blocks",
   "lesson_2_title": "Pronouns & question words",
   "lesson_2_subtitle": "Two short tables that sit underneath every sentence you'll ever say.",
@@ -111,7 +101,6 @@
   "lesson_2_greetings_mixed": "a man and a woman → ",
   "lesson_2_greetings_formal": "For anyone older, a stranger, or in formal settings, use <0></0> regardless of gender.",
   "lesson_2_test_title": "Self-test",
-
   "lesson_3_tag": "The most important lesson",
   "lesson_3_title": "The verb matrix",
   "lesson_3_subtitle": "Three tenses × three forms = nine sentence types. Master one verb across this grid and you can already say almost anything.",
@@ -133,7 +122,6 @@
   "lesson_3_contracted_h_real": "How they sound in real sentences:",
   "lesson_3_drill_title": "Drill — build sentences from the matrix",
   "lesson_3_drill_body": "Pick any verb. Run it through all nine cells aloud. Twenty to thirty seconds per verb. Repeat five times daily, ideally at different times. Within two or three days, the structure fires automatically — that's the whole point.",
-
   "lesson_4_tag": "The verb to be",
   "lesson_4_title": "A fi — the most important verb",
   "lesson_4_subtitle": "\"A fi\" is irregular but indispensable: identity, descriptions, professions, locations, states.",
@@ -142,7 +130,6 @@
   "lesson_4_shortcut_title": "Shortcut: 'e' = 'este'",
   "lesson_4_shortcut_body": "In speech, <0>este</0> shrinks to <0>e</0>. So <1></1> means the same as <2></2>",
   "lesson_4_test_title": "Self-test",
-
   "lesson_5_tag": "The verb to have",
   "lesson_5_title": "A avea — possession, age, and the past-tense helper",
   "lesson_5_subtitle": "\"A avea\" expresses possession AND is the auxiliary that builds every past tense.",
@@ -154,12 +141,10 @@
   "lesson_5_h_participles": "Past participle formation",
   "lesson_5_perfect_title": "Forming the past — perfect compus",
   "lesson_5_perfect_body": "Conjugated form of <0>a avea</0> + past participle.",
-
   "lesson_6_tag": "The thirty-two magic verbs",
   "lesson_6_title": "The verbs that cover daily life",
   "lesson_6_subtitle": "Infinitive, the \"eu\" form, the \"el / ea\" form, and the past participle. Drill each one through the matrix.",
   "lesson_6_intro": "Memorise these and you have access to almost any everyday situation. Hover any form to see its meaning, click to hear it.",
-
   "lesson_7_tag": "Articles, gender, plural",
   "lesson_7_title": "How Romanian nouns work",
   "lesson_7_subtitle": "Three genders. The definite article attaches to the END of the word — unique among Romance languages.",
@@ -171,7 +156,6 @@
   "lesson_7_gender_title": "Gender quick guide",
   "lesson_7_gender_body": "Consonant ending → usually masculine. <0>-ă</0> or <0>-e</0> → usually feminine. Neuter behaves like masculine in the singular and feminine in the plural.",
   "lesson_7_voc_title": "How Romanians address each other",
-
   "lesson_8_tag": "Adjectives, adverbs, possessives",
   "lesson_8_title": "Describing things, actions, and ownership",
   "lesson_8_subtitle": "Adjectives agree with the noun in gender and number. Possessives come AFTER the noun.",
@@ -181,7 +165,6 @@
   "lesson_8_h_possessives": "Possessives",
   "lesson_8_word_order_title": "Word order",
   "lesson_8_word_order_body": "Noun (with article) <0>+</0> possessive: <1></1>, <2></2>, <3></3>.",
-
   "lesson_9_tag": "Numbers, time, calendar",
   "lesson_9_title": "Counting, telling time, talking about dates",
   "lesson_9_subtitle": "The trickiest part is the teens — and the rule that puts 'de' before nouns when the number is twenty or higher.",
@@ -206,7 +189,6 @@
   "lesson_9_time_title": "'E ora …' — it is … o'clock",
   "lesson_9_seasons_title": "Talking about seasons and months",
   "lesson_9_test_title": "Self-test — numbers and time",
-
   "lesson_10_tag": "Prepositions and connectors",
   "lesson_10_title": "Linking words, places, directions",
   "lesson_10_subtitle": "A small set of prepositions does most of the work. Learn the \"în vs la\" distinction first.",
@@ -215,7 +197,6 @@
   "lesson_10_h_conjunctions": "Conjunctions",
   "lesson_10_in_inside": "în — physically inside",
   "lesson_10_la_destination": "la — at / to a destination",
-
   "lesson_11_tag": "Modals and comparatives",
   "lesson_11_title": "Can, must, should — and how to compare",
   "lesson_11_subtitle": "Modals all use the same structure: modal + să + verb. Comparatives use 'mai' and 'decât'.",
@@ -223,7 +204,6 @@
   "lesson_11_h_hai": "\"Hai să …\" — let's …!",
   "lesson_11_h_comparatives": "Comparatives",
   "lesson_11_hai_title": "The most common Romanian invitation",
-
   "lesson_12_tag": "Imperfect tense",
   "lesson_12_title": "\"I was doing / I used to do\"",
   "lesson_12_subtitle": "Ongoing or habitual past actions. The imperfect is regular — even irregular verbs behave predictably here.",
@@ -237,13 +217,11 @@
   "lesson_12_drill_title": "Drill — \"Când eram mic …\"",
   "lesson_12_drill_body": "Complete these sentences about your own childhood. Read aloud, three times each.",
   "lesson_12_test_title": "Self-test — imperfect",
-
   "lesson_13_tag": "Imperative",
   "lesson_13_title": "Commands and requests",
   "lesson_13_subtitle": "Two forms: \"tu\" (one person, informal) and \"voi\" (plural — also used with formal \"dumneavoastră\").",
   "lesson_13_polite_title": "Polite requests",
   "lesson_13_test_title": "Self-test — commands",
-
   "lesson_14_tag": "The subjunctive 'să'",
   "lesson_14_title": "Modal + să + verb",
   "lesson_14_subtitle": "Romanian uses the subjunctive where English uses the infinitive: \"I want to go\" → \"Vreau să merg.\"",
@@ -251,7 +229,6 @@
   "lesson_14_when_body": "After: <0>vreau</0> (I want), <0>trebuie</0> (must), <0>pot</0> (I can), <0>o să</0> (will), <0>hai</0> (let's), <0>sper</0> (I hope), <0>cred</0> (I think). Only the <0>third person</0> (he / she / they) takes a special form — the rest mostly look like the present.",
   "lesson_14_drill_title": "Drill — build \"Vreau să …\" sentences",
   "lesson_14_test_title": "Self-test — subjunctive",
-
   "lesson_15_tag": "Conditional + complex sentences",
   "lesson_15_title": "If … then …, reflexives, relative clauses",
   "lesson_15_subtitle": "Conditional uses 'aș / ai / ar / am / ați / ar' + verb. Three types of 'if' sentences cover almost everything.",
@@ -274,7 +251,6 @@
   "lesson_15_reflexive_pron_title": "Reflexive pronouns",
   "lesson_15_double_neg_title": "Mandatory pattern",
   "lesson_15_test_title": "Self-test — conditionals & reflexives",
-
   "lesson_16_tag": "Advanced patterns",
   "lesson_16_title": "Complex sentences, fillers, idioms, cognates",
   "lesson_16_subtitle": "The polish layer: how Romanians actually connect ideas, react, and reach across to English.",
@@ -286,29 +262,24 @@
   "lesson_16_mie_title": "How to say I'm hungry / cold / afraid",
   "lesson_16_cognates_title": "English → Romanian patterns",
   "lesson_16_cognates_body": "<0>-tion → -ție</0>: information → informație, situation → situație<br /><0>-ty → -tate</0>: university → universitate, quality → calitate<br /><0>-ture → -tură</0>: nature → natură, culture → cultură<br /><0>-ment → -ment</0>: moment → moment, apartment → apartament",
-
   "lesson_17_tag": "Grand review",
   "lesson_17_title": "Self-test across all sixteen lessons",
   "lesson_17_subtitle": "If you can render most of these into Romanian out loud, the foundation is solid.",
   "lesson_17_test_title": "Can you say all of these?",
   "lesson_17_next_title": "What comes next",
   "lesson_17_next_body": "You now have the complete foundation. The most useful next step is exposure: Romanian YouTube, ProTV, Digi24, Romanian podcasts, native speakers. The skeleton you've drilled here doesn't fully disappear — even after months away, a few drills bring it back fast.",
-
   "vocab_section_tag": "Reference",
   "vocab_section_title": "500+ core vocabulary",
   "vocab_section_subtitle": "The high-frequency words. Hover for translation, click to hear them. Read aloud, in chunks of twenty.",
   "vocab_health_title": "Saying 'it hurts'",
   "vocab_survival_label": "Survival phrases",
-
   "dialogues_section_tag": "Practice",
   "dialogues_section_title": "Sixteen mini-conversations",
   "dialogues_section_subtitle": "Read aloud — both roles. Cover the English column with your hand and try the Romanian first.",
-
   "schedule_section_tag": "Study plan",
   "schedule_section_title": "A 32-day pacing schedule",
   "schedule_section_subtitle": "A suggested rhythm. Adjust it to your life — but keep the daily micro-practice intact.",
   "schedule_section_h_daily": "Daily micro-practice (forever)",
-
   "aboutme_section_tag": "Your first paragraph",
   "aboutme_section_title": "The 'About Me' template",
   "aboutme_section_subtitle": "Fill in the blanks with your own life. This becomes your first real paragraph in Romanian — read it aloud three times.",
@@ -321,7 +292,6 @@
   "aboutme_blank_city": "city",
   "aboutme_blank_job": "job",
   "aboutme_blank_hobby": "hobby",
-
   "vocab_section_label_Survival phrases": "Survival phrases",
   "vocab_section_label_People & Family": "People & Family",
   "vocab_section_label_Home & Objects": "Home & Objects",
@@ -339,5 +309,26 @@
   "vocab_section_label_Entertainment & Culture": "Entertainment & Culture",
   "vocab_section_label_Time & Abstract": "Time & Abstract",
   "vocab_section_label_Directions": "Directions",
-  "vocab_section_label_Descriptive adjectives — size, shape, quality": "Descriptive adjectives — size, shape, quality"
+  "vocab_section_label_Descriptive adjectives — size, shape, quality": "Descriptive adjectives — size, shape, quality",
+  "lesson_2_pe_thing_inline": "(no “pe” — it’s a thing)",
+  "lesson_5_imi_place_plural_note": "(plural object → <0>plac</0>!)",
+  "lesson_9_de_no_de": "(no “de”)",
+  "lesson_9_de_with_de": "(with “de”!)",
+  "lesson_9_de_footer": "1–19 → no “de.”   20+ → always “de.”",
+  "lesson_15_if_real_intro": "<0>Real / likely</0> — equivalent to the English <0>1st conditional</0> (<1>If + present, will + verb</1>):",
+  "lesson_15_if_unreal_intro": "<0>Unreal / hypothetical</0> — equivalent to the English <0>2nd conditional</0> (<1>If + past, would + verb</1>):",
+  "lesson_15_if_past_unreal_intro": "<0>Past unreal</0> — equivalent to the English <0>3rd conditional</0> (<1>If + past perfect, would have + verb</1>):",
+  "Group I": "Group I",
+  "Group II": "Group II",
+  "Group III": "Group III",
+  "Group IV": "Group IV",
+  "face (body)": "face",
+  "back (body)": "back",
+  "my": "my",
+  "your (sg.)": "your (sg.)",
+  "his": "his",
+  "her": "her",
+  "our": "our",
+  "your (pl. / formal)": "your (pl. / formal)",
+  "their": "their"
 }

@@ -1,15 +1,17 @@
 {
   "_comment_for_translators": "Тільки інтерфейсні рядки рушія — мітки, що існують незалежно від обраної цільової мови. Рядки конкретної мови знаходяться у src/languages/<code>/locales/.",
-
   "language_selector_label": "Мова",
-
+  "target_language_selector_label": "Я вивчаю",
+  "target_language_selector_aria": "Мова, яку я вивчаю",
+  "matrix_col_question": "Питання",
+  "matrix_col_affirmative": "Ствердження",
+  "matrix_col_negative": "Заперечення",
   "theme_switch_to_label": "Перейти на {{mode}} тему",
   "theme_light": "світлу",
   "theme_dark": "темну",
-
   "nav_open": "Відкрити меню",
   "nav_close": "Закрити меню",
-
   "lesson_label": "Урок",
-  "test_helper": "Спробуй перекласти, потім натисни, щоб побачити відповідь."
+  "test_helper": "Спробуй перекласти, потім натисни, щоб побачити відповідь.",
+  "verbcard_past": "минулий"
 }

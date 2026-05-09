@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from "react-i18next";
 import {
   LessonSection, SectionHeading, InfoBox, TestBox,
   PhraseGrid, VocabGrid, NumberGrid, SoundGrid, DataTable,
@@ -48,10 +49,7 @@ export function Lesson7() {
       />
 
       <InfoBox variant="blue" title="lesson_7_gender_title">
-        <p>
-          Consonant ending → usually masculine. <b>-ă</b> or <b>-e</b> → usually feminine.
-          Neuter behaves like masculine in the singular and feminine in the plural.
-        </p>
+        <p><Trans i18nKey="lesson_7_gender_body" components={[<b />]} /></p>
       </InfoBox>
 
       <SectionHeading>lesson_7_h_gendat</SectionHeading>
@@ -137,8 +135,10 @@ export function Lesson8() {
       />
       <InfoBox variant="blue" title="lesson_8_word_order_title">
         <p>
-          Noun (with article) <b>+</b> possessive: <RO text="casa mea" en="my house" />,{" "}
-          <RO text="fratele meu" en="my brother" />, <RO text="prietenii noștri" en="our friends" />.
+          <Trans
+            i18nKey="lesson_8_word_order_body"
+            components={[<b />, <RO text="casa mea" en="my house" />, <RO text="fratele meu" en="my brother" />, <RO text="prietenii noștri" en="our friends" />]}
+          />
         </p>
       </InfoBox>
     </LessonSection>
@@ -148,6 +148,7 @@ export function Lesson8() {
 // ─── Lesson 9 — Numbers ─────────────────────────────────────────
 
 export function Lesson9() {
+  const { t } = useTranslation();
   return (
     <LessonSection
       id="L9" num="9" tag="lesson_9_tag"
@@ -159,20 +160,16 @@ export function Lesson9() {
 
       <SectionHeading>lesson_9_h_11_19</SectionHeading>
       <InfoBox variant="neutral" title="lesson_9_built_title">
-        <p>
-          11–19 literally mean “X toward ten” → number + <b>spre</b> + <b>zece</b>. Some forms
-          contract: <i>paisprezece</i> (not <i>patrusprezece</i>), <i>șaisprezece</i> (not{" "}
-          <i>șasesprezece</i>). This is the trickiest part of Romanian numbers — memorise them.
-        </p>
+        <p><Trans i18nKey="lesson_9_built_body" components={[<b />, <i />]} /></p>
       </InfoBox>
       <NumberGrid items={NUMBERS_11_19} />
 
       <InfoBox variant="gold" title="lesson_9_twelve_title">
         <p>
-          <b><RO text="doisprezece" en="twelve (m)" /></b> is masculine; <b><RO text="douăsprezece" en="twelve (f)" /></b> is
-          feminine. Use the feminine when counting feminine nouns and when telling time —{" "}
-          <RO text="ora douăsprezece" en="twelve o’clock" />.
-          (12 is the only number 11–19 with both forms.)
+          <Trans
+            i18nKey="lesson_9_twelve_body"
+            components={[<b />, <RO text="doisprezece" en="twelve (m)" />, <RO text="douăsprezece" en="twelve (f)" />, <RO text="ora douăsprezece" en="twelve o’clock" />]}
+          />
         </p>
       </InfoBox>
 
@@ -192,13 +189,13 @@ export function Lesson9() {
       </InfoBox>
 
       <InfoBox variant="neutral" title="lesson_9_de_title">
-        <p>After numbers <b>20 and above</b>, insert <b>de</b> before the noun:</p>
+        <p><Trans i18nKey="lesson_9_de_intro" components={[<b />]} /></p>
         <MonoBlock>
-          <RO text="doi lei" en="two lei" /> ✓ &nbsp;(no “de”)<br />
-          <RO text="douăzeci de lei" en="twenty lei" /> ✓ &nbsp;(with “de”!)<br />
+          <RO text="doi lei" en="two lei" /> ✓ &nbsp;{t("lesson_9_de_no_de")}<br />
+          <RO text="douăzeci de lei" en="twenty lei" /> ✓ &nbsp;{t("lesson_9_de_with_de")}<br />
           <RO text="o sută de oameni" en="one hundred people" /> ✓
         </MonoBlock>
-        <p style={{ marginTop: 8 }}>1–19 → no “de.” &nbsp; 20+ → always “de.”</p>
+        <p style={{ marginTop: 8 }}>{t("lesson_9_de_footer")}</p>
       </InfoBox>
 
       <SectionHeading>lesson_9_h_ordinals</SectionHeading>

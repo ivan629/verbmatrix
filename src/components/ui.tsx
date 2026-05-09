@@ -97,6 +97,7 @@ interface DataTableProps {
 }
 
 export function DataTable({ headers, rows, highlightCols = [], speakableCols = [] }: DataTableProps) {
+  const { t } = useTranslation();
   return (
     <div className="overflow-x-auto my-6 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-1)]">
       <table className="w-full border-collapse text-[0.9rem]">
@@ -107,7 +108,7 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
                 key={i}
                 className="bg-[var(--surface-2)] text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[var(--ink-3)] py-3 px-4 text-left"
               >
-                {h}
+                {t(h)}
               </th>
             ))}
           </tr>
@@ -130,7 +131,7 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
                 }
                 return (
                   <td key={j} className={cls}>
-                    <span className={isHi ? "" : j === 0 ? "font-mono text-[var(--ink)]" : "text-[var(--ink-2)]"}>{cell}</span>
+                    <span className={isHi ? "" : j === 0 ? "font-mono text-[var(--ink)]" : "text-[var(--ink-2)]"}>{t(cell)}</span>
                   </td>
                 );
               })}
@@ -212,6 +213,7 @@ export function NumberGrid({ items }: { items: NumberItem[] }) {
 // ─── SoundGrid ──────────────────────────────────────────────────
 
 export function SoundGrid({ items }: { items: SoundItem[] }) {
+  const { t } = useTranslation();
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 my-4">
       {items.map((s, i) => (
@@ -220,9 +222,9 @@ export function SoundGrid({ items }: { items: SoundItem[] }) {
             {s.symbol}
           </div>
           <div className="flex-1 text-[0.85rem]">
-            <div className="text-[var(--ink)]">{s.pronunciation}</div>
+            <div className="text-[var(--ink)]">{t(s.pronunciation)}</div>
             <div className="text-[var(--ink-2)] text-[0.82rem] italic mt-0.5">
-              {s.example ? <RO text={s.exampleWord}>{s.example}</RO> : s.description}
+              {s.example ? <RO text={s.exampleWord}>{t(s.example)}</RO> : t(s.description ?? "")}
             </div>
           </div>
         </div>
@@ -371,7 +373,7 @@ export function VerbCardGrid({ verbs }: { verbs: VerbDefinition[] }) {
               <span className="font-mono text-[var(--ink)]"><RO text={v.elForm.split(" ")[0] ?? v.elForm}>{v.elForm}</RO></span>
             </div>
             <div className="flex items-baseline justify-between pt-1.5 border-t border-[var(--border)]">
-              <span className="text-[var(--ink-3)] font-mono text-[0.75rem]">past</span>
+              <span className="text-[var(--ink-3)] font-mono text-[0.75rem]">{t("verbcard_past")}</span>
               <span className="font-mono text-[var(--gold)] font-medium">
                 <RO text={v.participle}>am {v.participle}</RO>
               </span>
