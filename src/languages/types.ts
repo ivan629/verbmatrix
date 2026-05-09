@@ -30,6 +30,37 @@ export interface ChromePhrase {
 }
 
 /**
+ * Onboarding data — the language-specific content that powers the 5-step
+ * first-contact flow. UI chrome (step labels, buttons, prose) lives in
+ * engine locales; only the language-specific *content* is per-module.
+ *
+ *   cognates:      ~24 free-recognition words. Decoded by an English speaker
+ *                  with zero prior exposure (informație, restaurant, ...).
+ *   firstVerb:     The verb introduced in step 3 — shown in 3 tenses.
+ *                  For Romanian: "a vorbi" (to speak).
+ *   firstSentence: What the user is asked to say aloud in step 4.
+ *                  For Romanian: "Eu vorbesc." (I speak.).
+ *
+ * `text` fields hold the target-language string. `en` fields are i18n keys
+ * (and English fallbacks) used the same way as elsewhere in the module.
+ */
+export interface OnboardingData {
+  cognates: ReadonlyArray<{ text: string; en: string }>;
+  firstVerb: {
+    infinitive: string;
+    /** i18n key — e.g. "to speak" */
+    meaning: string;
+    forms: ReadonlyArray<{
+      /** i18n key for the tense label — "Future", "Present", "Past" */
+      tenseLabel: string;
+      text: string;
+      en: string;
+    }>;
+  };
+  firstSentence: { text: string; en: string };
+}
+
+/**
  * A complete learning-language module. Everything the engine needs to
  * present a language lives here.
  */
@@ -77,4 +108,8 @@ export interface LanguageModule {
 
   /** Closing blessing in the footer ("Mult succes!"). */
   footerBlessing: ChromePhrase;
+
+  /** First-contact flow content. The engine reads this to render the 5-step
+   *  onboarding once per (browser × language). */
+  onboarding: OnboardingData;
 }

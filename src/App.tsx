@@ -1,19 +1,43 @@
 import { ThemeProvider } from "./context/Theme";
 import { TargetLanguageProvider, useTargetLanguage } from "./context/TargetLanguage";
 import { Sidebar, Hero, Footer } from "./components/Layout";
+import { FirstVisitPicker } from "./components/FirstVisitPicker";
+import { Onboarding, useShouldShowOnboarding } from "./components/Onboarding";
 
 /**
  * App content — read once we're inside <TargetLanguageProvider> so the
- * active language module is available. We render the lessons declared by
- * that module in order; the engine doesn't know or care what they are.
+ * active language module is available.
  *
- * Adding a new learning language is now data-only: drop a folder under
- * `src/languages/<code>/`, register it in `src/languages/index.ts`, and
- * the entire app reflows.
+ * Three render modes, gated in order:
+ *
+ *   1. **Home / picker** (URL is "/" — `isUnchosen === true`)
+ *      The user is at the language-picker home page. Either it's their
+ *      first visit, or they navigated back via the header chip.
+ *
+ *   2. **Onboarding** (per-language flag not set yet)
+ *      The user has picked a language, but the 5-step intro for that
+ *      specific language hasn't been seen on this device yet.
+ *
+ *   3. **The textbook itself.**
+ *
+ * Onboarding's seen-flag is per target-language code, so a user who later
+ * switches from Romanian to Spanish goes through Spanish onboarding too.
  */
 function AppContent() {
-  const { module } = useTargetLanguage();
+  const { module, isUnchosen } = useTargetLanguage();
+  const [showOnboarding, dismissOnboarding] = useShouldShowOnboarding();
 
+  // Step 1 — at home ("/").
+  if (isUnchosen) {
+    return <FirstVisitPicker />;
+  }
+
+  // Step 2 — language picked, but onboarding not yet seen for this code.
+  if (showOnboarding) {
+    return <Onboarding onComplete={dismissOnboarding} />;
+  }
+
+  // Step 3 — the app proper.
   return (
     <>
       <Sidebar />

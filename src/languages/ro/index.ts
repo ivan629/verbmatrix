@@ -2,6 +2,7 @@ import type { LanguageModule } from "../types";
 import { pronounce } from "./pronounce";
 import { AUDIO_MANIFEST } from "./audio-manifest";
 import { NAV_GROUPS } from "./data/schedule";
+import { ONBOARDING } from "./data/onboarding";
 import enLocale from "./locales/en.json";
 import ukLocale from "./locales/uk.json";
 
@@ -41,6 +42,8 @@ export const ro: LanguageModule = {
 
   heroExample:    { text: "Bună ziua!",   en: "Hello / Good day" },
   footerBlessing: { text: "Mult succes!", en: "footer_blessing_meaning" },
+
+  onboarding: ONBOARDING,
 
   lessons: [
     { id: "matrix",    Component: PracticeMatrix },

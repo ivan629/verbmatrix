@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { LanguageSelector } from "./LanguageSelector";
-import { TargetLanguageSelector } from "./TargetLanguageSelector";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTargetLanguage } from "../context/TargetLanguage";
 
@@ -48,7 +47,7 @@ function lessonNumber(href: string): string | null {
 
 export function Sidebar() {
     const { t } = useTranslation();
-    const { module } = useTargetLanguage();
+    const { module, goHome } = useTargetLanguage();
     const navGroups = module.navGroups;
 
     const [open, setOpen] = useState(false);
@@ -96,18 +95,21 @@ export function Sidebar() {
           flex flex-col
         `}
             >
-                {/* Brand + theme toggle */}
+                {/* Brand + theme toggle. The brand text is the universal
+                    "home" affordance — clicking it returns to "/" where the
+                    language picker lives. */}
                 <div className="flex items-center justify-between gap-2 pl-7 pr-3 pt-5 pb-4 border-b border-[var(--border)]">
-                    <a
-                        href="#top"
-                        onClick={() => setOpen(false)}
-                        className="block flex-1 hover:opacity-80 transition-opacity"
+                    <button
+                        type="button"
+                        onClick={() => { goHome(); setOpen(false); }}
+                        aria-label={t("nav_go_home")}
+                        className="block flex-1 text-left hover:opacity-80 transition-opacity cursor-pointer"
                     >
                         <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
                             {t("app_brand")}
                             <span className="text-[var(--ink-4)] ml-1.5 font-normal">{t("app_brand_suffix")}</span>
                         </div>
-                    </a>
+                    </button>
                     <ThemeToggle />
                 </div>
 
@@ -174,12 +176,11 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                {/* Bottom panel: target-language picker (auto-hidden until 2+
-                    learning languages are registered) above the UI-language
-                    picker (auto-hidden when only 1 UI language exists). When
-                    both are hidden, the panel collapses to nothing. */}
-                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom space-y-3">
-                    <TargetLanguageSelector />
+                {/* Bottom panel: interface-language picker (auto-hides when
+                    only one interface language is registered). Switching
+                    learning languages happens at the home page (URL "/") —
+                    reachable via the brand link at the top of this sidebar. */}
+                <div className="border-t border-[var(--border)] px-5 pt-4 pb-4 safe-bottom">
                     <LanguageSelector />
                 </div>
             </aside>
@@ -217,14 +218,37 @@ export function Hero() {
 export function Footer() {
     const { t } = useTranslation();
     const { module } = useTargetLanguage();
+
+    function handleReplayIntro() {
+        try {
+            localStorage.removeItem(`study-onboarded:${module.code}`);
+        } catch {
+            /* private browsing / quota — degrade silently */
+        }
+        // Reload so the gate in <AppContent> re-evaluates from a fresh
+        // mount. The onboarding flow then renders for the current language.
+        window.location.reload();
+    }
+
     return (
         <footer className="mt-16 py-12 border-t border-[var(--border)] no-print">
             <p className="font-display italic text-[1.05rem] text-[var(--ink-2)] mb-3 tracking-tight">
                 <RO text={module.footerBlessing.text} en={module.footerBlessing.en} />
             </p>
-            <p className="text-[0.82rem] text-[var(--ink-3)]">
+            <p className="text-[0.82rem] text-[var(--ink-3)] mb-6">
                 {t("footer_summary")}
             </p>
+            {/* Replay intro — a quiet affordance for re-running the 5-step
+                first-contact flow for whichever language is currently active.
+                Each language has its own seen-flag; this clears the one for
+                the active code and reloads. */}
+            <button
+                type="button"
+                onClick={handleReplayIntro}
+                className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-[var(--ink-4)] hover:text-[var(--ink-2)] transition-colors"
+            >
+                {t("footer_replay_intro")}
+            </button>
         </footer>
     );
 }
