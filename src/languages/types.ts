@@ -42,6 +42,14 @@ export interface LanguageModule {
   speechLang: string;
 
   /**
+   * Optional Azure Cognitive Services neural voice ID for high-quality TTS.
+   * If unset, the engine falls back to whatever VITE_AZURE_VOICE provides
+   * (and ultimately to the browser's built-in SpeechSynthesis using
+   * `speechLang`). Examples: "ro-RO-EmilNeural", "es-ES-ElviraNeural".
+   */
+  azureVoice?: string;
+
+  /**
    * Locale resources keyed by *interface* language code.
    *   { en: { hero_title: "...", ... }, uk: { hero_title: "...", ... } }
    *
