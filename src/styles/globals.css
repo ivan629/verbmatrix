@@ -315,13 +315,8 @@ body {
   pointer-events: none;
   z-index: 1;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.6;
-  mix-blend-mode: multiply;
-}
-[data-theme="dark"] .paper-grain::before,
-.scope-dark.paper-grain::before {
-  mix-blend-mode: screen;
-  opacity: 0.25;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
 }
 
 /* ─── Glass / blur surfaces ───────────────────────────────────── */
@@ -435,16 +430,16 @@ body {
 .fade-in { animation: fade-in 0.5s var(--ease-out-expo) both; }
 
 @keyframes reveal-up {
-  from { opacity: 0; transform: translateY(32px); filter: blur(4px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 @keyframes reveal-scale {
-  from { opacity: 0; transform: scale(0.94) translateY(16px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: scale(0.96) translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: scale(1) translate3d(0, 0, 0); }
 }
 @keyframes reveal-blur {
-  from { opacity: 0; filter: blur(12px); transform: scale(1.02); }
-  to   { opacity: 1; filter: blur(0); transform: scale(1); }
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 .reveal { opacity: 0; }
@@ -452,7 +447,7 @@ body {
 .reveal-scale { opacity: 0; }
 .reveal-scale.revealed { animation: reveal-scale var(--duration-reveal) var(--ease-out-expo) both; }
 .reveal-blur { opacity: 0; }
-.reveal-blur.revealed { animation: reveal-blur 0.9s var(--ease-out-expo) both; }
+.reveal-blur.revealed { animation: reveal-blur 0.7s var(--ease-out-expo) both; }
 
 /* Stagger — child delays inside revealed parent */
 .stagger.revealed > *:nth-child(1) { animation-delay: 0ms; }
@@ -486,15 +481,15 @@ body {
 .matrix-stagger.revealed > *:nth-child(8) { animation-delay: 420ms; }
 .matrix-stagger.revealed > *:nth-child(9) { animation-delay: 480ms; }
 
-/* Word-by-word hero animation — text streams in with blur clearing */
+/* Word-by-word hero animation — transform + opacity only (GPU-cheap) */
 @keyframes word-reveal {
-  from { opacity: 0; transform: translateY(0.4em); filter: blur(8px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translate3d(0, 0.3em, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 .word-reveal > span {
   display: inline-block;
   opacity: 0;
-  animation: word-reveal 0.9s var(--ease-out-expo) both;
+  animation: word-reveal 0.7s var(--ease-out-expo) both;
   will-change: transform, opacity;
 }
 .word-reveal > span:nth-child(1) { animation-delay: 0.05s; }
@@ -527,9 +522,9 @@ body {
 
 /* Aurora orb — slow color blob that drifts across hero */
 @keyframes aurora-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%      { transform: translate(40px, -30px) scale(1.1); }
-  66%      { transform: translate(-30px, 20px) scale(0.95); }
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(40px, -30px, 0) scale(1.1); }
+  66%      { transform: translate3d(-30px, 20px, 0) scale(0.95); }
 }
 .aurora-orb {
   position: absolute;
@@ -800,9 +795,9 @@ body {
 
 /* Splash reveal — for the matrix moment */
 @keyframes splash-in {
-  0%   { opacity: 0; transform: scale(0.6) rotate(-12deg); filter: blur(8px); }
-  60%  { opacity: 1; transform: scale(1.08) rotate(2deg); filter: blur(0); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
+  0%   { opacity: 0; transform: scale(0.7) rotate(-6deg); }
+  60%  { opacity: 1; transform: scale(1.05) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
 
 /* Confetti drift — for celebration moments */
@@ -822,13 +817,15 @@ body {
 }
 
 /* Text scramble appearance */
+/* Text scramble appearance — transform-only, no filter blur */
 @keyframes text-scramble {
-  0%   { opacity: 0; letter-spacing: -0.1em; filter: blur(8px); }
-  60%  { opacity: 1; letter-spacing: -0.05em; filter: blur(0); }
-  100% { opacity: 1; letter-spacing: -0.025em; filter: blur(0); }
+  0%   { opacity: 0; transform: translate3d(0, 12px, 0); letter-spacing: -0.08em; }
+  60%  { opacity: 1; transform: translate3d(0, -2px, 0); letter-spacing: -0.04em; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); letter-spacing: -0.025em; }
 }
 .text-scramble {
-  animation: text-scramble 1s var(--ease-out-expo) both;
+  animation: text-scramble 0.8s var(--ease-out-expo) both;
+  will-change: transform, opacity;
 }
 
 /* Display numeral */
@@ -936,6 +933,12 @@ body {
   75% { transform: translateX(-2px); }
 }
 .animate-shake { animation: shake 0.4s ease-out; }
+
+/* ─── Countdown pulse (contained — no expanding ring) ────────── */
+@keyframes countdown-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    PERFORMANCE LAYER

@@ -348,9 +348,9 @@ export function LandingPage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [annotationsActive, setAnnotationsActive] = useState(false);
 
-  // Annotations fire 1.8s after mount (after word-reveal completes)
+  // Annotations fire 1.6s after mount (after headline reveal-blur completes)
   useEffect(() => {
-    const t = setTimeout(() => setAnnotationsActive(true), 1800);
+    const t = setTimeout(() => setAnnotationsActive(true), 1600);
     return () => clearTimeout(t);
   }, []);
 
@@ -453,7 +453,13 @@ export function LandingPage() {
             {/* Status indicator (Linear-style) */}
             <div className="flex items-center justify-between mb-12 md:mb-16">
               <div className="flex items-center gap-2.5 text-white/40 font-mono text-[10px] uppercase tracking-[0.18em]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse" />
+                <span
+                  className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--gold)]"
+                  style={{
+                    animation: "countdown-pulse 1.6s ease-in-out infinite",
+                    boxShadow: "0 0 6px rgba(244,190,122,0.4)",
+                  }}
+                />
                 {t("landing_hero_status")}
               </div>
               <div className="hidden md:flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
@@ -463,20 +469,26 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* HUGE HEADLINE — with editorial annotations */}
-            <h1 className="font-display text-white font-light tracking-[-0.04em] leading-[1.0]
-                           text-[clamp(3rem,9vw,7rem)]
-                           max-w-[1080px] mb-12 md:mb-16">
-              <span className="block word-reveal">
-                <span>Stop</span>{" "}
-                <span><StrikeText active={annotationsActive} delay={0.3}>studying.</StrikeText></span>
+            {/* HUGE HEADLINE — editorial annotations.
+                Structure: each line is its own block. The reveal-blur animation
+                only animates opacity + scale (no translation), so the SVG strike
+                and circle measure positions remain stable. */}
+            <h1 className="font-display text-white font-light tracking-[-0.04em] leading-[1.05]
+                           text-[clamp(2.6rem,8.5vw,6.6rem)]
+                           max-w-[1100px] mb-12 md:mb-16">
+              <span className="block reveal-blur revealed" style={{ animationDelay: "0.1s" }}>
+                <span>Stop </span>
+                <StrikeText active={annotationsActive} delay={0.2}>studying.</StrikeText>
               </span>
-              <span className="block word-reveal text-shimmer font-display-wonk">
-                <span>Start</span>{" "}
-                <span><CircledText active={annotationsActive} delay={0.7}>speaking.</CircledText></span>
+              <span className="block reveal-blur revealed text-shimmer font-display-wonk"
+                style={{ animationDelay: "0.4s" }}>
+                <span>Start </span>
+                <CircledText active={annotationsActive} delay={0.6}>speaking.</CircledText>
               </span>
-              <span className="block word-reveal text-white/75 text-[clamp(2rem,6vw,4.4rem)] italic font-display-wonk mt-2">
-                <span>From</span> <span>day</span> <span>one.</span>
+              <span className="block reveal-blur revealed text-white/75 italic font-display-wonk mt-3
+                               text-[clamp(1.7rem,5.5vw,4rem)]"
+                style={{ animationDelay: "0.7s" }}>
+                From day one.
               </span>
             </h1>
 
@@ -828,7 +840,7 @@ export function LandingPage() {
                         {t("landing_lifetime_access")}
                       </div>
                     </div>
-                    <MagneticButton strength={0.25}>
+                    <MagneticButton strength={0.25} className="inline-block">
                       <button type="button"
                         onClick={() => {
                           trackEvent("purchase-click", { language: "all", price: PRICING.all.price });

@@ -139,7 +139,13 @@ export function CinematicMatrix() {
 
         {/* Status label (top left) */}
         <div className="absolute top-8 md:top-12 left-6 md:left-12 flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 z-20">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] animate-pulse" />
+          <span
+            className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--gold)]"
+            style={{
+              animation: "countdown-pulse 1.6s ease-in-out infinite",
+              boxShadow: "0 0 6px rgba(244,190,122,0.4)",
+            }}
+          />
           <span>The matrix in motion</span>
         </div>
 
