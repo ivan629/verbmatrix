@@ -1,56 +1,55 @@
 import { ThemeProvider } from "./context/Theme";
 import { TargetLanguageProvider, useTargetLanguage } from "./context/TargetLanguage";
+import { AccessProvider, useAccess } from "./context/Access";
 import { Sidebar, Hero, Footer } from "./components/Layout";
-import { FirstVisitPicker } from "./components/FirstVisitPicker";
+import { LandingPage } from "./components/LandingPage";
 import { Onboarding, useShouldShowOnboarding } from "./components/Onboarding";
 import { FloatingUILanguage } from "./components/FloatingUILanguage";
+import { PaywallCard } from "./components/PaywallCard";
+import { isFreeLessonId, FLAGS } from "./config";
 
 /**
- * App content — read once we're inside <TargetLanguageProvider> so the
- * active language module is available.
+ * App content — rendered inside all providers.
  *
- * Three render modes, gated in order:
+ * Four render modes, gated in order:
  *
- *   1. **Home / picker** (URL is "/" — `isUnchosen === true`)
- *      The user is at the language-picker home page. Either it's their
- *      first visit, or they navigated back via the sidebar brand link.
+ *   1. **Landing page** (URL is "/" — `isUnchosen === true`)
+ *      The public sales page. Shows pricing, method overview, language
+ *      cards with purchase buttons, and license key entry.
  *
  *   2. **Onboarding** (per-language flag not set yet)
- *      The user has picked a language, but the 5-step intro for that
- *      specific language hasn't been seen on this device yet.
- *      Onboarding is a focused flow with its own header, so the floating
- *      UI-language chip is intentionally hidden during this state.
+ *      Free for everyone. The 5-step first-contact flow is the best
+ *      sales tool — it shows the matrix method in action.
  *
- *   3. **The textbook itself.**
- *
- * The <FloatingUILanguage /> chip floats in the top-right corner across
- * states 1 and 3 — always within reach for switching the interface
- * language, never tied to scroll position or sidebar state.
- *
- * Onboarding's seen-flag is per target-language code, so a user who later
- * switches from Romanian to Spanish goes through Spanish onboarding too.
+ *   3. **The textbook** — with access gating.
+ *      Free lessons render normally. The first gated lesson is replaced
+ *      by a PaywallCard. Remaining paid lessons render only if the user
+ *      has a valid license for this language.
  */
 function AppContent() {
   const { module, isUnchosen } = useTargetLanguage();
   const [showOnboarding, dismissOnboarding] = useShouldShowOnboarding();
+  const { hasAccess } = useAccess();
 
-  // Step 1 — at home ("/").
+  // 1 — Landing page.
   if (isUnchosen) {
     return (
       <>
         <FloatingUILanguage />
-        <FirstVisitPicker />
+        <LandingPage />
       </>
     );
   }
 
-  // Step 2 — language picked, but onboarding not yet seen for this code.
-  // Intentionally renders without the floating chip.
+  // 2 — Onboarding (always free).
   if (showOnboarding) {
     return <Onboarding onComplete={dismissOnboarding} />;
   }
 
-  // Step 3 — the app proper.
+  // 3 — The textbook with access gating.
+  const paid = hasAccess(module.code);
+  let paywallInserted = false;
+
   return (
     <>
       <FloatingUILanguage />
@@ -59,9 +58,28 @@ function AppContent() {
         <div className="max-w-[880px] mx-auto px-6 md:px-12 lg:px-16">
           <Hero />
           <main className="pb-16">
-            {module.lessons.map(({ id, Component }) => (
-              <Component key={`${module.code}:${id}`} />
-            ))}
+            {module.lessons.map(({ id, Component }) => {
+              const isFree = isFreeLessonId(id);
+
+              // Free lesson — always render.
+              if (isFree || !FLAGS.paywallEnabled) {
+                return <Component key={`${module.code}:${id}`} />;
+              }
+
+              // Paid user — render everything.
+              if (paid) {
+                return <Component key={`${module.code}:${id}`} />;
+              }
+
+              // First gated lesson → insert the paywall card once.
+              if (!paywallInserted) {
+                paywallInserted = true;
+                return <PaywallCard key="paywall" />;
+              }
+
+              // Remaining gated lessons — hidden.
+              return null;
+            })}
           </main>
           <Footer />
         </div>
@@ -73,9 +91,11 @@ function AppContent() {
 export default function App() {
   return (
     <ThemeProvider>
-      <TargetLanguageProvider>
-        <AppContent />
-      </TargetLanguageProvider>
+      <AccessProvider>
+        <TargetLanguageProvider>
+          <AppContent />
+        </TargetLanguageProvider>
+      </AccessProvider>
     </ThemeProvider>
   );
 }

@@ -8,9 +8,10 @@ import { setActiveLanguage } from "../lib/active-language";
 import {
   readCodeFromPath, navigateToCode, navigateToHome, subscribeToPath,
 } from "../lib/url-routing";
+import { STORAGE_KEYS } from "../config";
 import type { LanguageModule } from "../languages/types";
 
-const STORAGE_KEY = "ro-study-learning-lang";
+const STORAGE_KEY = STORAGE_KEYS.activeLang;
 
 interface TargetLanguageContextValue {
   /** The fully-loaded module for the currently active learning language.

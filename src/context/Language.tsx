@@ -3,7 +3,7 @@ import {
   type ReactNode,
 } from "react";
 
-const STORAGE_KEY = "ro-study-target-lang";
+const STORAGE_KEY = "vm:target-lang";
 
 interface LanguageContextValue {
   /** ISO 639-1 code, e.g. "en", "es". Default "en". */
