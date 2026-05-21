@@ -4,6 +4,7 @@ import { useTTS } from "../lib/tts";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { tryGetActiveLanguage } from "../lib/active-language";
 import { RO } from "./RO";
+import { STORAGE_KEYS } from "../config";
 
 /**
  * Five-minute first-contact flow, run once per (browser × language).
@@ -27,10 +28,8 @@ import { RO } from "./RO";
  * later goes through onboarding for the new language too.
  */
 
-const SEEN_KEY_PREFIX = "study-onboarded:";
-
 function seenKeyFor(code: string): string {
-  return `${SEEN_KEY_PREFIX}${code}`;
+  return `${STORAGE_KEYS.onboardedPrefix}${code}`;
 }
 
 function hasSeenOnboarding(code: string): boolean {
@@ -122,7 +121,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         </header>
 
         <main className="flex-1 flex items-center justify-center px-6 py-10">
-          <div className="w-full max-w-[680px]">
+          <div key={step} className="w-full max-w-[680px] step-enter">
             {step === 1 && <StepHook onNext={next} />}
             {step === 2 && <StepCognates onNext={next} />}
             {step === 3 && <StepFirstVerb onNext={next} />}

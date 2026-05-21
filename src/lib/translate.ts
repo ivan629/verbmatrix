@@ -9,7 +9,9 @@
  * sessions hit the cache instantly.
  */
 
-const STORAGE_KEY = "ro-study-tx-cache-v1";
+import { STORAGE_KEYS } from "../config";
+
+const STORAGE_KEY = STORAGE_KEYS.translationCache;
 
 type Cache = Record<string, string>;
 

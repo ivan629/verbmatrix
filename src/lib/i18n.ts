@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import en from "../locales/en.json";
 import uk from "../locales/uk.json";
 
-const STORAGE_KEY = "ro-study-lang";
+const STORAGE_KEY = "vm:ui-lang";
 
 /**
  * AVAILABLE_LANGUAGES — the list shown in the sidebar dropdown for the

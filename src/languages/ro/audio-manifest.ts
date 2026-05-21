@@ -455,6 +455,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "Eu o să lucrez.": "529f82dae9d9",
   "Eu o să vorbesc.": "8c079eb5b446",
   "Eu sunt din Anglia.": "dea62aab0be7",
+  "Eu sunt student.": "9237aff7a513",
   "Eu sunt.": "b287d03d696c",
   "Eu vorbesc.": "77fa171ab06c",
   "exact": "b55e22fe7830",
