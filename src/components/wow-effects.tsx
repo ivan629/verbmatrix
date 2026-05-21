@@ -65,17 +65,23 @@ export function CountdownTimer({ className = "" }: { className?: string }) {
   const secs = seconds % 60;
 
   return (
-    <div ref={containerRef} className={`inline-flex items-center gap-2 ${className}`}>
+    <div ref={containerRef} className={`inline-flex items-center gap-2.5 ${className}`}>
       {phase === "done" ? (
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--gold-bright)]">
-          ⏱ That's how long it takes
-        </span>
+        <>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--gold-bright)]">
+            ⏱ That's how long it takes
+          </span>
+        </>
       ) : (
         <>
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-[var(--gold)] opacity-60 animate-ping" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--gold-bright)]" />
-          </span>
+          {/* Contained pulsing dot — no expanding ring */}
+          <span
+            className="inline-block w-[6px] h-[6px] rounded-full bg-[var(--gold-bright)]"
+            style={{
+              animation: "countdown-pulse 1.6s ease-in-out infinite",
+              boxShadow: "0 0 8px rgba(244,190,122,0.5)",
+            }}
+          />
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/50">
             First sentence in
           </span>
@@ -90,40 +96,55 @@ export function CountdownTimer({ className = "" }: { className?: string }) {
 
 // ─── Magnetic button wrapper ───────────────────────────────────
 // Wraps a button so the cursor attracts it when nearby. Uses rAF
-// for smooth movement, pointer events for proximity detection.
+// for smooth movement. Pointer-fine devices only — disabled on mobile.
 
 export function MagneticButton({
   children,
   className = "",
-  strength = 0.35,
+  strength = 0.3,
   ...rest
 }: {
   children: ReactNode;
   className?: string;
   strength?: number;
 } & React.HTMLAttributes<HTMLDivElement>) {
-  const ref = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | undefined>(undefined);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    // Only enable on pointer:fine desktop
+    const isFine = window.matchMedia("(pointer: fine)").matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setEnabled(isFine && !reduceMotion);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
+    const wrapper = wrapperRef.current;
+    const inner = innerRef.current;
+    if (!wrapper || !inner) return;
 
     function update() {
-      // Smooth lerp toward target
-      currentRef.current.x += (targetRef.current.x - currentRef.current.x) * 0.15;
-      currentRef.current.y += (targetRef.current.y - currentRef.current.y) * 0.15;
-      if (el) {
-        el.style.transform = `translate3d(${currentRef.current.x}px, ${currentRef.current.y}px, 0)`;
-      }
-      // Keep ticking while there's distance to cover
       const dx = targetRef.current.x - currentRef.current.x;
       const dy = targetRef.current.y - currentRef.current.y;
+      currentRef.current.x += dx * 0.18;
+      currentRef.current.y += dy * 0.18;
+      if (inner) {
+        inner.style.transform = `translate3d(${currentRef.current.x.toFixed(2)}px, ${currentRef.current.y.toFixed(2)}px, 0)`;
+      }
+      // Continue while there's distance OR we're being attracted
       if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
         rafRef.current = requestAnimationFrame(update);
       } else {
+        // Snap to final position to avoid sub-pixel drift
+        if (inner) {
+          inner.style.transform = `translate3d(${targetRef.current.x}px, ${targetRef.current.y}px, 0)`;
+        }
+        currentRef.current = { ...targetRef.current };
         rafRef.current = undefined;
       }
     }
@@ -134,40 +155,61 @@ export function MagneticButton({
       }
     }
 
-    function onMove(e: MouseEvent) {
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
+    function onMove(e: PointerEvent) {
+      if (!wrapper) return;
+      const rect = wrapper.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = e.clientX - cx;
       const dy = e.clientY - cy;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      const radius = Math.max(rect.width, rect.height) * 1.2;
+      // Activation radius: 1.4× the longer dimension
+      const radius = Math.max(rect.width, rect.height) * 1.4;
       if (distance < radius) {
-        targetRef.current = { x: dx * strength, y: dy * strength };
+        // Falloff: stronger when close, weaker at radius edge
+        const falloff = 1 - distance / radius;
+        targetRef.current = {
+          x: dx * strength * falloff,
+          y: dy * strength * falloff,
+        };
       } else {
         targetRef.current = { x: 0, y: 0 };
       }
       startTick();
     }
 
-    function onLeave() {
-      targetRef.current = { x: 0, y: 0 };
-      startTick();
-    }
-
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseleave", onLeave);
+    window.addEventListener("pointermove", onMove, { passive: true });
     return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
-      if (rafRef.current !== undefined) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("pointermove", onMove);
+      if (rafRef.current !== undefined) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = undefined;
+      }
     };
-  }, [strength]);
+  }, [enabled, strength]);
+
+  // The wrapper carries the className for layout (w-full sm:w-auto etc).
+  // The inner div is purely a transform target — display:contents so it doesn't
+  // create its own box, just passes through children unchanged.
+  if (!enabled) {
+    return (
+      <div className={className} {...rest}>
+        {children}
+      </div>
+    );
+  }
 
   return (
-    <div ref={ref} className={`gpu inline-block ${className}`} {...rest}>
-      {children}
+    <div ref={wrapperRef} className={className} {...rest}>
+      <div
+        ref={innerRef}
+        style={{
+          willChange: "transform",
+          transform: "translate3d(0, 0, 0)",
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -406,7 +448,8 @@ export function HoverPhonetic({
 }
 
 // ─── Animated strikethrough text ───────────────────────────────
-// "studying" appears, then a hand-drawn line strikes through it.
+// Hand-drawn line strikes through text. The SVG is sized in absolute
+// pixels via a ref so it tracks the actual text width, not a percentage.
 
 export function StrikeText({
   children,
@@ -419,36 +462,79 @@ export function StrikeText({
   active?: boolean;
   delay?: number;
 }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setSize({ w: rect.width, h: rect.height });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(ref.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // SVG viewBox uses the measured pixel size so the curve doesn't stretch.
+  // Line sits at roughly 60% of text height (crosses mid-x of lowercase letters).
+  const W = Math.max(size.w, 1);
+  const H = Math.max(size.h, 1);
+  const yLine = H * 0.62;
+  const dash = W * 1.05; // a bit longer than width for the curve
+
   return (
-    <span className={`relative inline-block ${className}`}>
-      <span style={{ opacity: active ? 0.45 : 1, transition: "opacity 0.6s ease" }}>
+    <span ref={ref} className={`relative inline-block ${className}`}>
+      <span
+        style={{
+          opacity: active ? 0.42 : 1,
+          transition: `opacity 0.5s ease ${delay + 0.2}s`,
+        }}
+      >
         {children}
       </span>
-      <svg
-        className="absolute pointer-events-none"
-        style={{ left: "-2%", top: "50%", width: "104%", height: "30px", transform: "translateY(-50%)" }}
-        viewBox="0 0 200 30"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M2,16 Q60,12 100,15 Q140,18 198,14"
-          stroke="var(--rose)"
-          strokeWidth="3"
-          strokeLinecap="round"
+      {size.w > 0 && (
+        <svg
+          className="absolute pointer-events-none"
           style={{
-            strokeDasharray: 220,
-            strokeDashoffset: active ? 0 : 220,
-            transition: `stroke-dashoffset 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+            left: -W * 0.02,
+            top: 0,
+            width: W * 1.04,
+            height: H,
+            overflow: "visible",
           }}
-        />
-      </svg>
+          viewBox={`0 0 ${W * 1.04} ${H}`}
+          fill="none"
+        >
+          <path
+            d={`M ${W * 0.02},${yLine}
+                Q ${W * 0.3},${yLine - H * 0.04}
+                  ${W * 0.55},${yLine - H * 0.01}
+                T ${W * 1.02},${yLine - H * 0.03}`}
+            stroke="var(--rose)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            style={{
+              strokeDasharray: dash,
+              strokeDashoffset: active ? 0 : dash,
+              transition: `stroke-dashoffset 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+            }}
+          />
+        </svg>
+      )}
     </span>
   );
 }
 
 // ─── Animated hand-drawn circle ────────────────────────────────
-// "speaking" gets circled with a gold pen-stroke that draws itself.
+// Pen-stroke ellipse around text. Sized to actual text bounds via ref.
 
 export function CircledText({
   children,
@@ -461,31 +547,70 @@ export function CircledText({
   active?: boolean;
   delay?: number;
 }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      setSize({ w: rect.width, h: rect.height });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(ref.current);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
+
+  // Pad around the text so the circle has breathing room
+  const padX = size.w * 0.06;
+  const padY = size.h * 0.18;
+  const W = size.w + padX * 2;
+  const H = size.h + padY * 2;
+  // Approximate circumference of the ellipse
+  const a = W / 2;
+  const b = H / 2;
+  const perimeter = Math.PI * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
+
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span ref={ref} className={`relative inline-block ${className}`}>
       <span>{children}</span>
-      <svg
-        className="absolute pointer-events-none"
-        style={{
-          left: "-10%", top: "-15%",
-          width: "120%", height: "130%",
-        }}
-        viewBox="0 0 220 80"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <path
-          d="M14,40 Q22,12 110,10 Q200,14 208,40 Q210,68 110,72 Q14,68 14,40 Z"
-          stroke="var(--gold)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
+      {size.w > 0 && (
+        <svg
+          className="absolute pointer-events-none"
           style={{
-            strokeDasharray: 700,
-            strokeDashoffset: active ? 0 : 700,
-            transition: `stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+            left: -padX,
+            top: -padY,
+            width: W,
+            height: H,
+            overflow: "visible",
           }}
-        />
-      </svg>
+          viewBox={`0 0 ${W} ${H}`}
+          fill="none"
+        >
+          <ellipse
+            cx={W / 2}
+            cy={H / 2}
+            rx={a - 2}
+            ry={b - 2}
+            stroke="var(--gold)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            transform={`rotate(-2 ${W / 2} ${H / 2})`}
+            style={{
+              strokeDasharray: perimeter,
+              strokeDashoffset: active ? 0 : perimeter,
+              transition: `stroke-dashoffset 1.1s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+            }}
+          />
+        </svg>
+      )}
     </span>
   );
 }
