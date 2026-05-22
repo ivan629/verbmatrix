@@ -1,39 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTargetLanguage } from "../context/TargetLanguage";
+import { useLessonNav } from "../context/LessonNav";
 import { BRAND, STORAGE_KEYS } from "../config";
 
 // ─── Sidebar ────────────────────────────────────────────────────
-
-function useActiveSection(ids: string[]): string {
-    const idsKey = useMemo(() => ids.join("|"), [ids]);
-    const [active, setActive] = useState<string>("");
-
-    useEffect(() => {
-        const idArray = idsKey.split("|").filter(Boolean);
-        if (idArray.length === 0) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const visible = entries
-                    .filter((e) => e.isIntersecting)
-                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-                if (visible.length > 0) setActive(visible[0].target.id);
-            },
-            { rootMargin: "-15% 0px -65% 0px", threshold: 0 }
-        );
-
-        idArray.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
-        return () => observer.disconnect();
-    }, [idsKey]);
-
-    return active;
-}
 
 /**
  * Pull the lesson number out of an anchor like "#L3" → "03".
@@ -48,14 +21,16 @@ function lessonNumber(href: string): string | null {
 export function Sidebar() {
     const { t } = useTranslation();
     const { module, goHome } = useTargetLanguage();
+    const { activeId, isComplete, focusMode, toggleFocusMode, completedCount } = useLessonNav();
     const navGroups = module.navGroups;
-
     const [open, setOpen] = useState(false);
-    const allIds = useMemo(
-        () => navGroups.flatMap((g) => g.links.map((l) => l.href.slice(1))),
-        [navGroups]
-    );
-    const active = useActiveSection(allIds);
+
+    // Count total completable lessons (those with an L-prefixed id) for the
+    // progress copy at the bottom of the sidebar.
+    const totalLessons = navGroups
+        .flatMap(g => g.links)
+        .filter(l => lessonNumber(l.href) !== null)
+        .length;
 
     return (
         <>
@@ -123,32 +98,30 @@ export function Sidebar() {
                             <ul className="space-y-px">
                                 {group.links.map((link) => {
                                     const id = link.href.slice(1);
-                                    const isActive = active === id;
+                                    const isActive = activeId === id;
                                     const num = lessonNumber(link.href);
                                     const isFeatured = link.featured === true;
+                                    const done = num !== null && isComplete(id);
 
                                     // Featured ("core engine") links: pure typographic accent —
                                     // gold text + gold ★ glyph, no border, no fill in default
                                     // state. The colour alone does the differentiating work.
-                                    // Active state adds a quiet gold-soft fill so you can tell
-                                    // you're on the matrix at a glance.
                                     const linkClass = isFeatured
                                         ? `
-                        grid grid-cols-[20px_1fr] items-baseline gap-2
+                        grid grid-cols-[12px_20px_1fr] items-baseline gap-2
                         px-3 py-2.5 text-[13px] rounded-md transition-colors
                         text-[var(--gold)]
                         hover:bg-[var(--gold-soft)]
                         ${isActive ? "bg-[var(--gold-soft)]" : ""}
                       `
                                         : `
-                        grid grid-cols-[20px_1fr] items-baseline gap-2
+                        grid grid-cols-[12px_20px_1fr] items-baseline gap-2
                         px-3 py-2.5 text-[13px] rounded-md transition-colors
                         ${isActive
                                             ? "bg-[var(--surface-2)] text-[var(--ink)] font-medium"
                                             : "text-[var(--ink-2)] hover:text-[var(--ink)] hover:bg-[var(--surface-2)]/60"}
                       `;
 
-                                    // Glyph: ★ for featured, lesson number for lessons, · for the rest.
                                     const glyph = isFeatured ? "★" : (num ?? "·");
                                     const glyphClass = isFeatured
                                         ? "font-mono text-[10.5px] text-[var(--gold)]"
@@ -156,16 +129,27 @@ export function Sidebar() {
                                             isActive ? "text-[var(--gold)]" : "text-[var(--ink-4)]"
                                         }`;
 
+                                    // Completion dot — only shown for actual lessons (L#-anchored).
+                                    // Featured matrix link and reference items get no dot.
+                                    const showDot = num !== null;
+
                                     return (
                                         <li key={link.href}>
                                             <a
                                                 href={link.href}
                                                 onClick={() => setOpen(false)}
                                                 className={linkClass}
+                                                aria-current={isActive ? "true" : undefined}
                                             >
-                        <span className={glyphClass} aria-hidden="true">
-                          {glyph}
-                        </span>
+                                                <span aria-hidden="true" className="flex items-center justify-center">
+                                                    {showDot && (
+                                                        <span
+                                                            className={`completion-dot${done ? " is-complete" : ""}`}
+                                                            title={done ? t("lesson_marked_complete") : ""}
+                                                        />
+                                                    )}
+                                                </span>
+                                                <span className={glyphClass} aria-hidden="true">{glyph}</span>
                                                 <span>{t(`nav_links_${link.label}`)}</span>
                                             </a>
                                         </li>
@@ -175,6 +159,26 @@ export function Sidebar() {
                         </div>
                     ))}
                 </nav>
+
+                {/* Sidebar footer — focus mode toggle + progress */}
+                <div className="border-t border-[var(--border)] px-4 py-3 space-y-2">
+                    {totalLessons > 0 && (
+                        <div className="px-3 font-mono text-[10px] tracking-[0.12em] uppercase text-[var(--ink-4)]">
+                            {t("sidebar_progress", { done: completedCount, total: totalLessons })}
+                        </div>
+                    )}
+                    <button
+                        type="button"
+                        onClick={toggleFocusMode}
+                        className={`focus-mode-toggle${focusMode ? " is-on" : ""}`}
+                        aria-pressed={focusMode}
+                        title={t("focus_mode_hint_shortcut")}
+                    >
+                        <span aria-hidden="true">{focusMode ? "◉" : "○"}</span>
+                        <span className="flex-1 text-left">{t("focus_mode_label")}</span>
+                        <span className="focus-mode-shortcut" aria-hidden="true">F</span>
+                    </button>
+                </div>
 
                 {/* Interface-language toggle now floats in the top-right
                     corner of the viewport — see <FloatingUILanguage />. The

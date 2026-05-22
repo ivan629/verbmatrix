@@ -1,13 +1,16 @@
 import { ThemeProvider } from "./context/Theme";
 import { TargetLanguageProvider, useTargetLanguage } from "./context/TargetLanguage";
 import { AccessProvider, useAccess } from "./context/Access";
+import { LessonNavProvider } from "./context/LessonNav";
 import { Sidebar, Hero, Footer } from "./components/Layout";
 import { LandingPage } from "./components/LandingPage";
 import { Onboarding, useShouldShowOnboarding } from "./components/Onboarding";
 import { FloatingUILanguage } from "./components/FloatingUILanguage";
 import { PaywallCard } from "./components/PaywallCard";
 import { LessonProgressBar } from "./components/LessonProgressBar";
+import { PhaseHeader } from "./components/PhaseHeader";
 import { isFreeLessonId, FLAGS } from "./config";
+import type { ReactNode } from "react";
 
 /**
  * App content — rendered inside all providers.
@@ -51,6 +54,61 @@ function AppContent() {
   const paid = hasAccess(module.code);
   let paywallInserted = false;
 
+  // Build the lesson stream with phase headers injected between navGroups.
+  // The first navGroup (typically "Practice", containing only the matrix
+  // demo) is treated as the page entry and gets no header above it. Every
+  // subsequent group earns a PhaseHeader before its first lesson.
+  //
+  // Phase numbering skips the first group, so the user sees "Phase I", "II"
+  // ... "V" for the five learning phases.
+  const groupOfLesson = (lessonId: string): string | null => {
+    for (const g of module.navGroups) {
+      if (g.links.some(l => l.href === `#${lessonId}`)) return g.label;
+    }
+    return null;
+  };
+  const firstGroupLabel = module.navGroups[0]?.label ?? null;
+  const totalPhases = Math.max(0, module.navGroups.length - 1);
+
+  const stream: ReactNode[] = [];
+  let currentGroup: string | null = null;
+  let phaseNumber = 0;
+
+  for (const { id, Component } of module.lessons) {
+    const group = groupOfLesson(id);
+
+    // Crossed into a new navGroup? Insert a PhaseHeader — but skip the
+    // very first group (page entry) and skip ungrouped lessons.
+    if (group && group !== currentGroup) {
+      currentGroup = group;
+      if (group !== firstGroupLabel) {
+        phaseNumber++;
+        stream.push(
+          <PhaseHeader
+            key={`phase-${group}`}
+            number={phaseNumber}
+            total={totalPhases}
+            groupLabel={group}
+          />
+        );
+      }
+    }
+
+    const isFree = isFreeLessonId(id);
+
+    if (isFree || !FLAGS.paywallEnabled || paid) {
+      stream.push(<Component key={`${module.code}:${id}`} />);
+      continue;
+    }
+
+    // First gated lesson → insert the paywall card once, then stop.
+    if (!paywallInserted) {
+      paywallInserted = true;
+      stream.push(<PaywallCard key="paywall" />);
+    }
+    // Remaining gated lessons — hidden.
+  }
+
   return (
     <>
       <LessonProgressBar />
@@ -60,28 +118,7 @@ function AppContent() {
         <div className="max-w-[880px] mx-auto px-6 md:px-12 lg:px-16">
           <Hero />
           <main className="pb-16">
-            {module.lessons.map(({ id, Component }) => {
-              const isFree = isFreeLessonId(id);
-
-              // Free lesson — always render.
-              if (isFree || !FLAGS.paywallEnabled) {
-                return <Component key={`${module.code}:${id}`} />;
-              }
-
-              // Paid user — render everything.
-              if (paid) {
-                return <Component key={`${module.code}:${id}`} />;
-              }
-
-              // First gated lesson → insert the paywall card once.
-              if (!paywallInserted) {
-                paywallInserted = true;
-                return <PaywallCard key="paywall" />;
-              }
-
-              // Remaining gated lessons — hidden.
-              return null;
-            })}
+            {stream}
           </main>
           <Footer />
         </div>
@@ -95,7 +132,9 @@ export default function App() {
     <ThemeProvider>
       <AccessProvider>
         <TargetLanguageProvider>
-          <AppContent />
+          <LessonNavProvider>
+            <AppContent />
+          </LessonNavProvider>
         </TargetLanguageProvider>
       </AccessProvider>
     </ThemeProvider>

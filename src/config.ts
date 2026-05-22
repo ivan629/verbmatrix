@@ -49,6 +49,14 @@ export const STORAGE_KEYS = {
   /** License keys — JSON object mapping language code → key string.
    *  e.g. `{ "ro": "XXXX-XXXX-XXXX", "all": "YYYY-YYYY-YYYY" }` */
   licenses: `${PREFIX}:licenses`,
+  /** Per-lesson completion. Suffixed with `<lang>:<lessonId>` at runtime:
+   *  e.g. `vm:completed:ro:L3 = "1"`. Absence means not completed. */
+  completedPrefix: `${PREFIX}:completed:`,
+  /** Last-viewed lesson id, per language: `vm:last-pos:ro = "L7"`. Used to
+   *  restore the user's reading position when they return. */
+  lastPositionPrefix: `${PREFIX}:last-pos:`,
+  /** Focus mode preference (global, not per-language): "1" or absent. */
+  focusMode: `${PREFIX}:focus-mode`,
 } as const;
 
 // ─── Pricing ────────────────────────────────────────────────────

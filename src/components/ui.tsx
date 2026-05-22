@@ -1,26 +1,28 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import type {
   BoxVariant, PhraseItem, VocabItem, NumberItem, SoundItem,
   PrincipleItem, ScheduleItem, FillerItem, TestItem, ContrastColumn, VerbDefinition,
 } from "../types";
 import { RO } from "./RO";
+import { useLessonNav } from "../context/LessonNav";
+import { useTargetLanguage } from "../context/TargetLanguage";
 
 // ─── Lesson Section ─────────────────────────────────────────────
 //
-// New opener (mockup-approved 10/10 design):
+// Opener (mockup-approved):
 //   • eyebrow         — gold "Lesson N · Tag" line
 //   • display title   — large, with <em> emphasis on the outcome word
 //   • gold rule       — 36px thin gold bar, visual punctuation
 //   • meta strip      — "5 min · read"  "3 min · practice"
 //   • goal sentence   — italic "By the end you will…"
 //
-// All new props (time, practice, goal, recap, nextId, nextLabel) are optional.
-// When absent the section degrades gracefully — old call sites still render
-// fine, just without the time budget, goal, or close-of-lesson moment.
+// Behaviour:
+//   • registers itself with LessonNavProvider (active tracking + focus mode)
+//   • auto-renders <LessonClose> when `recap` is set, with mark-complete button
+//   • detects phase-end automatically by checking if nextId crosses navGroups
 //
-// The title supports <em>...</em> inline markup for italic gold emphasis on
-// the outcome word, rendered via <Trans>.
+// All new props are optional — legacy call sites still render correctly.
 
 type LessonMode = "read" | "say" | "recall" | "write";
 
@@ -50,6 +52,33 @@ export function LessonSection({
   id, num, tag, title, subtitle, goal, time, practice, recap, nextId, nextLabel, children,
 }: LessonSectionProps) {
   const { t } = useTranslation();
+  const { activeId, focusMode, registerSection } = useLessonNav();
+  const { module } = useTargetLanguage();
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Register / unregister this section with the shared observer.
+  useEffect(() => {
+    registerSection(id, sectionRef.current);
+    return () => registerSection(id, null);
+  }, [id, registerSection]);
+
+  // Detect phase boundary: if the next lesson is in a different navGroup
+  // than this one, this lesson is the last of its phase.
+  const isPhaseEnd = useMemo(() => {
+    if (!nextId) return false;
+    const groupOf = (lessonId: string): string | null => {
+      for (const g of module.navGroups) {
+        if (g.links.some(l => l.href === `#${lessonId}`)) return g.label;
+      }
+      return null;
+    };
+    const currentGroup = groupOf(id);
+    const nextGroup = groupOf(nextId);
+    return currentGroup !== null && nextGroup !== null && currentGroup !== nextGroup;
+  }, [id, nextId, module.navGroups]);
+
+  // Focus mode: hide every section except the active one.
+  const isFocusHidden = focusMode && activeId !== null && activeId !== id;
 
   const eyebrowText =
     num === "★"
@@ -57,7 +86,13 @@ export function LessonSection({
       : `${t("lesson_label")} ${num} · ${t(tag)}`;
 
   return (
-    <section id={id} className="mb-24 scroll-mt-20 fade-in">
+    <section
+      id={id}
+      ref={sectionRef}
+      data-lesson-section
+      data-lesson-id={id}
+      className={`mb-24 scroll-mt-20 fade-in${isFocusHidden ? " lesson-focus-hidden" : ""}`}
+    >
       {/* ── Opener ─────────────────────────────────────────────── */}
       <div className="lesson-eyebrow">{eyebrowText}</div>
 
@@ -94,6 +129,8 @@ export function LessonSection({
           nextId={nextId}
           nextLabel={nextLabel}
           num={num}
+          lessonId={id}
+          phaseEnd={isPhaseEnd}
         />
       )}
     </section>
@@ -101,18 +138,26 @@ export function LessonSection({
 }
 
 // ─── Lesson Close ───────────────────────────────────────────────
-// The deliberate end-of-lesson moment. Checkmark + recap + next pointer.
-// Renders a closure beat that consolidates what was just learned.
+// The deliberate end-of-lesson moment.
+//   • checkmark + recap          — closure beat
+//   • "Stop here?" (phase end)   — permission to put the book down
+//   • mark-complete button       — sidebar dot fills, motivation
+//   • next-lesson pointer        — chains forward when ready
 
 export function LessonClose({
-  recap, nextId, nextLabel, num,
+  recap, nextId, nextLabel, num, lessonId, phaseEnd,
 }: {
   recap: string;
   nextId?: string;
   nextLabel?: string;
   num?: string;
+  lessonId?: string;
+  phaseEnd?: boolean;
 }) {
   const { t } = useTranslation();
+  const { isComplete, toggleComplete } = useLessonNav();
+  const done = lessonId ? isComplete(lessonId) : false;
+
   const completeLabel =
     num && num !== "★"
       ? `${t("lesson_label")} ${num} ${t("lesson_complete")}`
@@ -125,13 +170,37 @@ export function LessonClose({
         <span>{completeLabel}</span>
       </div>
       <p className="lesson-close-recap">{t(recap)}</p>
-      {nextId && nextLabel && (
-        <a href={`#${nextId}`} className="lesson-close-next">
-          <span className="next-label">{t("lesson_next")}:</span>
-          <span>{t(nextLabel)}</span>
-          <span aria-hidden="true">→</span>
-        </a>
+
+      {phaseEnd && (
+        <div className="lesson-stop-here">
+          <span className="lesson-stop-here-glyph" aria-hidden="true">◐</span>
+          <div>
+            <div className="lesson-stop-here-label">{t("lesson_stop_here_label")}</div>
+            <div className="lesson-stop-here-body">{t("lesson_stop_here_body")}</div>
+          </div>
+        </div>
       )}
+
+      <div className="lesson-close-actions">
+        {lessonId && (
+          <button
+            type="button"
+            onClick={() => toggleComplete(lessonId)}
+            className={`lesson-mark-complete${done ? " is-complete" : ""}`}
+            aria-pressed={done}
+          >
+            <span aria-hidden="true">{done ? "✓" : "○"}</span>
+            <span>{done ? t("lesson_marked_complete") : t("lesson_mark_complete")}</span>
+          </button>
+        )}
+        {nextId && nextLabel && (
+          <a href={`#${nextId}`} className="lesson-close-next">
+            <span className="next-label">{t("lesson_next")}:</span>
+            <span><Trans i18nKey={nextLabel} components={{ em: <em /> }} /></span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
+      </div>
     </div>
   );
 }

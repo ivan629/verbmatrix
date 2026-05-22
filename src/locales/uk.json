@@ -210,5 +210,18 @@
   "box_remember_label": "Запам'ятай",
   "box_pitfall_label": "Часта помилка",
   "box_aside_label": "Між іншим",
-  "box_note_label": "Примітка"
+  "box_note_label": "Примітка",
+  "phase_counter": "Фаза {{number}} з {{total}}",
+  "lesson_mark_complete": "Позначити пройденим",
+  "lesson_marked_complete": "Пройдено",
+  "lesson_stop_here_label": "Гарне місце, щоб зупинитися.",
+  "lesson_stop_here_body": "Ти дійшов(ла) до кінця цієї фази. Повернись завтра зі свіжою головою.",
+  "focus_mode_label": "Режим фокусу",
+  "focus_mode_hint_shortcut": "Натисни F для перемикання. Приховує все, крім поточного уроку.",
+  "sidebar_progress": "{{done}} з {{total}} пройдено",
+  "phase_foundations_intro": "Звуки, речення, сім принципів. Усе подальше будується на цьому.",
+  "phase_verbs_intro": "Три часи, три форми, дев'ять клітинок. Матриця — це весь підручник у мініатюрі.",
+  "phase_grammar_intro": "Артиклі, узгодження, присвійність. Кістяк, що під кожним реченням.",
+  "phase_tenses_intro": "Минуле, майбутнє, умовне. Форми, яких речення набуває в часі.",
+  "phase_reference_intro": "Словник, діалоги, план на тридцять два дні. Підручник стає довідником."
 }
