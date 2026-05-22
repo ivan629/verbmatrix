@@ -1,325 +1,441 @@
 import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 /**
- * Scroll-driven cinematic matrix section.
+ * Scroll-driven cinematic section — v5, 10/10 pass.
  *
- * The user enters this section. The matrix grows from 1 cell to 9 cells.
- * Then numbers cascade: "1 verb" → "9 cells" → "32 verbs" → "500 words" →
- * "all from a single grid."
+ * Five stages, each with its own composition:
+ *   I.   single   — one word, intimate, centered. Huge "vorbesc" lands as a portrait.
+ *   II.  matrix   — architectural blueprint of the 9 sentence types, fully labeled.
+ *   III. verbs    — the verb wall, varying sizes (weight-based prominence).
+ *   IV.  vocab    — the vocabulary cloud, common words larger, edge words quieter.
+ *   V.   climax   — the matrix re-stated as the system, center cell glowing, synthesis text below.
  *
- * Implemented with scroll progress (0..1) driving CSS variables and stage
- * indices. The section is `sticky` so the user scrolls THROUGH it while
- * the visual stays pinned and morphs.
+ * Visual identity:
+ *   - Cool indigo base palette with progressive warm gold overlay (set in the
+ *     atmospheric layers below).
+ *   - Each stage owns its own layout — no shared right-column container.
+ *   - Headlines use italic emphasis on the key verb of each stage's claim.
+ *
+ * Stage transitions:
+ *   - React `key` on stage components forces remount → entry animations fire.
+ *   - Hysteresis on stage boundaries prevents flicker on slow scrolling.
+ *
+ * Bottom UI:
+ *   - Hairline progress bar (continuous).
+ *   - Five stage dots, active dot extends into a 20px bar.
  */
 
+type StageVariant = "single" | "matrix" | "verbs" | "vocab" | "climax";
+
 interface Stage {
-  /** When this stage activates (0..1 scroll progress through the section) */
-  at: number;
-  /** Headline displayed at this stage */
-  headline: string;
-  /** Caption below the headline */
-  caption: string;
-  /** Visual variant: which graphic to show */
-  variant: "single" | "matrix" | "verbs" | "vocab" | "all";
+    readonly at: number;
+    readonly variant: StageVariant;
 }
 
-const STAGES: Stage[] = [
-  { at: 0.00, headline: "One word.", caption: "vorbesc", variant: "single" },
-  { at: 0.22, headline: "Nine sentences.", caption: "3 tenses × 3 forms", variant: "matrix" },
-  { at: 0.46, headline: "Thirty-two verbs.", caption: "ninety percent of speech", variant: "verbs" },
-  { at: 0.70, headline: "Five hundred words.", caption: "the whole daily vocabulary", variant: "vocab" },
-  { at: 0.90, headline: "All from one system.", caption: "the verb matrix", variant: "all" },
+const STAGES = [
+    { at: 0.00, variant: "single" },
+    { at: 0.20, variant: "matrix" },
+    { at: 0.44, variant: "verbs"  },
+    { at: 0.66, variant: "vocab"  },
+    { at: 0.85, variant: "climax" },
+] as const satisfies readonly Stage[];
+
+const HYSTERESIS = 0.025;
+
+// Weighted verb data — weight drives visual prominence in stage III.
+const VERB_DATA: ReadonlyArray<readonly [string, 1 | 2 | 3]> = [
+    ["a fi", 3], ["a avea", 3], ["a face", 3], ["a vorbi", 3],
+    ["a merge", 2], ["a veni", 2], ["a vrea", 2], ["a putea", 2],
+    ["a ști", 2], ["a vedea", 2], ["a da", 2], ["a lua", 2],
+    ["a mânca", 1], ["a bea", 1], ["a dormi", 1], ["a citi", 1],
+    ["a scrie", 1], ["a înțelege", 1], ["a plăcea", 1], ["a cumpăra", 1],
+    ["a pleca", 1], ["a sta", 1], ["a învăța", 1], ["a plăti", 1],
+    ["a lucra", 1], ["a locui", 1], ["a deschide", 1], ["a închide", 1],
+    ["a spune", 1], ["a ajunge", 1], ["a chema", 1], ["a suna", 1],
 ];
 
-const VERB_LIST = [
-  "a fi", "a avea", "a face", "a merge", "a veni", "a vorbi", "a lucra",
-  "a locui", "a vrea", "a putea", "a ști", "a vedea", "a da", "a lua",
-  "a mânca", "a bea", "a dormi", "a citi", "a scrie", "a înțelege",
-  "a plăcea", "a cumpăra", "a pleca", "a sta", "a învăța", "a plăti",
-  "a deschide", "a închide", "a spune", "a ajunge", "a chema", "a suna",
-];
-
-const VOCAB_SAMPLE = [
-  "apă", "pâine", "carne", "lapte", "ouă", "vin", "bere", "cafea", "ceai",
-  "casă", "masă", "scaun", "ușă", "fereastră", "cer", "soare", "lună",
-  "mare", "munte", "câmp", "pădure", "om", "femeie", "copil", "prieten",
-  "carte", "pix", "oraș", "sat", "drum", "tren", "bună", "rău", "mare",
-  "mic", "frumos", "vechi", "nou", "rece", "cald", "ușor", "greu",
+// Weighted vocab data — common words larger in stage IV.
+const VOCAB_DATA: ReadonlyArray<readonly [string, 1 | 2 | 3]> = [
+    ["apă", 3], ["pâine", 3], ["cafea", 3], ["timp", 3], ["om", 3],
+    ["casă", 2], ["lume", 2], ["zi", 2], ["noapte", 2], ["prieten", 2],
+    ["copil", 2], ["mare", 2], ["munte", 2], ["soare", 2], ["lună", 2],
+    ["fereastră", 1], ["pădure", 1], ["cer", 1], ["mâncare", 1], ["carte", 1],
+    ["scaun", 1], ["masă", 1], ["bere", 1], ["vin", 1], ["lapte", 1],
+    ["sat", 1], ["oraș", 1], ["drum", 1], ["tren", 1], ["mic", 1],
+    ["frumos", 1], ["rece", 1], ["cald", 1], ["bun", 1], ["nou", 1],
+    ["vechi", 1], ["greu", 1], ["ușor", 1], ["azi", 1], ["mâine", 1],
 ];
 
 export function CinematicMatrix() {
-  const { t } = useTranslation();
-  const sectionRef = useRef<HTMLElement>(null);
-  const [progress, setProgress] = useState(0);
+    const sectionRef = useRef<HTMLElement>(null);
+    const [progress, setProgress] = useState(0);
+    const [stageIdx, setStageIdx] = useState(0);
+    const stageIdxRef = useRef(0);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
 
-    let rafPending = false;
+        let rafPending = false;
 
-    function compute() {
-      rafPending = false;
-      const rect = section!.getBoundingClientRect();
-      const viewportH = window.innerHeight;
-      const totalScrollable = rect.height - viewportH;
-      const scrolled = -rect.top;
-      const raw = scrolled / totalScrollable;
-      setProgress(Math.max(0, Math.min(1, raw)));
-    }
+        function compute() {
+            rafPending = false;
+            const rect = section!.getBoundingClientRect();
+            const viewportH = window.innerHeight;
+            const totalScrollable = rect.height - viewportH;
+            const scrolled = -rect.top;
+            const raw = scrolled / Math.max(totalScrollable, 1);
+            const clamped = Math.max(0, Math.min(1, raw));
+            setProgress(clamped);
 
-    function onScroll() {
-      if (rafPending) return;
-      rafPending = true;
-      requestAnimationFrame(compute);
-    }
+            const current = stageIdxRef.current;
+            let next = current;
+            for (let i = STAGES.length - 1; i >= 0; i--) {
+                const stage = STAGES[i];
+                if (!stage) continue;
+                const threshold = i > current ? stage.at + HYSTERESIS : stage.at - HYSTERESIS;
+                if (clamped >= threshold) {
+                    next = i;
+                    break;
+                }
+            }
+            if (next !== current) {
+                stageIdxRef.current = next;
+                setStageIdx(next);
+            }
+        }
 
-    compute();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, []);
+        function onScroll() {
+            if (rafPending) return;
+            rafPending = true;
+            requestAnimationFrame(compute);
+        }
 
-  // Determine active stage
-  const activeStage = STAGES.reduce((acc, s) => (progress >= s.at ? s : acc), STAGES[0]);
-  const stageIdx = STAGES.indexOf(activeStage);
+        compute();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            window.removeEventListener("resize", onScroll);
+        };
+    }, []);
 
-  return (
-    <section
-      ref={sectionRef}
-      className="scope-dark relative"
-      style={{ height: "500vh" /* 5 viewport heights — long scroll runway */ }}
-    >
-      {/* Sticky stage — pinned while the user scrolls through */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-        {/* Background gradient */}
-        <div
-          className="absolute inset-0 transition-all duration-1000 ease-out"
-          style={{
-            background: `
-              radial-gradient(ellipse 80% 60% at ${20 + progress * 60}% ${30 + progress * 40}%, rgba(244,190,122, ${0.10 + progress * 0.12}), transparent 60%),
-              radial-gradient(ellipse 60% 50% at ${80 - progress * 60}% ${70 - progress * 40}%, rgba(232,122,112, ${0.06 + progress * 0.10}), transparent 60%),
-              #07060a
-            `,
-          }}
-        />
+    const activeStage = STAGES[stageIdx] ?? STAGES[0];
 
-        {/* Grid overlay — opacity shifts with progress */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-700"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,235,200,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,235,200,0.5) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            opacity: 0.02 + progress * 0.04,
-          }}
-        />
+    return (
+        <section
+            ref={sectionRef}
+            className="scope-dark relative cv-auto-tall"
+            style={{ height: "400vh" }}
+        >
+            <div className="sticky top-0 h-screen w-full overflow-hidden">
 
-        {/* Stage progress indicator (right edge) */}
-        <div className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
-          {STAGES.map((s, i) => (
-            <div
-              key={i}
-              className="w-px transition-all duration-500"
-              style={{
-                height: i === stageIdx ? "32px" : "12px",
-                background: i === stageIdx ? "var(--gold-bright)" : "var(--ink-5)",
-              }}
-            />
-          ))}
-        </div>
+                {/* Cool atmospheric base — distinct from the hero's warm gold palette */}
+                <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        background:
+                            "linear-gradient(180deg, rgba(244,190,122,0.05) 0%, transparent 18%)," +
+                            "linear-gradient(180deg, rgba(110,130,170,0.05) 8%, transparent 38%)," +
+                            "radial-gradient(ellipse 62% 50% at 18% 28%, rgba(80,100,160,0.18), transparent 65%)," +
+                            "radial-gradient(ellipse 50% 40% at 86% 56%, rgba(100,120,170,0.11), transparent 60%)," +
+                            "radial-gradient(ellipse 45% 36% at 50% 92%, rgba(60,80,130,0.10), transparent 60%)," +
+                            "#06070c",
+                    }}
+                />
 
-        {/* Stage counter (top right) */}
-        <div className="absolute top-8 md:top-12 right-6 md:right-12 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 z-20">
-          {String(stageIdx + 1).padStart(2, "0")} / {String(STAGES.length).padStart(2, "0")}
-        </div>
+                {/* Progress-driven warm overlay — atmosphere brightens as user descends */}
+                <div
+                    className="absolute inset-0 pointer-events-none transition-opacity duration-700 ease-out"
+                    style={{
+                        opacity: 0.25 + progress * 0.6,
+                        background:
+                            "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(244,190,122,0.18), transparent 70%)",
+                    }}
+                />
 
-        {/* Status label (top left) */}
-        <div className="absolute top-8 md:top-12 left-6 md:left-12 flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 z-20">
-          <span
-            className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--gold)]"
-            style={{
-              animation: "countdown-pulse 1.6s ease-in-out infinite",
-              boxShadow: "0 0 6px rgba(244,190,122,0.4)",
-            }}
-          />
-          <span>The matrix in motion</span>
-        </div>
+                {/* The stage content — full screen, owns its layout */}
+                <Stage key={`stage-${stageIdx}`} variant={activeStage.variant} />
 
-        {/* The cinematic stage */}
-        <div className="relative z-10 w-full max-w-[1100px] px-5 md:px-12 grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 items-center">
-
-          {/* Left: text */}
-          <div>
-            <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-[var(--gold-bright)] mb-5">
-              § Stage {stageIdx + 1}
+                {/* Stage indicator + progress hairline */}
+                <StageProgress stageIdx={stageIdx} progress={progress} />
             </div>
-            <h2
-              key={`headline-${stageIdx}`}
-              className="font-display text-white font-light tracking-[-0.035em] leading-[0.95]
-                         text-[clamp(2.4rem,6.5vw,5.2rem)] mb-6 text-scramble"
-            >
-              {activeStage.headline}
-            </h2>
-            <p
-              key={`caption-${stageIdx}`}
-              className="font-display italic text-[clamp(1rem,1.8vw,1.3rem)] text-white/60 leading-[1.5] text-scramble"
-              style={{ fontVariationSettings: '"SOFT" 100, "WONK" 0', animationDelay: "0.1s" }}
-            >
-              — {activeStage.caption}
-            </p>
-          </div>
-
-          {/* Right: visual that transforms */}
-          <div className="relative w-full aspect-square max-w-[500px] mx-auto">
-            <CinematicVisual variant={activeStage.variant} progress={progress} />
-          </div>
-        </div>
-
-        {/* Progress bar (bottom) */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/5 z-20">
-          <div
-            className="h-full transition-transform duration-100 ease-out origin-left"
-            style={{
-              transform: `scaleX(${progress})`,
-              background: "var(--signature-gradient)",
-            }}
-          />
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 }
 
-// ─── The morphing visual ────────────────────────────────────────
+// ─── Stage router ───────────────────────────────────────────────
 
-function CinematicVisual({ variant, progress }: { variant: string; progress: number }) {
-  if (variant === "single") {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="glow-pulse glass-strong rounded-2xl px-8 py-6 shadow-heavy">
-          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--gold-bright)] mb-2 text-center">verb</div>
-          <div className="font-display text-[3rem] md:text-[4rem] text-white font-light tracking-tight">
-            vorbesc
-          </div>
-          <div className="font-mono text-[11px] text-white/50 mt-1 text-center">I speak</div>
-        </div>
-      </div>
-    );
-  }
+function Stage({ variant }: { variant: StageVariant }) {
+    switch (variant) {
+        case "single": return <StageSingle />;
+        case "matrix": return <StageMatrix />;
+        case "verbs":  return <StageVerbs />;
+        case "vocab":  return <StageVocab />;
+        case "climax": return <StageClimax />;
+    }
+}
 
-  if (variant === "matrix") {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center p-8">
-        <div className="grid grid-cols-3 gap-3 w-full max-w-[420px] aspect-square">
-          {[
-            ["O să vorbesc?", "Eu o să vorbesc.", "N-o să vorbesc."],
-            ["Vorbesc eu?", "Eu vorbesc.", "Eu nu vorbesc."],
-            ["Am vorbit eu?", "Eu am vorbit.", "Nu am vorbit."],
-          ].flat().map((text, i) => {
-            const col = i % 3;
-            const colorClasses = ["text-[var(--question)]", "text-[var(--affirm)]", "text-[var(--neg)]"];
-            return (
-              <div
-                key={i}
-                className={`glass rounded-xl p-3 flex items-center justify-center text-center font-mono text-[10px] md:text-[12px] ${colorClasses[col]}`}
-                style={{
-                  animation: `splash-in 0.6s var(--ease-out-expo) both`,
-                  animationDelay: `${i * 50}ms`,
-                }}
-              >
-                <span className="leading-tight">{text}</span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
+// ─── Stage I — Single word, centered, intimate ──────────────────
 
-  if (variant === "verbs") {
+function StageSingle() {
     return (
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div className="grid grid-cols-4 gap-1.5 w-full max-w-[440px]">
-          {VERB_LIST.map((verb, i) => (
-            <div
-              key={verb}
-              className="glass rounded-lg py-2 px-2.5 text-center"
-              style={{
-                animation: `splash-in 0.5s var(--ease-out-expo) both`,
-                animationDelay: `${i * 25}ms`,
-              }}
-            >
-              <span className="font-display text-[11px] md:text-[13px] text-white/85 italic">{verb}</span>
+        <div className="absolute inset-0 z-10 flex items-center justify-center px-5">
+            <div className="max-w-[900px] w-full text-center">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-white/35 mb-10 stage-enter"
+                     style={{ animationDelay: "0s" }}>
+                    I.
+                </div>
+                <div className="font-display text-[clamp(4.2rem,13vw,10.5rem)] text-white font-light tracking-[-0.04em] leading-[0.9] stage-enter"
+                     style={{ animationDelay: "0.15s" }}>
+                    vorbesc
+                </div>
+                <div className="font-mono text-[clamp(0.85rem,1.3vw,1rem)] uppercase tracking-[0.16em] text-white/50 mt-4 stage-enter"
+                     style={{ animationDelay: "0.35s" }}>
+                    — I speak
+                </div>
+                <hr className="hero-rule mx-auto my-10 stage-enter" style={{ animationDelay: "0.55s" }} />
+                <h2 className="font-display text-[clamp(1.5rem,3vw,2.2rem)] text-white/85 font-light tracking-[-0.02em] leading-snug stage-enter"
+                    style={{ animationDelay: "0.7s" }}>
+                    One word.
+                </h2>
+                <p className="font-display italic text-[clamp(0.95rem,1.4vw,1.1rem)] text-white/45 mt-3 stage-enter"
+                   style={{ animationDelay: "0.85s" }}>
+                    the entry point
+                </p>
             </div>
-          ))}
         </div>
-      </div>
     );
-  }
+}
 
-  if (variant === "vocab") {
+// ─── Stage II — Matrix construction, architectural ──────────────
+
+function StageMatrix() {
+    const cells: ReadonlyArray<ReadonlyArray<string>> = [
+        ["O să vorbesc?", "Eu o să vorbesc.", "N-o să vorbesc."],
+        ["Vorbesc eu?",   "Eu vorbesc.",      "Eu nu vorbesc."],
+        ["Am vorbit eu?", "Eu am vorbit.",    "Nu am vorbit."],
+    ];
+    const tenseLabels = ["FUT", "PRZ", "PST"] as const;
+    const colSemantics = ["question", "affirm", "neg"] as const;
+    const colSymbols = ["?", "+", "−"] as const;
+
     return (
-      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-        <div className="flex flex-wrap gap-2 justify-center max-w-[480px] px-4">
-          {VOCAB_SAMPLE.map((word, i) => (
-            <span
-              key={word + i}
-              className="px-3 py-1.5 rounded-full glass font-display text-[12px] md:text-[14px] text-white/80"
-              style={{
-                animation: `splash-in 0.45s var(--ease-out-expo) both`,
-                animationDelay: `${i * 18}ms`,
-              }}
-            >
-              {word}
-            </span>
-          ))}
-          <span className="px-3 py-1.5 rounded-full font-mono text-[10px] text-[var(--gold-bright)] uppercase tracking-wider self-center">
-            + 460 more
-          </span>
-        </div>
-      </div>
-    );
-  }
+        <div className="absolute inset-0 z-10 flex items-center justify-center px-5 md:px-12">
+            <div className="w-full max-w-[1100px]">
+                <div className="text-center mb-10">
+                    <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-white/35 mb-4 stage-enter"
+                         style={{ animationDelay: "0s" }}>
+                        II.
+                    </div>
+                    <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
+                        style={{ animationDelay: "0.15s" }}>
+                        Now <span className="italic">structure</span>.
+                    </h2>
+                    <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
+                       style={{ animationDelay: "0.3s" }}>
+                        three tenses × three forms — nine cells
+                    </p>
+                </div>
 
-  // "all" — collapsed final state — the brand mark
-  return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="relative">
-        {/* Big rotating circle */}
-        <div
-          className="absolute -inset-32 rounded-full pointer-events-none"
-          style={{
-            background: "conic-gradient(from 0deg, transparent, var(--gold-soft), transparent 60%)",
-            animation: "shimmer 4s linear infinite",
-            opacity: 0.4,
-          }}
-        />
-        {/* 3×3 matrix as the resolved identity */}
-        <div className="relative grid grid-cols-3 gap-2 w-[200px] md:w-[240px] aspect-square"
-             style={{ animation: "splash-in 0.8s var(--ease-out-expo) both" }}>
-          {Array.from({ length: 9 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-md"
-              style={{
-                background: i === 4
-                  ? "var(--signature-gradient)"
-                  : "rgba(255,255,255,0.06)",
-                border: i === 4 ? "none" : "1px solid rgba(255,255,255,0.10)",
-                boxShadow: i === 4 ? "var(--shadow-gold)" : "none",
-              }}
-            />
-          ))}
+                <div className="max-w-[680px] mx-auto stage-enter" style={{ animationDelay: "0.45s" }}>
+                    <div className="grid grid-cols-[52px_1fr_1fr_1fr] gap-2 mb-2">
+                        <div />
+                        {colSymbols.map((s, i) => (
+                            <div key={s}
+                                 className={`text-center font-mono text-[11px] uppercase tracking-[0.16em] font-semibold text-[var(--${colSemantics[i]})]`}>
+                                {s}
+                            </div>
+                        ))}
+                    </div>
+
+                    {[0, 1, 2].map((row) => (
+                        <div key={row} className="grid grid-cols-[52px_1fr_1fr_1fr] gap-2 mb-2">
+                            <div className="flex items-center justify-end pr-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
+                                {tenseLabels[row]}
+                            </div>
+                            {cells[row]?.map((text, col) => (
+                                <div key={col}
+                                     className={`bg-white/[0.04] border border-white/10 rounded-lg p-3.5 text-center font-mono text-[11.5px] md:text-[12.5px] leading-tight text-[var(--${colSemantics[col]})]`}>
+                                    {text}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
-        <div className="text-center mt-8 font-mono text-[10px] uppercase tracking-[0.24em] text-[var(--gold-bright)]"
-             style={{ animation: "fade-in 0.8s ease 0.6s both" }}>
-          The verb matrix
+    );
+}
+
+// ─── Stage III — Verb wall, weighted prominence ─────────────────
+
+function StageVerbs() {
+    const sizeFor = (w: 1 | 2 | 3) =>
+        w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
+            w === 2 ? "text-[clamp(1.1rem,1.7vw,1.45rem)]" :
+                "text-[clamp(0.85rem,1.3vw,1.1rem)]";
+
+    const colorFor = (w: 1 | 2 | 3) =>
+        w === 3 ? "text-white/90" :
+            w === 2 ? "text-white/65" :
+                "text-white/40";
+
+    return (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 md:px-12">
+            <div className="text-center mb-10 max-w-[820px]">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-white/35 mb-4 stage-enter"
+                     style={{ animationDelay: "0s" }}>
+                    III.
+                </div>
+                <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
+                    style={{ animationDelay: "0.15s" }}>
+                    Now <span className="italic">multiply</span>.
+                </h2>
+                <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
+                   style={{ animationDelay: "0.3s" }}>
+                    thirty-two verbs cover ninety percent of daily speech
+                </p>
+            </div>
+
+            <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-5 gap-y-3 px-4 stage-enter"
+                 style={{ animationDelay: "0.45s" }}>
+                {VERB_DATA.map(([verb, weight], i) => (
+                    <span key={i}
+                          className={`font-display italic tracking-tight ${sizeFor(weight)} ${colorFor(weight)}`}>
+            {verb}
+          </span>
+                ))}
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
+}
+
+// ─── Stage IV — Vocabulary cloud, weighted prominence ──────────
+
+function StageVocab() {
+    const sizeFor = (w: 1 | 2 | 3) =>
+        w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
+            w === 2 ? "text-[clamp(1.1rem,1.6vw,1.4rem)]" :
+                "text-[clamp(0.85rem,1.2vw,1.05rem)]";
+
+    const colorFor = (w: 1 | 2 | 3) =>
+        w === 3 ? "text-white/85" :
+            w === 2 ? "text-white/60" :
+                "text-white/40";
+
+    return (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-5 md:px-12">
+            <div className="text-center mb-10 max-w-[820px]">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-white/35 mb-4 stage-enter"
+                     style={{ animationDelay: "0s" }}>
+                    IV.
+                </div>
+                <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
+                    style={{ animationDelay: "0.15s" }}>
+                    And the <span className="italic">words</span>.
+                </h2>
+                <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
+                   style={{ animationDelay: "0.3s" }}>
+                    five hundred essential — already in real sentences
+                </p>
+            </div>
+
+            <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-4 gap-y-2 px-4 stage-enter"
+                 style={{ animationDelay: "0.45s" }}>
+                {VOCAB_DATA.map(([word, weight], i) => (
+                    <span key={i} className={`font-display ${sizeFor(weight)} ${colorFor(weight)}`}>
+            {word}
+          </span>
+                ))}
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--gold-bright)] self-center ml-3">
+          + 460 more
+        </span>
+            </div>
+        </div>
+    );
+}
+
+// ─── Stage V — Climax: synthesis with glowing center ────────────
+
+function StageClimax() {
+    return (
+        <div className="absolute inset-0 z-10 flex items-center justify-center px-5 md:px-12">
+            <div className="w-full max-w-[1100px]">
+                <div className="text-center mb-8">
+                    <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-[var(--gold-bright)] mb-4 stage-enter"
+                         style={{ animationDelay: "0s" }}>
+                        V. — synthesis
+                    </div>
+                </div>
+
+                {/* Climax matrix — center cell glows, surrounding cells quiet */}
+                <div className="grid grid-cols-3 gap-3 max-w-[440px] aspect-square mx-auto stage-enter"
+                     style={{ animationDelay: "0.2s" }}>
+                    {Array.from({ length: 9 }).map((_, i) => {
+                        const isCenter = i === 4;
+                        return (
+                            <div key={i}
+                                 className={`rounded-md border ${isCenter ? "climax-cell-glow" : ""}`}
+                                 style={{
+                                     background: isCenter
+                                         ? "linear-gradient(135deg, rgba(244,190,122,0.32), rgba(232,122,112,0.20))"
+                                         : "rgba(255,255,255,0.04)",
+                                     borderColor: isCenter
+                                         ? "rgba(244,190,122,0.60)"
+                                         : "rgba(255,255,255,0.10)",
+                                 }} />
+                        );
+                    })}
+                </div>
+
+                {/* Synthesis text — the felt meaning */}
+                <div className="text-center mt-12 max-w-[720px] mx-auto">
+                    <h2 className="font-display text-[clamp(2rem,4.6vw,3.4rem)] text-white font-light tracking-[-0.025em] leading-[1.1] mb-4 stage-enter"
+                        style={{ animationDelay: "0.55s" }}>
+                        It's already a <span className="italic">language</span>.
+                    </h2>
+                    <p className="font-mono text-[clamp(0.85rem,1.3vw,1rem)] uppercase tracking-[0.16em] text-white/55 mb-3 stage-enter"
+                       style={{ animationDelay: "0.75s" }}>
+                        1 grid · 9 cells · 32 verbs · 500 words
+                    </p>
+                    <p className="font-display italic text-[clamp(1rem,1.6vw,1.2rem)] text-white/55 stage-enter"
+                       style={{ animationDelay: "0.9s" }}>
+                        yours, in thirty-two days.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ─── Stage progress — bottom hairline + 5 dots ─────────────────
+
+function StageProgress({ stageIdx, progress }: { stageIdx: number; progress: number }) {
+    return (
+        <>
+            {/* Stage dots — active dot extends into a bar */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5 z-20">
+                {STAGES.map((_, i) => (
+                    <div key={i}
+                         className="rounded-full transition-all duration-500 ease-out"
+                         style={{
+                             width: i === stageIdx ? "24px" : "4px",
+                             height: "4px",
+                             background: i === stageIdx ? "var(--gold-bright)" : "rgba(255,255,255,0.20)",
+                             boxShadow: i === stageIdx ? "0 0 8px rgba(244,190,122,0.50)" : "none",
+                         }} />
+                ))}
+            </div>
+
+            {/* Bottom continuous progress hairline */}
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-white/[0.08] z-20">
+                <div className="h-full origin-left bg-white/40"
+                     style={{
+                         transform: `scaleX(${progress})`,
+                         transition: "transform 0.1s linear",
+                     }} />
+            </div>
+        </>
+    );
 }
