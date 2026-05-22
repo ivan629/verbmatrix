@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTargetLanguage } from "../context/TargetLanguage";
+import { BRAND, STORAGE_KEYS } from "../config";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -218,7 +219,7 @@ export function Footer() {
 
     function handleReplayIntro() {
         try {
-            localStorage.removeItem(`study-onboarded:${module.code}`);
+            localStorage.removeItem(`${STORAGE_KEYS.onboardedPrefix}${module.code}`);
         } catch {
             /* private browsing / quota — degrade silently */
         }

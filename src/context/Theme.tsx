@@ -2,9 +2,10 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useState,
   type ReactNode,
 } from "react";
+import { STORAGE_KEYS } from "../config";
 
-const STORAGE_KEY = "ro-study-theme";
 const MEDIA = "(prefers-color-scheme: dark)";
+const STORAGE_KEY = STORAGE_KEYS.theme;
 
 export type ThemePreference = "system" | "light" | "dark";
 export type ResolvedTheme = "light" | "dark";
