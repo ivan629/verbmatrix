@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "../lib/i18n";
 import { useTargetLanguage } from "../context/TargetLanguage";
-import { BRAND, PRICING, getPricing, trackEvent, type LanguagePricing } from "../config";
+import { BRAND, getPricing, trackEvent, type LanguagePricing } from "../config";
 import { useAccess } from "../context/Access";
 import { LicenseKeyModal } from "./LicenseKeyModal";
 import { useScrollReveal, useScrollRevealChildren } from "../lib/useScrollReveal";
@@ -439,11 +439,6 @@ export function LandingPage() {
 
   const speak = useTTS();
 
-  const comingSoonCodes = useMemo(
-      () => Object.keys(PRICING).filter((code) => code !== "all" && !available.some((l) => l.code === code)),
-      [available],
-  );
-
   return (
       <div className="min-h-screen flex flex-col bg-[var(--bg)] relative">
 
@@ -737,90 +732,7 @@ export function LandingPage() {
                       />
                     </li>
                 ))}
-                {comingSoonCodes.map((code) => (
-                    <li key={code} className="reveal">
-                      <LanguageCard
-                          lang={{
-                            code,
-                            label: t(`landing_lang_${code}`, { defaultValue: code.toUpperCase() }),
-                            heroExample: { text: "—", en: "" },
-                          }}
-                          pricing={getPricing(code)}
-                          isCurrent={false} comingSoon={true}
-                          onSelect={() => {}} onActivate={() => {}} hasAccess={false}
-                      />
-                    </li>
-                ))}
               </ul>
-
-              {/* Bundle — dark featured panel inside cream section */}
-              <div className="max-w-[800px] mx-auto reveal">
-                <div className="cta-dark-panel p-8 md:p-10 relative">
-                  <div className="relative z-[2] flex items-start justify-between gap-6 flex-wrap">
-                    <div className="flex-1 min-w-[260px]">
-                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--gold)] mb-3">
-                        ★ {t("landing_bundle_kicker")}
-                      </div>
-                      <h3 className="font-display text-[clamp(1.5rem,2.8vw,2.1rem)] font-medium tracking-[-0.02em] leading-[1.1] mb-3 text-white">
-                        {t("landing_bundle_title")}
-                      </h3>
-                      <p className="text-[0.95rem] text-white/65 leading-[1.65] max-w-[420px]">
-                        {t("landing_bundle_body")}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-3 shrink-0">
-                      <div className="text-right">
-                        {/* Savings visible — separately-bought total shown with strikethrough */}
-                        {(() => {
-                          const allPrice = PRICING.all?.price;
-                          const allFormatted = PRICING.all?.priceFormatted;
-                          if (typeof allPrice !== "number" || !allFormatted) {
-                            return (
-                                <div className="font-display text-[2.6rem] text-white font-light leading-none tracking-[-0.03em] tabular-nums">
-                                  {allFormatted ?? "—"}
-                                </div>
-                            );
-                          }
-                          const separatelyTotal = Object.entries(PRICING)
-                              .filter(([code]) => code !== "all")
-                              .reduce((sum, [, p]) => sum + (p?.price ?? 0), 0);
-                          const savings = Math.max(separatelyTotal - allPrice, 0);
-                          const currency = allFormatted.replace(/[\d.,\s]/g, "") || "€";
-                          return (
-                              <>
-                                {separatelyTotal > allPrice && (
-                                    <div className="font-mono text-[11px] text-white/40 line-through tabular-nums mb-1">
-                                      {currency}{separatelyTotal}
-                                    </div>
-                                )}
-                                <div className="font-display text-[2.8rem] text-white font-light leading-none tracking-[-0.03em] tabular-nums">
-                                  {allFormatted}
-                                </div>
-                                {savings > 0 && (
-                                    <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--gold)] mt-2">
-                                      Save {currency}{Math.round(savings)}
-                                    </div>
-                                )}
-                                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 mt-1">
-                                  {t("landing_lifetime_access")}
-                                </div>
-                              </>
-                          );
-                        })()}
-                      </div>
-                      <button type="button"
-                              onClick={() => {
-                                if (!PRICING.all) return;
-                                trackEvent("purchase-click", { language: "all", price: PRICING.all.price });
-                                if (PRICING.all.checkoutUrl) window.open(PRICING.all.checkoutUrl, "_blank");
-                              }}
-                              className="btn-tactile btn-gold">
-                        {t("landing_get_access")} →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
 

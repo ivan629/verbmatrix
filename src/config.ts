@@ -74,20 +74,7 @@ export const PRICING: Record<string, LanguagePricing> = {
     checkoutUrl: "",
     productId: "",
   },
-  es: {
-    code: "es",
-    price: 49.99,
-    priceFormatted: "$49.99",
-    checkoutUrl: "",
-    productId: "",
-  },
-  ja: {
-    code: "ja",
-    price: 79.99,
-    priceFormatted: "$79.99",
-    checkoutUrl: "",
-    productId: "",
-  },
+  // es and ja will be added here when those modules are built.
   all: {
     code: "all",
     price: 99.99,
@@ -120,9 +107,21 @@ export function isFreeLessonId(id: string): boolean {
 // ─── Feature Flags ──────────────────────────────────────────────
 
 export const FLAGS = {
-  /** When true, the paywall is enforced. Set to false during development
-   *  to browse all content without a key. */
-  paywallEnabled: true,
+  /**
+   * When true, the paywall is enforced.
+   *
+   * Set VITE_DISABLE_PAYWALL=true in your .env.local to bypass it locally
+   * without touching this file — useful for reviewing all lessons during dev.
+   *
+   * Never set this in production .env — Vite bakes env vars at build time,
+   * so a production build with VITE_DISABLE_PAYWALL=true would ship with
+   * the paywall disabled for every visitor.
+   *
+   * Usage:
+   *   # .env.local  (git-ignored)
+   *   VITE_DISABLE_PAYWALL=true
+   */
+  paywallEnabled: import.meta.env.VITE_DISABLE_PAYWALL !== "true",
   /** When true, license keys are validated against the LemonSqueezy API
    *  on every page load. When false, only the local key presence is checked
    *  (useful for offline / development). */
