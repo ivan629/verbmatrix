@@ -89,6 +89,7 @@
   "landing_problem_attribution": "What most apps won't tell you",
 
   "landing_method_kicker": "The method",
+  "landing_method_transition": "And here's how it works.",
   "landing_method_title_part1": "Learn the system,",
   "landing_method_title_part2": "not the vocabulary.",
   "landing_method_1_title": "The matrix is the engine.",
@@ -101,6 +102,10 @@
   "landing_timeline_kicker": "What thirty-two days looks like",
   "landing_timeline_title": "A foundation strong enough that even months away, it never fully disappears.",
   "landing_timeline_caption": "Each milestone is a real, measurable shift. By day thirty-two, you ask, state, or deny anything — past, present, or future — without thinking about it.",
+  "landing_timeline_milestone_1": "Your first sentence, aloud.",
+  "landing_timeline_milestone_2": "Conversation rhythm starts to click.",
+  "landing_timeline_milestone_3": "Your thinking starts to shift.",
+  "landing_timeline_milestone_4": "A real conversation — without thinking about grammar.",
 
   "landing_includes_kicker": "Inside each course",
   "landing_includes_title": "Everything you need. Nothing you don't.",
@@ -136,7 +141,9 @@
   "landing_bundle_body": "Get every current course plus all future languages as they launch. One payment, lifetime access, all updates included.",
 
   "landing_guarantee_kicker": "Thirty-day guarantee",
-  "landing_guarantee_body": "Use the course for thirty days. If you cannot hold a 60-second conversation in your target language by the end of it, email us. We refund every cent. No forms. No \"tell us why.\" One email.",
+  "landing_guarantee_body": "Use the course for thirty days. If you cannot hold a 60-second conversation in your target language by the end of it, email me. I refund every cent. No forms. No \"tell us why.\" One email.",
+  "landing_guarantee_signature_name": "Stelian",
+  "landing_guarantee_signature_role": "Founder, VerbMatrix",
 
   "landing_speak_kicker": "Try it now",
   "landing_speak_title": "Say this out loud.",
@@ -181,10 +188,11 @@
   "landing_faq_4_a": "Yes. Pay once. Access the course forever, including every future update. No monthly charges, no auto-renewals, no surprises.",
   "landing_faq_5_q": "Can I try before I buy?",
   "landing_faq_5_a": "Absolutely. The interactive matrix, the 5-minute onboarding, and the foundational lessons are entirely free. You experience the method before deciding. Most people know within five minutes whether it's for them.",
+  "landing_faq_closing": "Still have questions?",
 
-  "landing_final_cta_title": "Five minutes from now, you'll speak your",
-  "landing_final_cta_emphasis": "first real sentence.",
-  "landing_final_cta_subtitle": "The free onboarding takes five minutes. By the end of it, you'll have said something real, aloud, in a new language.",
+  "landing_final_cta_title": "You've seen the",
+  "landing_final_cta_emphasis": "matrix. Now use it.",
+  "landing_final_cta_subtitle": "Five minutes from now, your first sentence aloud. Thirty-two days from now, your first real conversation.",
 
   "landing_footer_rights": "All rights reserved.",
   "landing_footer_activate": "Activate key",

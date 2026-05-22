@@ -9,6 +9,7 @@
 import { useState, type SVGProps } from "react";
 
 // ─── Brand mark: the 3×3 matrix ─────────────────────────────────
+// Clean, iconic, readable at any size from 16px favicon to 240px stamp.
 
 export function MatrixMark({ size = 32, ...props }: { size?: number } & SVGProps<SVGSVGElement>) {
     return (
@@ -23,6 +24,86 @@ export function MatrixMark({ size = 32, ...props }: { size?: number } & SVGProps
             <rect x="12" y="22" width="8" height="8" stroke="currentColor" strokeWidth="1.5" rx="1.5" />
             <rect x="22" y="22" width="8" height="8" stroke="currentColor" strokeWidth="1.5" rx="1.5" />
         </svg>
+    );
+}
+
+// ─── Brand lockup: mark + wordmark ──────────────────────────────
+// Used in the nav and footer at small sizes. The wordmark "VERBMATRIX"
+// is tracked tight, all-caps, in display serif — a single deliberate
+// piece of brand identity.
+
+interface LogoLockupProps {
+    size?: number;
+    className?: string;
+    variant?: "horizontal" | "stacked";
+    tone?: "light" | "dark"; // controls the wordmark color
+}
+
+export function LogoLockup({
+                               size = 24,
+                               className = "",
+                               variant = "horizontal",
+                               tone = "light",
+                           }: LogoLockupProps) {
+    const wordmarkColor = tone === "light" ? "text-white" : "text-[var(--ink)]";
+
+    if (variant === "stacked") {
+        return (
+            <div className={`inline-flex flex-col items-center gap-2 ${className}`}>
+                <MatrixMark size={size} className={wordmarkColor} />
+                <div className={`font-display ${wordmarkColor} font-medium tracking-[-0.015em] leading-none`}
+                     style={{ fontSize: `${size * 0.55}px` }}>
+                    VerbMatrix
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`inline-flex items-center gap-2.5 ${className}`}>
+            <MatrixMark size={size} className={wordmarkColor} />
+            <div className={`font-display ${wordmarkColor} font-medium tracking-[-0.015em] leading-none`}
+                 style={{ fontSize: `${size * 0.7}px` }}>
+                VerbMatrix
+            </div>
+        </div>
+    );
+}
+
+// ─── Giant brand stamp — for hero/CTA bookend moments ──────────
+// A display-scale matrix mark with a heavy gold halo behind the
+// center cell. Drops on the final CTA so the page closes with the
+// brand visible big — mirroring the small nav mark, scaled up 10×.
+
+export function GiantMatrixMark({
+                                    size = 220,
+                                    className = "",
+                                }: {
+    size?: number;
+    className?: string;
+}) {
+    return (
+        <div
+            className={`relative inline-block ${className}`}
+            style={{ width: size, height: size }}
+            aria-hidden="true"
+        >
+            {/* Soft gold halo behind the center cell — extends beyond the bounds */}
+            <div
+                className="absolute pointer-events-none"
+                style={{
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: size * 1.4,
+                    height: size * 1.4,
+                    background:
+                        "radial-gradient(circle, rgba(244,190,122,0.32) 0%, rgba(244,190,122,0.08) 35%, transparent 60%)",
+                    filter: "blur(8px)",
+                }}
+            />
+            <MatrixMark size={size} className="text-white relative z-10" />
+        </div>
     );
 }
 
@@ -514,10 +595,7 @@ export function AuroraOrbs({ tone = "gold" }: { tone?: "gold" | "warm" }) {
     );
 }
 
-// ─── Crosshair — proper architectural corner mark ──────────────
-// Replaces the stray "+" Unicode symbols which were barely visible
-// at text-white/30. Two crossed lines, sized in absolute px, with
-// adjustable color via `currentColor`.
+// ─── Crosshair — architectural corner mark ─────────────────────
 
 export function CrossHair({
                               size = 12,
@@ -544,30 +622,177 @@ export function CrossHair({
     );
 }
 
-// ─── Microphone icon — for the "say this aloud" CTA ───────────
+// ─── Matrix grid — lines grow into existence on viewport entry ──
+// The product is VerbMatrix — so the grid IS the brand. The grid
+// lines DRAW themselves in (stroke-dashoffset → 0) once on viewport
+// entry, then stay still. No looping animation. Vertical lines
+// grow from the top down, horizontal lines from left to right,
+// staggered like a blueprint being drawn.
 
-export function Microphone({ size = 18, className = "" }: { size?: number; className?: string }) {
+interface MatrixGridProps {
+    className?: string;
+    tone?: "gold" | "rose";
+    opacity?: number;
+}
+
+export function MatrixGrid({
+                               className = "",
+                               tone = "gold",
+                               opacity = 0.6,
+                           }: MatrixGridProps) {
+    const W = 1200;
+    const H = 800;
+    const CELL = 80;
+
+    const color = tone === "gold" ? "rgb(244,190,122)" : "rgb(232,122,112)";
+
+    // Build vertical and horizontal grid lines.
+    // Each gets a staggered delay so the grid "draws itself" over ~1.5s.
+    const verticalLines: number[] = [];
+    for (let x = CELL; x < W; x += CELL) verticalLines.push(x);
+
+    const horizontalLines: number[] = [];
+    for (let y = CELL; y < H; y += CELL) horizontalLines.push(y);
+
+    // A few accent cells that briefly glow once during the draw-in.
+    const accentCells: Array<readonly [number, number, number]> = [
+        [3, 2, 1400],
+        [9, 4, 1800],
+        [13, 6, 2100],
+        [6, 7, 2400],
+    ];
+
     return (
         <svg
-            width={size}
-            height={size}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={className}
+            viewBox={`0 0 ${W} ${H}`}
+            preserveAspectRatio="xMidYMid slice"
+            className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
+            style={{ opacity, color }}
             aria-hidden="true"
         >
-            <rect x="9" y="2" width="6" height="12" rx="3" />
-            <path d="M5 11a7 7 0 0 0 14 0" />
-            <line x1="12" y1="19" x2="12" y2="22" />
+            {/* Vertical lines draw top → bottom, staggered left → right */}
+            <g stroke={color} strokeWidth="1" strokeLinecap="round">
+                {verticalLines.map((x, i) => (
+                    <line
+                        key={`v-${i}`}
+                        x1={x} y1={0} x2={x} y2={H}
+                        className="matrix-grow-v"
+                        style={{
+                            ["--len" as string]: String(H),
+                            ["--delay" as string]: `${i * 60}ms`,
+                        }}
+                    />
+                ))}
+            </g>
+
+            {/* Horizontal lines draw left → right, staggered top → bottom */}
+            <g stroke={color} strokeWidth="1" strokeLinecap="round">
+                {horizontalLines.map((y, i) => (
+                    <line
+                        key={`h-${i}`}
+                        x1={0} y1={y} x2={W} y2={y}
+                        className="matrix-grow-h"
+                        style={{
+                            ["--len" as string]: String(W),
+                            ["--delay" as string]: `${500 + i * 80}ms`,
+                        }}
+                    />
+                ))}
+            </g>
+
+            {/* Accent cells — light up once during the draw-in */}
+            <g>
+                {accentCells.map(([col, row, delay], i) => (
+                    <rect
+                        key={`a-${i}`}
+                        x={col * CELL}
+                        y={row * CELL}
+                        width={CELL}
+                        height={CELL}
+                        fill={color}
+                        className="matrix-cell-flash"
+                        style={{ ["--delay" as string]: `${delay}ms` }}
+                    />
+                ))}
+            </g>
         </svg>
     );
 }
 
-// ─── Speaker / play icon ──────────────────────────────────────
+// ─── Growing tree lines — kept for reuse, no longer used in landing ─────
+
+interface TreeLinesProps {
+    className?: string;
+    tone?: "gold" | "rose";
+    opacity?: number;
+}
+
+export function TreeLines({
+                              className = "",
+                              tone = "gold",
+                              opacity = 0.5,
+                          }: TreeLinesProps) {
+    const tipColor = tone === "gold" ? "rgba(244,190,122,0.55)" : "rgba(232,122,112,0.55)";
+    const fadeColor = tone === "gold" ? "rgba(244,190,122,0)" : "rgba(232,122,112,0)";
+
+    // Each branch: [pathD, length, delaySeconds]
+    // Length is approximate — used for stroke-dasharray.
+    const branches: Array<readonly [string, number, number]> = [
+        // Main trunk — rises from bottom-center upward
+        ["M 600 820 C 600 700, 585 580, 575 460 S 545 240, 510 120", 900, 0],
+        // Big-left primary branch
+        ["M 580 540 C 510 510, 410 470, 320 410 S 180 280, 130 180", 700, 0.5],
+        // Big-right primary branch
+        ["M 580 540 C 660 510, 770 470, 870 410 S 1020 290, 1080 200", 720, 0.5],
+        // Mid-left secondary
+        ["M 555 400 C 470 380, 360 340, 280 280", 380, 1.1],
+        // Mid-right secondary
+        ["M 555 400 C 650 380, 760 340, 850 280", 400, 1.1],
+        // Upper-left fork
+        ["M 535 260 C 460 240, 370 200, 320 150", 280, 1.6],
+        // Upper-right fork
+        ["M 535 260 C 620 240, 720 200, 790 150", 290, 1.6],
+        // Top fine branches
+        ["M 515 160 C 470 140, 410 110, 380 70", 200, 2.0],
+        ["M 515 160 C 570 140, 640 110, 690 70", 220, 2.0],
+        // Outer fine tips
+        ["M 200 240 C 160 200, 120 160, 90 110", 160, 2.4],
+        ["M 1010 240 C 1060 200, 1110 160, 1140 110", 170, 2.4],
+    ];
+
+    return (
+        <svg
+            viewBox="0 0 1200 800"
+            preserveAspectRatio="xMidYMid slice"
+            className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
+            aria-hidden="true"
+            style={{ opacity }}
+        >
+            <defs>
+                <linearGradient id={`tree-stroke-${tone}`} x1="50%" y1="100%" x2="50%" y2="0%">
+                    <stop offset="0%" stopColor={fadeColor} />
+                    <stop offset="30%" stopColor={tone === "gold" ? "rgba(244,190,122,0.25)" : "rgba(232,122,112,0.20)"} />
+                    <stop offset="100%" stopColor={tipColor} />
+                </linearGradient>
+            </defs>
+            <g stroke={`url(#tree-stroke-${tone})`} strokeWidth="1">
+                {branches.map(([d, len, delay], i) => (
+                    <path
+                        key={i}
+                        d={d}
+                        className="tree-line tree-line-anim"
+                        style={{
+                            ["--len" as string]: String(len),
+                            ["--delay" as string]: `${delay}s`,
+                        }}
+                    />
+                ))}
+            </g>
+        </svg>
+    );
+}
+
+// ─── Speaker icon ──────────────────────────────────────────────
 
 export function Speaker({ size = 16, className = "" }: { size?: number; className?: string }) {
     return (
