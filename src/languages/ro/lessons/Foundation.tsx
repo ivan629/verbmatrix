@@ -10,10 +10,15 @@ import { CORE_PRINCIPLES, LIBERATING_TRUTHS } from "../data/schedule";
 
 export function LessonRules() {
   return (
-    <LessonSection
-      id="rules" num="★" tag="lesson_rules_tag"
+    <LessonSection id="rules" num="★" tag="lesson_rules_tag"
       title="lesson_rules_title"
-      subtitle="lesson_rules_subtitle"
+      
+      goal="lesson_rules_goal"
+      time={3}
+      practice={0}
+      recap="lesson_rules_recap"
+      nextId="L0"
+      nextLabel="lesson_0_title"
     >
       <PrincipleGrid items={CORE_PRINCIPLES} />
     </LessonSection>
@@ -24,10 +29,15 @@ export function LessonRules() {
 
 export function Lesson0() {
   return (
-    <LessonSection
-      id="L0" num="0" tag="lesson_0_tag"
+    <LessonSection id="L0" num="0" tag="lesson_0_tag"
       title="lesson_0_title"
-      subtitle="lesson_0_subtitle"
+      
+      goal="lesson_0_goal"
+      time={5}
+      practice={0}
+      recap="lesson_0_recap"
+      nextId="L1"
+      nextLabel="lesson_1_title"
     >
       <PsychBox
         title="lesson_0_psych_title"
@@ -77,10 +87,15 @@ const CONSONANT_COMBOS = [
 
 export function Lesson1() {
   return (
-    <LessonSection
-      id="L1" num="1" tag="lesson_1_tag"
+    <LessonSection id="L1" num="1" tag="lesson_1_tag"
       title="lesson_1_title"
-      subtitle="lesson_1_subtitle"
+      
+      goal="lesson_1_goal"
+      time={6}
+      practice={4}
+      recap="lesson_1_recap"
+      nextId="L2"
+      nextLabel="lesson_2_title"
     >
       <SectionHeading>lesson_1_h_special</SectionHeading>
       <SoundGrid items={SPECIAL_CHARS} />
@@ -149,10 +164,15 @@ const QUESTION_WORDS = [
 export function Lesson2() {
   const { t } = useTranslation();
   return (
-    <LessonSection
-      id="L2" num="2" tag="lesson_2_tag"
+    <LessonSection id="L2" num="2" tag="lesson_2_tag"
       title="lesson_2_title"
-      subtitle="lesson_2_subtitle"
+      
+      goal="lesson_2_goal"
+      time={5}
+      practice={5}
+      recap="lesson_2_recap"
+      nextId="L3"
+      nextLabel="lesson_3_title"
     >
       <SectionHeading>lesson_2_h_subject</SectionHeading>
       <DataTable

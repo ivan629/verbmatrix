@@ -12,10 +12,15 @@ import { CORE_VERBS } from "../data/verbs";
 
 export function Lesson4() {
   return (
-    <LessonSection
-      id="L4" num="4" tag="lesson_4_tag"
+    <LessonSection id="L4" num="4" tag="lesson_4_tag"
       title="lesson_4_title"
-      subtitle="lesson_4_subtitle"
+      
+      goal="lesson_4_goal"
+      time={6}
+      practice={6}
+      recap="lesson_4_recap"
+      nextId="L5"
+      nextLabel="lesson_5_title"
     >
       <SectionHeading>lesson_4_h_matrix</SectionHeading>
       <Matrix data={MATRIX_FI} />
@@ -52,10 +57,15 @@ export function Lesson4() {
 
 export function Lesson5() {
   return (
-    <LessonSection
-      id="L5" num="5" tag="lesson_5_tag"
+    <LessonSection id="L5" num="5" tag="lesson_5_tag"
       title="lesson_5_title"
-      subtitle="lesson_5_subtitle"
+      
+      goal="lesson_5_goal"
+      time={7}
+      practice={6}
+      recap="lesson_5_recap"
+      nextId="L6"
+      nextLabel="lesson_6_title"
     >
       <SectionHeading>lesson_5_h_matrix</SectionHeading>
       <Matrix data={MATRIX_AVEA} />
@@ -118,10 +128,15 @@ export function Lesson5() {
 export function Lesson6() {
   const { t } = useTranslation();
   return (
-    <LessonSection
-      id="L6" num="6" tag="lesson_6_tag"
+    <LessonSection id="L6" num="6" tag="lesson_6_tag"
       title="lesson_6_title"
-      subtitle="lesson_6_subtitle"
+      
+      goal="lesson_6_goal"
+      time={8}
+      practice={12}
+      recap="lesson_6_recap"
+      nextId="L7"
+      nextLabel="lesson_7_title"
     >
       <Paragraph>{t("lesson_6_intro")}</Paragraph>
       <VerbCardGrid verbs={CORE_VERBS} />

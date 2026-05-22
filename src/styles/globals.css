@@ -346,7 +346,8 @@ body {
   display: inline;
   cursor: pointer;
   color: inherit;
-  background-image: linear-gradient(transparent calc(100% - 1px), var(--ink-4) 1px);
+  /* Subtle gold hairline — telegraphs interactivity without screaming */
+  background-image: linear-gradient(transparent calc(100% - 1px), var(--gold-border) 1px);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
@@ -354,7 +355,7 @@ body {
   border-radius: 2px;
 }
 .ro:hover {
-  background-image: linear-gradient(transparent calc(100% - 1px), var(--gold) 1px);
+  background-image: linear-gradient(transparent calc(100% - 2px), var(--gold) 2px);
   color: var(--gold);
 }
 .ro.playing {
@@ -1672,4 +1673,233 @@ body {
             0 0 24px rgba(244,190,122,0.35),
             0 0 48px rgba(244,190,122,0.18);
   }
+}
+/* ─────────────────────────────────────────────────────────────────────
+   LESSON OPENER — eyebrow, display title, gold rule, time budget, goal
+   ─────────────────────────────────────────────────────────────────── */
+
+.lesson-eyebrow {
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.lesson-display-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+.lesson-display-title em,
+.lesson-display-title i {
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.lesson-rule {
+  width: 36px;
+  height: 2px;
+  background: var(--gold);
+  border: none;
+  margin: 0 0 14px 0;
+}
+
+.lesson-meta-strip {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.lesson-meta-strip strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.lesson-goal {
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  font-style: italic;
+  max-width: 540px;
+  margin-bottom: 32px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   MODE PILLS — read / say / recall annotations next to SectionHeadings
+   ─────────────────────────────────────────────────────────────────── */
+
+.mode-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+.mode-pill-read   { background: var(--surface-2); color: var(--ink-3); }
+.mode-pill-say    { background: var(--gold-soft); color: var(--gold-deep); }
+.mode-pill-recall { background: var(--rose-soft); color: var(--rose-deep); }
+.mode-pill-write  { background: var(--question-bg); color: var(--question); }
+
+/* ─────────────────────────────────────────────────────────────────────
+   SEMANTIC BOXES — Remember / Pitfall / Aside / Note
+   Left border + soft background tells the learner what cognitive bucket
+   ─────────────────────────────────────────────────────────────────── */
+
+.box-semantic {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-left: 3px solid var(--ink-4);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 18px 0;
+}
+.box-semantic.remember { border-left-color: var(--gold); background: var(--gold-soft); }
+.box-semantic.pitfall  { border-left-color: var(--rose); background: var(--rose-soft); }
+.box-semantic.aside    { border-left-color: var(--ink-4); background: var(--surface-2); }
+.box-semantic.note     { border-left-color: var(--question); background: var(--question-bg); }
+
+.box-semantic-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+}
+.box-semantic.remember .box-semantic-meta { color: var(--gold-deep); }
+.box-semantic.pitfall  .box-semantic-meta { color: var(--rose-deep); }
+.box-semantic.aside    .box-semantic-meta { color: var(--ink-3); }
+.box-semantic.note     .box-semantic-meta { color: var(--question); }
+
+.box-semantic-body {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.box-semantic-body > p:not(:last-child) { margin-bottom: 0.5em; }
+
+/* ─────────────────────────────────────────────────────────────────────
+   LESSON CLOSE — checkmark, recap, next pointer
+   The moment of closure that consolidates memory
+   ─────────────────────────────────────────────────────────────────── */
+
+.lesson-close {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--border-2);
+}
+.lesson-close-mark {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--gold);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lesson-close-mark .check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+.lesson-close-recap {
+  font-size: 1rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  font-style: italic;
+  max-width: 580px;
+}
+.lesson-close-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink);
+  padding: 8px 14px;
+  border: 0.5px solid var(--border-2);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: all var(--duration-fast) ease;
+  cursor: pointer;
+}
+.lesson-close-next:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-soft);
+}
+.lesson-close-next .next-label { color: var(--ink-3); }
+.lesson-close-next:hover .next-label { color: var(--gold-deep); }
+
+/* ─────────────────────────────────────────────────────────────────────
+   LESSON SCROLL PROGRESS — thin gold bar fixed at top of viewport
+   ─────────────────────────────────────────────────────────────────── */
+
+.lesson-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 60;
+  pointer-events: none;
+}
+.lesson-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-bright), var(--gold));
+  transform-origin: left center;
+  transition: transform 0.12s linear;
+  box-shadow: 0 1px 4px rgba(176, 122, 42, 0.4);
+}
+
+/* Dark theme adjustments for new lesson elements */
+[data-theme="dark"] .lesson-rule { background: var(--gold-bright); }
+[data-theme="dark"] .lesson-eyebrow { color: var(--gold-bright); }
+[data-theme="dark"] .lesson-display-title em { color: var(--gold-bright); }
+[data-theme="dark"] .lesson-close-mark { color: var(--gold-bright); }
+[data-theme="dark"] .lesson-close-mark .check {
+  background: var(--gold-soft);
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
+}
+[data-theme="dark"] .lesson-close-next:hover {
+  border-color: var(--gold-bright);
+  color: var(--gold-bright);
 }

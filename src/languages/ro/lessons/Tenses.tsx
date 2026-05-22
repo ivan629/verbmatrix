@@ -14,10 +14,15 @@ import { COGNATES } from "../data/vocabulary";
 export function Lesson12() {
   const { t } = useTranslation();
   return (
-    <LessonSection
-      id="L12" num="12" tag="lesson_12_tag"
+    <LessonSection id="L12" num="12" tag="lesson_12_tag"
       title="lesson_12_title"
-      subtitle="lesson_12_subtitle"
+      
+      goal="lesson_12_goal"
+      time={6}
+      practice={6}
+      recap="lesson_12_recap"
+      nextId="L13"
+      nextLabel="lesson_13_title"
     >
       <SectionHeading>lesson_12_h_conjugation</SectionHeading>
       <DataTable
@@ -91,10 +96,15 @@ export function Lesson12() {
 
 export function Lesson13() {
   return (
-    <LessonSection
-      id="L13" num="13" tag="lesson_13_tag"
+    <LessonSection id="L13" num="13" tag="lesson_13_tag"
       title="lesson_13_title"
-      subtitle="lesson_13_subtitle"
+      
+      goal="lesson_13_goal"
+      time={5}
+      practice={5}
+      recap="lesson_13_recap"
+      nextId="L14"
+      nextLabel="lesson_14_title"
     >
       <DataTable
         headers={["English", "+ (tu)", "+ (voi / formal)", "− (tu)"]}
@@ -134,10 +144,15 @@ export function Lesson13() {
 
 export function Lesson14() {
   return (
-    <LessonSection
-      id="L14" num="14" tag="lesson_14_tag"
+    <LessonSection id="L14" num="14" tag="lesson_14_tag"
       title="lesson_14_title"
-      subtitle="lesson_14_subtitle"
+      
+      goal="lesson_14_goal"
+      time={6}
+      practice={6}
+      recap="lesson_14_recap"
+      nextId="L15"
+      nextLabel="lesson_15_title"
     >
       <InfoBox variant="blue" title="lesson_14_when_title">
         <p><Trans i18nKey="lesson_14_when_body" components={[<b />]} /></p>
@@ -185,10 +200,15 @@ export function Lesson14() {
 
 export function Lesson15() {
   return (
-    <LessonSection
-      id="L15" num="15" tag="lesson_15_tag"
+    <LessonSection id="L15" num="15" tag="lesson_15_tag"
       title="lesson_15_title"
-      subtitle="lesson_15_subtitle"
+      
+      goal="lesson_15_goal"
+      time={7}
+      practice={6}
+      recap="lesson_15_recap"
+      nextId="L16"
+      nextLabel="lesson_16_title"
     >
       <SectionHeading>lesson_15_h_conditional</SectionHeading>
       <DataTable
@@ -283,10 +303,15 @@ export function Lesson15() {
 
 export function Lesson16() {
   return (
-    <LessonSection
-      id="L16" num="16" tag="lesson_16_tag"
+    <LessonSection id="L16" num="16" tag="lesson_16_tag"
       title="lesson_16_title"
-      subtitle="lesson_16_subtitle"
+      
+      goal="lesson_16_goal"
+      time={8}
+      practice={5}
+      recap="lesson_16_recap"
+      nextId="L17"
+      nextLabel="lesson_17_title"
     >
       <SectionHeading>lesson_16_h_complex</SectionHeading>
       <PhraseGrid items={COMPLEX_SENTENCES} />
@@ -324,10 +349,15 @@ export function Lesson16() {
 
 export function Lesson17() {
   return (
-    <LessonSection
-      id="L17" num="17" tag="lesson_17_tag"
+    <LessonSection id="L17" num="17" tag="lesson_17_tag"
       title="lesson_17_title"
-      subtitle="lesson_17_subtitle"
+      
+      goal="lesson_17_goal"
+      time={5}
+      practice={15}
+      recap="lesson_17_recap"
+      nextId="vocab"
+      nextLabel="vocab_section_title"
     >
       <TestBox title="lesson_17_test_title" items={GRAND_REVIEW_TESTS} />
       <InfoBox variant="gold" title="lesson_17_next_title">

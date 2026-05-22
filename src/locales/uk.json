@@ -196,5 +196,19 @@
   "day_prog_confidence": "Впевненість",
   "landing_lang_ro": "Румунська",
   "landing_method_headline": "Вчи систему, а не словник.",
-  "day_prog_prefix": "ДЕНЬ"
+  "day_prog_prefix": "ДЕНЬ",
+  "lesson_meta_min": "хв",
+  "lesson_meta_read": "читання",
+  "lesson_meta_practice": "практика",
+  "lesson_complete": "пройдено",
+  "lesson_complete_generic": "Розділ пройдено",
+  "lesson_next": "Далі",
+  "mode_read": "Читай",
+  "mode_say": "Скажи вголос",
+  "mode_recall": "Закрий і пригадай",
+  "mode_write": "Напиши",
+  "box_remember_label": "Запам'ятай",
+  "box_pitfall_label": "Часта помилка",
+  "box_aside_label": "Між іншим",
+  "box_note_label": "Примітка"
 }

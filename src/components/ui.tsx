@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import type {
   BoxVariant, PhraseItem, VocabItem, NumberItem, SoundItem,
   PrincipleItem, ScheduleItem, FillerItem, TestItem, ContrastColumn, VerbDefinition,
@@ -7,41 +7,157 @@ import type {
 import { RO } from "./RO";
 
 // ─── Lesson Section ─────────────────────────────────────────────
+//
+// New opener (mockup-approved 10/10 design):
+//   • eyebrow         — gold "Lesson N · Tag" line
+//   • display title   — large, with <em> emphasis on the outcome word
+//   • gold rule       — 36px thin gold bar, visual punctuation
+//   • meta strip      — "5 min · read"  "3 min · practice"
+//   • goal sentence   — italic "By the end you will…"
+//
+// All new props (time, practice, goal, recap, nextId, nextLabel) are optional.
+// When absent the section degrades gracefully — old call sites still render
+// fine, just without the time budget, goal, or close-of-lesson moment.
+//
+// The title supports <em>...</em> inline markup for italic gold emphasis on
+// the outcome word, rendered via <Trans>.
+
+type LessonMode = "read" | "say" | "recall" | "write";
 
 interface LessonSectionProps {
   id: string;
   num: string;
   tag: string;
   title: string;
+  /** Legacy: long-form subtitle. Prefer `goal` for the italic outcome sentence. */
   subtitle?: string;
+  /** Italic "By the end you will…" sentence. Replaces subtitle visually when present. */
+  goal?: string;
+  /** Estimated reading time in minutes. */
+  time?: number;
+  /** Estimated active-practice time in minutes. */
+  practice?: number;
+  /** One-sentence recap rendered at the bottom in the LessonClose block. */
+  recap?: string;
+  /** DOM id of the next lesson (e.g. "L2"). Renders an inline "Next →" pointer. */
+  nextId?: string;
+  /** Display label for the next lesson (e.g. "Pronouns"). */
+  nextLabel?: string;
   children: ReactNode;
 }
 
-export function LessonSection({ id, num, tag, title, subtitle, children }: LessonSectionProps) {
+export function LessonSection({
+  id, num, tag, title, subtitle, goal, time, practice, recap, nextId, nextLabel, children,
+}: LessonSectionProps) {
   const { t } = useTranslation();
+
+  const eyebrowText =
+    num === "★"
+      ? t(tag)
+      : `${t("lesson_label")} ${num} · ${t(tag)}`;
+
   return (
     <section id={id} className="mb-24 scroll-mt-20 fade-in">
-      <div className="flex items-center gap-3 mb-3 text-[var(--ink-3)]">
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em] font-medium">
-          {num === "★" ? "✦" : `${t("lesson_label")} ${num}`}
-        </span>
-        <span className="w-6 h-px bg-[var(--border-2)]" />
-        <span className="font-mono text-[11px] uppercase tracking-[0.12em]">{t(tag)}</span>
-      </div>
-      <h2 className="font-display text-[2rem] md:text-[2.4rem] font-normal text-[var(--ink)] leading-[1.1] tracking-tight mb-3">
-        {t(title)}
+      {/* ── Opener ─────────────────────────────────────────────── */}
+      <div className="lesson-eyebrow">{eyebrowText}</div>
+
+      <h2 className="lesson-display-title">
+        <Trans i18nKey={title} components={{ em: <em /> }} />
       </h2>
-      {subtitle && <p className="text-[var(--ink-3)] text-[1.05rem] mb-8 max-w-[640px] leading-relaxed">{t(subtitle)}</p>}
+
+      <hr className="lesson-rule" />
+
+      {(time !== undefined || practice !== undefined) && (
+        <div className="lesson-meta-strip">
+          {time !== undefined && (
+            <span><strong>{time} {t("lesson_meta_min")}</strong> · {t("lesson_meta_read")}</span>
+          )}
+          {practice !== undefined && (
+            <span><strong>{practice} {t("lesson_meta_min")}</strong> · {t("lesson_meta_practice")}</span>
+          )}
+        </div>
+      )}
+
+      {goal ? (
+        <p className="lesson-goal">{t(goal)}</p>
+      ) : subtitle ? (
+        <p className="text-[var(--ink-3)] text-[1.05rem] mb-8 max-w-[640px] leading-relaxed">{t(subtitle)}</p>
+      ) : null}
+
+      {/* ── Body ───────────────────────────────────────────────── */}
       <div>{children}</div>
+
+      {/* ── Auto-close (if recap given) ─────────────────────────── */}
+      {recap && (
+        <LessonClose
+          recap={recap}
+          nextId={nextId}
+          nextLabel={nextLabel}
+          num={num}
+        />
+      )}
     </section>
   );
 }
 
-export function SectionHeading({ children }: { children: ReactNode }) {
+// ─── Lesson Close ───────────────────────────────────────────────
+// The deliberate end-of-lesson moment. Checkmark + recap + next pointer.
+// Renders a closure beat that consolidates what was just learned.
+
+export function LessonClose({
+  recap, nextId, nextLabel, num,
+}: {
+  recap: string;
+  nextId?: string;
+  nextLabel?: string;
+  num?: string;
+}) {
+  const { t } = useTranslation();
+  const completeLabel =
+    num && num !== "★"
+      ? `${t("lesson_label")} ${num} ${t("lesson_complete")}`
+      : t("lesson_complete_generic");
+
+  return (
+    <div className="lesson-close">
+      <div className="lesson-close-mark">
+        <span className="check" aria-hidden="true">✓</span>
+        <span>{completeLabel}</span>
+      </div>
+      <p className="lesson-close-recap">{t(recap)}</p>
+      {nextId && nextLabel && (
+        <a href={`#${nextId}`} className="lesson-close-next">
+          <span className="next-label">{t("lesson_next")}:</span>
+          <span>{t(nextLabel)}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </div>
+  );
+}
+
+// ─── Section Heading ────────────────────────────────────────────
+// Now supports an optional `mode` pill that tells the learner what
+// cognitive mode the upcoming block requires.
+//   read    — passive reading (default; pill omitted)
+//   say     — speak aloud (gold)
+//   recall  — cover & retrieve (rose)
+//   write   — write out (blue)
+
+export function SectionHeading({
+  children,
+  mode,
+}: {
+  children: ReactNode;
+  mode?: LessonMode;
+}) {
   const { t } = useTranslation();
   return (
     <h3 className="font-display text-[1.35rem] font-normal text-[var(--ink)] mt-12 mb-4 tracking-tight">
       {typeof children === "string" ? t(children) : children}
+      {mode && mode !== "read" && (
+        <span className={`mode-pill mode-pill-${mode}`}>{t(`mode_${mode}`)}</span>
+      )}
     </h3>
   );
 }
@@ -84,6 +200,59 @@ export function InfoBox({ variant = "neutral", title, children }: { variant?: Bo
       </div>
     </div>
   );
+}
+
+// ─── Semantic boxes ─────────────────────────────────────────────
+// Thin wrappers around InfoBox that tell the learner the cognitive bucket
+// of the content. Use these in new lesson content; legacy InfoBox calls
+// continue to work unchanged.
+//
+//   <Remember>  — gold star — "this is the takeaway, memorise it"
+//   <Pitfall>   — rose triangle — "common mistake, watch out"
+//   <Aside>     — gray crosshatch — "side context / etymology / fun fact"
+//   <Note>      — blue circle — "background info, not on the test"
+//
+// Each accepts an optional `title` (i18n key). Body is free-form children.
+
+type SemanticBoxKind = "remember" | "pitfall" | "aside" | "note";
+
+const SEMANTIC_GLYPHS: Record<SemanticBoxKind, string> = {
+  remember: "★",
+  pitfall:  "⚠",
+  aside:    "⌗",
+  note:     "◯",
+};
+
+function SemanticBox({
+  kind, title, children,
+}: {
+  kind: SemanticBoxKind;
+  title?: string;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={`box-semantic ${kind}`}>
+      <div className="box-semantic-meta">
+        <span aria-hidden="true">{SEMANTIC_GLYPHS[kind]}</span>
+        <span>{t(`box_${kind}_label`)}{title ? ` · ${t(title)}` : ""}</span>
+      </div>
+      <div className="box-semantic-body">{children}</div>
+    </div>
+  );
+}
+
+export function Remember({ title, children }: { title?: string; children: ReactNode }) {
+  return <SemanticBox kind="remember" title={title}>{children}</SemanticBox>;
+}
+export function Pitfall({ title, children }: { title?: string; children: ReactNode }) {
+  return <SemanticBox kind="pitfall" title={title}>{children}</SemanticBox>;
+}
+export function Aside({ title, children }: { title?: string; children: ReactNode }) {
+  return <SemanticBox kind="aside" title={title}>{children}</SemanticBox>;
+}
+export function Note({ title, children }: { title?: string; children: ReactNode }) {
+  return <SemanticBox kind="note" title={title}>{children}</SemanticBox>;
 }
 
 // ─── DataTable ──────────────────────────────────────────────────

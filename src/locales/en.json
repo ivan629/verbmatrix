@@ -226,5 +226,19 @@
   "day_prog_confidence": "Confidence",
   "landing_lang_ro": "Romanian",
   "landing_method_headline": "Learn the system, not the vocabulary.",
-  "day_prog_prefix": "DAY"
+  "day_prog_prefix": "DAY",
+  "lesson_meta_min": "min",
+  "lesson_meta_read": "read",
+  "lesson_meta_practice": "practice",
+  "lesson_complete": "complete",
+  "lesson_complete_generic": "Section complete",
+  "lesson_next": "Next",
+  "mode_read": "Read",
+  "mode_say": "Say aloud",
+  "mode_recall": "Cover & recall",
+  "mode_write": "Write it out",
+  "box_remember_label": "Remember",
+  "box_pitfall_label": "Common pitfall",
+  "box_aside_label": "Aside",
+  "box_note_label": "Note"
 }

@@ -11,10 +11,15 @@ import { MATRIX_VORBI_EU, MATRIX_LUCRA_FULL, MATRIX_FACE_FULL } from "../data/ma
 export function Lesson3() {
   const { t } = useTranslation();
   return (
-    <LessonSection
-      id="L3" num="3" tag="lesson_3_tag"
+    <LessonSection id="L3" num="3" tag="lesson_3_tag"
       title="lesson_3_title"
-      subtitle="lesson_3_subtitle"
+      
+      goal="lesson_3_goal"
+      time={7}
+      practice={8}
+      recap="lesson_3_recap"
+      nextId="L4"
+      nextLabel="lesson_4_title"
     >
       <InfoBox variant="green" title="lesson_3_dont_panic_title">
         <p><Trans i18nKey="lesson_3_dont_panic_body" components={[<b />]} /></p>

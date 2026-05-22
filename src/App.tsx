@@ -6,6 +6,7 @@ import { LandingPage } from "./components/LandingPage";
 import { Onboarding, useShouldShowOnboarding } from "./components/Onboarding";
 import { FloatingUILanguage } from "./components/FloatingUILanguage";
 import { PaywallCard } from "./components/PaywallCard";
+import { LessonProgressBar } from "./components/LessonProgressBar";
 import { isFreeLessonId, FLAGS } from "./config";
 
 /**
@@ -52,6 +53,7 @@ function AppContent() {
 
   return (
     <>
+      <LessonProgressBar />
       <FloatingUILanguage />
       <Sidebar />
       <div className="md:ml-[260px]">

@@ -17,10 +17,15 @@ import {
 
 export function Lesson7() {
   return (
-    <LessonSection
-      id="L7" num="7" tag="lesson_7_tag"
+    <LessonSection id="L7" num="7" tag="lesson_7_tag"
       title="lesson_7_title"
-      subtitle="lesson_7_subtitle"
+      
+      goal="lesson_7_goal"
+      time={7}
+      practice={6}
+      recap="lesson_7_recap"
+      nextId="L8"
+      nextLabel="lesson_8_title"
     >
       <SectionHeading>lesson_7_h_indef</SectionHeading>
       <DataTable
@@ -88,10 +93,15 @@ export function Lesson7() {
 
 export function Lesson8() {
   return (
-    <LessonSection
-      id="L8" num="8" tag="lesson_8_tag"
+    <LessonSection id="L8" num="8" tag="lesson_8_tag"
       title="lesson_8_title"
-      subtitle="lesson_8_subtitle"
+      
+      goal="lesson_8_goal"
+      time={6}
+      practice={6}
+      recap="lesson_8_recap"
+      nextId="L9"
+      nextLabel="lesson_9_title"
     >
       <SectionHeading>lesson_8_h_agreement</SectionHeading>
       <DataTable
@@ -150,10 +160,15 @@ export function Lesson8() {
 export function Lesson9() {
   const { t } = useTranslation();
   return (
-    <LessonSection
-      id="L9" num="9" tag="lesson_9_tag"
+    <LessonSection id="L9" num="9" tag="lesson_9_tag"
       title="lesson_9_title"
-      subtitle="lesson_9_subtitle"
+      
+      goal="lesson_9_goal"
+      time={6}
+      practice={6}
+      recap="lesson_9_recap"
+      nextId="L10"
+      nextLabel="lesson_10_title"
     >
       <SectionHeading>lesson_9_h_0_10</SectionHeading>
       <NumberGrid items={NUMBERS_0_10} />
@@ -270,10 +285,15 @@ export function Lesson9() {
 
 export function Lesson10() {
   return (
-    <LessonSection
-      id="L10" num="10" tag="lesson_10_tag"
+    <LessonSection id="L10" num="10" tag="lesson_10_tag"
       title="lesson_10_title"
-      subtitle="lesson_10_subtitle"
+      
+      goal="lesson_10_goal"
+      time={6}
+      practice={5}
+      recap="lesson_10_recap"
+      nextId="L11"
+      nextLabel="lesson_11_title"
     >
       <SectionHeading>lesson_10_h_prepositions</SectionHeading>
       <DataTable
@@ -327,10 +347,15 @@ export function Lesson10() {
 
 export function Lesson11() {
   return (
-    <LessonSection
-      id="L11" num="11" tag="lesson_11_tag"
+    <LessonSection id="L11" num="11" tag="lesson_11_tag"
       title="lesson_11_title"
-      subtitle="lesson_11_subtitle"
+      
+      goal="lesson_11_goal"
+      time={6}
+      practice={6}
+      recap="lesson_11_recap"
+      nextId="L12"
+      nextLabel="lesson_12_title"
     >
       <SectionHeading>lesson_11_h_modals</SectionHeading>
       <DataTable
