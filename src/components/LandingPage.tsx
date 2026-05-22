@@ -6,11 +6,10 @@ import { useAccess } from "../context/Access";
 import { LicenseKeyModal } from "./LicenseKeyModal";
 import { useScrollReveal, useScrollRevealChildren } from "../lib/useScrollReveal";
 import { useTTS } from "../lib/tts";
-import { ThemeToggle } from "./ThemeToggle";
 import { CinematicMatrix } from "./CinematicMatrix";
 import {
-  MatrixMark, LanguageOrb, Chevron, DayProgression,
-  CrossHair,
+  LanguageOrb, Chevron, DayProgression,
+  CrossHair, LogoLockup, GiantMatrixMark,
 } from "./illustrations";
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -163,23 +162,67 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
   );
 }
 
-// ─── Avatar — initials in a colored circle ──────────────────────
+// ─── Mini visual anchors for the Includes section ──────────────
+// Each item gets a unique glyph so the section scans as a deluxe
+// product inventory rather than a feature checklist.
 
-function Avatar({ name }: { name: string }) {
-  const initials = name
-      .split(" ")
-      .filter((s) => !s.includes("."))
-      .map((s) => s[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase();
-  const palette = ["#2a5a8a", "#2d6342", "#8f3128", "#5b4b8a", "#7a5028"];
-  const hash = name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const color = palette[hash % palette.length] ?? palette[0];
+function MiniMatrix() {
   return (
-      <div className="avatar-initials" style={{ background: color }} aria-hidden="true">
-        {initials}
-      </div>
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="34" rx="2" stroke="currentColor" strokeOpacity="0.35" />
+        <line x1="12.33" y1="1" x2="12.33" y2="35" stroke="currentColor" strokeOpacity="0.35" />
+        <line x1="23.67" y1="1" x2="23.67" y2="35" stroke="currentColor" strokeOpacity="0.35" />
+        <line x1="1" y1="12.33" x2="35" y2="12.33" stroke="currentColor" strokeOpacity="0.35" />
+        <line x1="1" y1="23.67" x2="35" y2="23.67" stroke="currentColor" strokeOpacity="0.35" />
+        <rect x="14" y="14" width="8" height="8" rx="1" fill="var(--gold)" fillOpacity="0.55" />
+      </svg>
+  );
+}
+
+function BigGlyph({ value }: { value: string }) {
+  return (
+      <span className="font-display text-[var(--gold)] font-light tracking-[-0.03em] tabular-nums leading-none"
+            style={{ fontSize: value.length > 2 ? "1.6rem" : "1.9rem" }}>
+      {value}
+    </span>
+  );
+}
+
+function MiniWaveform() {
+  // Five vertical bars at varying heights, centered.
+  const heights = [8, 16, 24, 18, 12, 22, 10];
+  return (
+      <svg width="44" height="32" viewBox="0 0 44 32" fill="none" aria-hidden="true">
+        {heights.map((h, i) => (
+            <rect key={i}
+                  x={2 + i * 6}
+                  y={(32 - h) / 2}
+                  width="3"
+                  height={h}
+                  rx="1"
+                  fill="var(--gold)"
+                  fillOpacity={0.45 + (h / 60)} />
+        ))}
+      </svg>
+  );
+}
+
+function MiniCalendar() {
+  // 32 dots arranged 8 cols × 4 rows — represents the 32 days.
+  const dots = Array.from({ length: 32 }, (_, i) => [i % 8, Math.floor(i / 8)] as const);
+  return (
+      <svg width="40" height="22" viewBox="0 0 40 22" fill="none" aria-hidden="true">
+        {dots.map(([c, r], i) => (
+            <circle
+                key={i}
+                cx={3 + c * 5}
+                cy={3 + r * 5.5}
+                r="1.6"
+                fill="var(--gold)"
+                fillOpacity={0.25 + (i / 60)}
+            />
+        ))}
+      </svg>
   );
 }
 
@@ -337,7 +380,6 @@ export function LandingPage() {
   const timelineRef = useScrollReveal<HTMLElement>({ threshold: 0.3 });
   const insideRef = useScrollRevealChildren<HTMLElement>();
   const langRef = useScrollRevealChildren<HTMLElement>();
-  const testimonialsRef = useScrollRevealChildren<HTMLElement>();
   const faqRef = useScrollReveal<HTMLElement>();
 
   const speak = useTTS();
@@ -358,12 +400,7 @@ export function LandingPage() {
             style={{ ["--nav-tint-a" as string]: navSolid ? "0.85" : "0" }}
         >
           <div className="max-w-[1200px] mx-auto px-5 md:px-12 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <MatrixMark size={24} />
-              <div className="font-display text-[1rem] tracking-tight leading-none font-medium text-white">
-                {BRAND.name}
-              </div>
-            </div>
+            <LogoLockup size={22} tone="light" />
             <div className="flex items-center gap-2 md:gap-6">
               <a href="#method" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
                 Method
@@ -487,18 +524,26 @@ export function LandingPage() {
           <section id="method" ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36 scroll-mt-16">
             <div className="atmos-cream" />
             <div className="max-w-[920px] mx-auto relative" style={{ zIndex: 1 }}>
+
+              {/* Quiet transition handoff from the cinematic. Italic. */}
+              <div className="reveal text-center mb-14">
+                <hr className="hero-rule mx-auto mb-7" />
+                <p className="font-display italic text-[clamp(1.3rem,2.2vw,1.8rem)] text-[var(--ink-2)] tracking-[-0.01em] leading-snug">
+                  {t("landing_method_transition")}
+                </p>
+              </div>
+
               <div className="reveal mb-20 text-center">
-                <div className="eyebrow mb-5">{t("landing_method_kicker")}</div>
-                <h2 className="font-display text-[clamp(2rem,4.4vw,3.2rem)] font-light text-[var(--ink)] tracking-[-0.025em] leading-[1.08] max-w-[680px] mx-auto">
-                  {t("landing_method_title_part1")} {t("landing_method_title_part2")}
+                <h2 className="font-display text-[clamp(2rem,4.4vw,3.2rem)] font-light text-[var(--ink)] tracking-[-0.025em] leading-[1.08] max-w-[720px] mx-auto">
+                  Learn the <span className="italic">system</span>, not the <span className="italic">vocabulary</span>.
                 </h2>
               </div>
 
               <div className="space-y-16 md:space-y-20">
                 {[
-                  { num: "01", title: "landing_method_1_title", body: "landing_method_1_body" },
-                  { num: "02", title: "landing_method_2_title", body: "landing_method_2_body" },
-                  { num: "03", title: "landing_method_3_title", body: "landing_method_3_body" },
+                  { num: "01", title: <>The matrix is the <span className="italic">engine</span>.</>,                                  body: "landing_method_1_body" },
+                  { num: "02", title: <><span className="italic">Thirty-two verbs</span> cover almost everything.</>,                  body: "landing_method_2_body" },
+                  { num: "03", title: <>Five minutes, five times a day — for <span className="italic">thirty-two days</span>.</>,      body: "landing_method_3_body" },
                 ].map((step) => (
                     <div key={step.num}
                          className="reveal grid grid-cols-1 md:grid-cols-[120px_1fr] gap-5 md:gap-12 items-start">
@@ -507,7 +552,7 @@ export function LandingPage() {
                       </div>
                       <div className="manuscript-step">
                         <h3 className="font-display text-[1.4rem] md:text-[1.7rem] text-[var(--ink)] tracking-[-0.02em] leading-[1.2] mb-3 font-medium">
-                          {t(step.title)}
+                          {step.title}
                         </h3>
                         <p className="text-[1.02rem] text-[var(--ink-2)] leading-[1.7] max-w-[640px]">
                           {t(step.body)}
@@ -521,41 +566,49 @@ export function LandingPage() {
 
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
-          {/* ═════════ 4. TIMELINE — STAT TILES ═════════ */}
+          {/* ═════════ 4. TIMELINE — THE THIRTY-TWO-DAY JOURNEY ═════════ */}
           <section ref={timelineRef} className="scope-cream reveal relative px-5 md:px-12 py-24 md:py-32">
             <div className="max-w-[1000px] mx-auto relative">
-              <div className="text-center mb-14">
+              <div className="text-center mb-12">
                 <div className="eyebrow mb-5">{t("landing_timeline_kicker")}</div>
                 <h2 className="font-display text-[clamp(1.7rem,3.4vw,2.4rem)] font-light text-[var(--ink)] tracking-[-0.02em] leading-[1.15] max-w-[680px] mx-auto">
                   {t("landing_timeline_title")}
                 </h2>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-16">
+              {/* DayProgression is the hero of this section now — larger,
+                centered, with breathing room. */}
+              <div className="w-full overflow-x-auto pb-2 -mx-5 px-5 md:mx-0 md:px-0 mb-10">
+                <DayProgression className="min-w-[640px] w-full h-[140px] block mx-auto" />
+              </div>
+
+              {/* Four key milestones — what happens at days 1, 7, 14, 32 */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-x-3 gap-y-8 mb-12 max-w-[920px] mx-auto">
                 {[
-                  { num: "5 min",  label: "to your first sentence" },
-                  { num: "32",     label: "structured days" },
-                  { num: "32",     label: "core verbs · 90% of speech" },
-                  { num: "500+",   label: "vocabulary words" },
-                ].map((s, i) => (
-                    <div key={i} className="stat-tile">
-                      <div className="font-display text-[clamp(2rem,3.6vw,2.8rem)] mb-2 font-light tracking-tight tabular-nums text-[var(--ink)]">
-                        {s.num}
+                  { day: "Day 1",  label: t("landing_timeline_milestone_1") },
+                  { day: "Day 7",  label: t("landing_timeline_milestone_2") },
+                  { day: "Day 14", label: t("landing_timeline_milestone_3") },
+                  { day: "Day 32", label: t("landing_timeline_milestone_4") },
+                ].map((m, i) => (
+                    <div key={i} className="text-center md:text-left">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--gold)] mb-2 tabular-nums">
+                        {m.day}
                       </div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-3)] leading-snug max-w-[160px] mx-auto">
-                        {s.label}
+                      <div className="font-display text-[clamp(1rem,1.4vw,1.15rem)] text-[var(--ink)] tracking-[-0.01em] leading-[1.4] max-w-[200px] mx-auto md:mx-0">
+                        {m.label}
                       </div>
                     </div>
                 ))}
               </div>
 
-              <div className="w-full overflow-x-auto pb-4 -mx-5 px-5 md:mx-0 md:px-0">
-                <DayProgression className="min-w-[560px] w-full h-[100px] block mx-auto" />
+              {/* Small inline stat strip — context, not focus */}
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--ink-3)] tabular-nums pt-6 border-t border-[var(--border)] max-w-[760px] mx-auto">
+                <span><span className="text-[var(--ink)]">5 min</span> daily</span>
+                <span><span className="text-[var(--ink)]">32</span> verbs</span>
+                <span><span className="text-[var(--ink)]">500+</span> words</span>
+                <span><span className="text-[var(--ink)]">17</span> lessons</span>
+                <span><span className="text-[var(--ink)]">16</span> dialogues</span>
               </div>
-
-              <p className="text-center mt-10 text-[0.98rem] text-[var(--ink-3)] max-w-[560px] mx-auto leading-[1.65]">
-                {t("landing_timeline_caption")}
-              </p>
             </div>
           </section>
 
@@ -571,23 +624,27 @@ export function LandingPage() {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {[
-                  { num: "01", title: "landing_includes_matrix",    desc: "landing_includes_matrix_desc" },
-                  { num: "02", title: "landing_includes_verbs",     desc: "landing_includes_verbs_desc" },
-                  { num: "03", title: "landing_includes_vocab",     desc: "landing_includes_vocab_desc" },
-                  { num: "04", title: "landing_includes_dialogues", desc: "landing_includes_dialogues_desc" },
-                  { num: "05", title: "landing_includes_audio",     desc: "landing_includes_audio_desc" },
-                  { num: "06", title: "landing_includes_plan",      desc: "landing_includes_plan_desc" },
+                  { num: "01", title: "landing_includes_matrix",    desc: "landing_includes_matrix_desc",    visual: <MiniMatrix /> },
+                  { num: "02", title: "landing_includes_verbs",     desc: "landing_includes_verbs_desc",    visual: <BigGlyph value="32" /> },
+                  { num: "03", title: "landing_includes_vocab",     desc: "landing_includes_vocab_desc",    visual: <BigGlyph value="500+" /> },
+                  { num: "04", title: "landing_includes_dialogues", desc: "landing_includes_dialogues_desc", visual: <BigGlyph value="16" /> },
+                  { num: "05", title: "landing_includes_audio",     desc: "landing_includes_audio_desc",    visual: <MiniWaveform /> },
+                  { num: "06", title: "landing_includes_plan",      desc: "landing_includes_plan_desc",     visual: <MiniCalendar /> },
                 ].map((item) => (
-                    <div key={item.num} className="reveal spec-item flex items-start gap-4">
-                      <CrossHair size={12} className="text-[var(--gold)] mt-1.5 shrink-0" strokeWidth={1.5} />
-                      <div className="flex-1">
-                        <div className="flex items-baseline gap-2 mb-1">
-                          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)] tabular-nums">{item.num}</span>
-                          <span className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight font-medium">
-                        {t(item.title)}
-                      </span>
+                    <div key={item.num}
+                         className="reveal card-glass card-lift relative p-6 md:p-7 flex items-start gap-5">
+                      {/* Visual anchor — unique per item */}
+                      <div className="shrink-0 w-[64px] h-[64px] rounded-lg bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--ink-2)] relative z-[2]">
+                        {item.visual}
+                      </div>
+                      <div className="flex-1 min-w-0 relative z-[2]">
+                        <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)] tabular-nums mb-1.5">
+                          {item.num}
+                        </div>
+                        <div className="font-display text-[1.05rem] md:text-[1.15rem] text-[var(--ink)] tracking-[-0.01em] font-medium leading-snug mb-2">
+                          {t(item.title)}
                         </div>
                         <div className="text-[0.92rem] text-[var(--ink-2)] leading-[1.6]">
                           {t(item.desc, { defaultValue: "" })}
@@ -601,48 +658,7 @@ export function LandingPage() {
 
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
-          {/* ═════════ 6. TESTIMONIALS — PREMIUM CARDS ═════════ */}
-          <section ref={testimonialsRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32">
-            <div className="atmos-cream" />
-            <div className="max-w-[1100px] mx-auto relative" style={{ zIndex: 1 }}>
-              <div className="text-center mb-14">
-                <div className="eyebrow mb-5">{t("landing_testimonials_kicker")}</div>
-                <h2 className="font-display text-[clamp(1.9rem,3.8vw,2.6rem)] font-light text-[var(--ink)] tracking-[-0.02em] leading-[1.1]">
-                  {t("landing_testimonials_title")}
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {[1, 2, 3].map((n) => (
-                    <figure key={n} className="card-glass card-lift hover-sheen reveal p-6 md:p-7 flex flex-col">
-                      <div className="text-[var(--gold)] font-display text-[2.2rem] leading-none mb-2 opacity-50">"</div>
-                      <blockquote className="text-[0.98rem] leading-[1.65] text-[var(--ink)] flex-1 -mt-2">
-                        {t(`landing_testimonial_${n}_quote`)}
-                      </blockquote>
-                      <figcaption className="mt-6 pt-5 border-t border-[var(--border)] flex items-center gap-3">
-                        <Avatar name={t(`landing_testimonial_${n}_name`)} />
-                        <div className="min-w-0">
-                          <div className="font-display text-[0.95rem] text-[var(--ink)] font-medium tracking-tight truncate">
-                            {t(`landing_testimonial_${n}_name`)}
-                          </div>
-                          <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--ink-3)] truncate">
-                            {t(`landing_testimonial_${n}_role`)} · {t(`landing_testimonial_${n}_city`)}
-                          </div>
-                        </div>
-                      </figcaption>
-                    </figure>
-                ))}
-              </div>
-
-              <p className="text-center mt-10 font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)]">
-                {t("landing_testimonials_disclaimer")}
-              </p>
-            </div>
-          </section>
-
-          <hr className="fade-rule mx-auto max-w-[800px]" />
-
-          {/* ═════════ 7. LANGUAGES + BUNDLE ═════════ */}
+          {/* ═════════ 6. LANGUAGES + BUNDLE ═════════ */}
           <section id="languages" ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32 scroll-mt-16">
             <div className="max-w-[1100px] mx-auto">
               <div className="reveal text-center mb-16">
@@ -700,12 +716,43 @@ export function LandingPage() {
                     </div>
                     <div className="flex flex-col items-end gap-3 shrink-0">
                       <div className="text-right">
-                        <div className="font-display text-[2.6rem] text-white font-light leading-none tracking-[-0.03em] tabular-nums">
-                          {PRICING.all?.priceFormatted ?? "—"}
-                        </div>
-                        <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 mt-1.5">
-                          {t("landing_lifetime_access")}
-                        </div>
+                        {/* Savings visible — separately-bought total shown with strikethrough */}
+                        {(() => {
+                          const allPrice = PRICING.all?.price;
+                          const allFormatted = PRICING.all?.priceFormatted;
+                          if (typeof allPrice !== "number" || !allFormatted) {
+                            return (
+                                <div className="font-display text-[2.6rem] text-white font-light leading-none tracking-[-0.03em] tabular-nums">
+                                  {allFormatted ?? "—"}
+                                </div>
+                            );
+                          }
+                          const separatelyTotal = Object.entries(PRICING)
+                              .filter(([code]) => code !== "all")
+                              .reduce((sum, [, p]) => sum + (p?.price ?? 0), 0);
+                          const savings = Math.max(separatelyTotal - allPrice, 0);
+                          const currency = allFormatted.replace(/[\d.,\s]/g, "") || "€";
+                          return (
+                              <>
+                                {separatelyTotal > allPrice && (
+                                    <div className="font-mono text-[11px] text-white/40 line-through tabular-nums mb-1">
+                                      {currency}{separatelyTotal}
+                                    </div>
+                                )}
+                                <div className="font-display text-[2.8rem] text-white font-light leading-none tracking-[-0.03em] tabular-nums">
+                                  {allFormatted}
+                                </div>
+                                {savings > 0 && (
+                                    <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--gold)] mt-2">
+                                      Save {currency}{savings}
+                                    </div>
+                                )}
+                                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 mt-1">
+                                  {t("landing_lifetime_access")}
+                                </div>
+                              </>
+                          );
+                        })()}
                       </div>
                       <button type="button"
                               onClick={() => {
@@ -725,7 +772,7 @@ export function LandingPage() {
 
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
-          {/* ═════════ 8. GUARANTEE — INTIMATE SEAL MOMENT ═════════ */}
+          {/* ═════════ 7. GUARANTEE — INTIMATE SEAL + FOUNDER SIGNATURE ═════════ */}
           <section className="scope-cream px-5 md:px-12 py-20 md:py-28">
             <div className="max-w-[640px] mx-auto text-center">
               <div className="guarantee-seal">
@@ -733,13 +780,24 @@ export function LandingPage() {
                 <p className="text-[1.05rem] md:text-[1.18rem] text-[var(--ink-2)] leading-[1.7]">
                   {t("landing_guarantee_body")}
                 </p>
+
+                {/* Founder signature — typeset, gold accent rule above */}
+                <div className="mt-10 pt-6 inline-flex flex-col items-center">
+                  <hr className="hero-rule mb-5" />
+                  <div className="font-display italic text-[1.3rem] md:text-[1.5rem] text-[var(--ink)] tracking-[-0.01em] leading-none">
+                    {t("landing_guarantee_signature_name")}
+                  </div>
+                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--ink-3)] mt-2">
+                    {t("landing_guarantee_signature_role")}
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
-          {/* ═════════ 9. FAQ ═════════ */}
+          {/* ═════════ 8. FAQ ═════════ */}
           <section id="faq" ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24 scroll-mt-16">
             <div className="max-w-[800px] mx-auto">
               <div className="text-center mb-14">
@@ -753,10 +811,21 @@ export function LandingPage() {
                     <FAQItem key={item.q} q={item.q} a={item.a} num={String(i + 1).padStart(2, "0")} />
                 ))}
               </div>
+
+              {/* Closing — direct contact line for edge cases */}
+              <div className="mt-14 text-center">
+                <p className="font-display italic text-[clamp(1rem,1.5vw,1.15rem)] text-[var(--ink-2)] mb-2">
+                  {t("landing_faq_closing")}
+                </p>
+                <a href={`mailto:${BRAND.contactEmail}`}
+                   className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors">
+                  {BRAND.contactEmail}
+                </a>
+              </div>
             </div>
           </section>
 
-          {/* ═════════ 10. FINAL CTA — DARK + TREE LINES (bookend) ═════════ */}
+          {/* ═════════ 9. FINAL CTA — DARK + JOURNEY-CLOSE BOOKEND ═════════ */}
           <section className="scope-dark bg-noir emerges-from-cream relative px-5 md:px-12 py-28 md:py-36 overflow-hidden border-t border-white/[0.06]">
             <div className="atmos-final" />
 
@@ -768,6 +837,12 @@ export function LandingPage() {
             }} />
 
             <div className="max-w-[760px] mx-auto text-center relative" style={{ zIndex: 2 }}>
+              {/* Giant brand stamp — bookend to the small mark in the nav.
+                The page opens with the logo at 22px, closes with it at 220px. */}
+              <div className="mb-10 inline-block">
+                <GiantMatrixMark size={180} />
+              </div>
+
               <h2 className="font-display text-white text-[clamp(2rem,4.4vw,3.4rem)] font-light tracking-[-0.025em] leading-[1.08] mb-7">
                 {t("landing_final_cta_title")}{" "}
                 <span className="italic">{t("landing_final_cta_emphasis")}</span>
@@ -786,10 +861,7 @@ export function LandingPage() {
         <footer className="scope-dark relative px-5 md:px-12 py-14 border-t border-white/[0.06]">
           <div className="max-w-[1100px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
-              <div className="flex items-center gap-2.5">
-                <MatrixMark size={22} />
-                <div className="font-display text-[1rem] font-medium text-white tracking-tight">{BRAND.name}</div>
-              </div>
+              <LogoLockup size={20} tone="light" />
               <div className="flex flex-wrap items-center gap-x-7 gap-y-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55">
                 <button type="button" onClick={() => setKeyModal("all")}
                         className="hover:text-white transition-colors">
@@ -798,7 +870,6 @@ export function LandingPage() {
                 <a href="#terms" className="hover:text-white transition-colors">{t("landing_footer_terms")}</a>
                 <a href="#privacy" className="hover:text-white transition-colors">{t("landing_footer_privacy")}</a>
                 <a href={`mailto:${BRAND.contactEmail}`} className="hover:text-white transition-colors">{t("landing_footer_contact")}</a>
-                <ThemeToggle />
               </div>
             </div>
             <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
