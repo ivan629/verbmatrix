@@ -263,19 +263,19 @@ body {
 /* Dia-inspired watercolor wash with the signature palette (gold + rose) */
 .bg-watercolor {
   background:
-    radial-gradient(ellipse 80% 60% at 18% 28%, rgba(196, 149, 69, 0.14), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 82% 62%, rgba(196, 87, 78, 0.10), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 50% 92%, rgba(212, 149, 69, 0.12), transparent 60%),
-    var(--bg);
+          radial-gradient(ellipse 80% 60% at 18% 28%, rgba(196, 149, 69, 0.14), transparent 60%),
+          radial-gradient(ellipse 70% 50% at 82% 62%, rgba(196, 87, 78, 0.10), transparent 60%),
+          radial-gradient(ellipse 60% 40% at 50% 92%, rgba(212, 149, 69, 0.12), transparent 60%),
+          var(--bg);
 }
 
 /* Dramatic noir for dark hero — gold + rose orbital tints */
 .bg-noir {
   background:
-    radial-gradient(ellipse 90% 65% at 50% -10%, rgba(244, 190, 122, 0.14), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 95%, rgba(232, 122, 112, 0.10), transparent 50%),
-    radial-gradient(ellipse 50% 40% at 5% 50%, rgba(176, 122, 42, 0.08), transparent 55%),
-    var(--bg);
+          radial-gradient(ellipse 90% 65% at 50% -10%, rgba(244, 190, 122, 0.14), transparent 60%),
+          radial-gradient(ellipse 60% 50% at 85% 95%, rgba(232, 122, 112, 0.10), transparent 50%),
+          radial-gradient(ellipse 50% 40% at 5% 50%, rgba(176, 122, 42, 0.08), transparent 55%),
+          var(--bg);
 }
 
 /* Subtle aurora for transitions between sections */
@@ -289,8 +289,8 @@ body {
   inset: -100px 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 50% 30% at 30% 30%, var(--gold-soft), transparent 70%),
-    radial-gradient(ellipse 40% 25% at 70% 60%, var(--rose-soft), transparent 70%);
+          radial-gradient(ellipse 50% 30% at 30% 30%, var(--gold-soft), transparent 70%),
+          radial-gradient(ellipse 40% 25% at 70% 60%, var(--rose-soft), transparent 70%);
   filter: blur(40px);
   opacity: 0.7;
   pointer-events: none;
@@ -315,8 +315,7 @@ body {
   pointer-events: none;
   z-index: 1;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  opacity: 0.35;
-  mix-blend-mode: overlay;
+  opacity: 0.18;
 }
 
 /* ─── Glass / blur surfaces ───────────────────────────────────── */
@@ -549,7 +548,8 @@ body {
 .marquee-track {
   display: flex;
   flex-shrink: 0;
-  animation: marquee 40s linear infinite;
+  animation: marquee 24s linear infinite;
+  will-change: transform;
 }
 
 /* Cell transition for matrix verb switch */
@@ -772,11 +772,11 @@ body {
 }
 .text-shimmer {
   background: linear-gradient(
-    100deg,
-    var(--gold-bright) 0%,
-    var(--gold) 30%,
-    var(--rose) 60%,
-    var(--gold) 90%
+          100deg,
+          var(--gold-bright) 0%,
+          var(--gold) 30%,
+          var(--rose) 60%,
+          var(--gold) 90%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -862,29 +862,29 @@ body {
 /* Soft drop shadow for floating UI elements */
 .shadow-soft {
   box-shadow:
-    0 1px 2px rgba(0,0,0,0.04),
-    0 4px 12px rgba(0,0,0,0.05),
-    0 16px 40px rgba(0,0,0,0.07);
+          0 1px 2px rgba(0,0,0,0.04),
+          0 4px 12px rgba(0,0,0,0.05),
+          0 16px 40px rgba(0,0,0,0.07);
 }
 .shadow-heavy {
   box-shadow:
-    0 2px 4px rgba(0,0,0,0.06),
-    0 12px 24px rgba(0,0,0,0.08),
-    0 28px 64px rgba(0,0,0,0.12);
+          0 2px 4px rgba(0,0,0,0.06),
+          0 12px 24px rgba(0,0,0,0.08),
+          0 28px 64px rgba(0,0,0,0.12);
 }
 .scope-dark .shadow-soft,
 [data-theme="dark"] .shadow-soft {
   box-shadow:
-    0 1px 2px rgba(0,0,0,0.4),
-    0 4px 12px rgba(0,0,0,0.5),
-    0 16px 40px rgba(0,0,0,0.6);
+          0 1px 2px rgba(0,0,0,0.4),
+          0 4px 12px rgba(0,0,0,0.5),
+          0 16px 40px rgba(0,0,0,0.6);
 }
 .scope-dark .shadow-heavy,
 [data-theme="dark"] .shadow-heavy {
   box-shadow:
-    0 2px 4px rgba(0,0,0,0.5),
-    0 12px 24px rgba(0,0,0,0.6),
-    0 28px 64px rgba(0,0,0,0.8);
+          0 2px 4px rgba(0,0,0,0.5),
+          0 12px 24px rgba(0,0,0,0.6),
+          0 28px 64px rgba(0,0,0,0.8);
 }
 
 /* Measure */
@@ -940,6 +940,12 @@ body {
   50%      { opacity: 0.55; transform: scale(0.85); }
 }
 
+/* ─── Soundwave bars (was referenced but never defined) ──────── */
+@keyframes soundwave-pulse {
+  0%, 100% { transform: scaleY(0.35); opacity: 0.55; }
+  50%      { transform: scaleY(1);    opacity: 1; }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    PERFORMANCE LAYER
    ═══════════════════════════════════════════════════════════════
@@ -951,6 +957,10 @@ body {
 .cv-auto {
   content-visibility: auto;
   contain-intrinsic-size: 1px 800px;
+}
+.cv-auto-tall {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 4500px;
 }
 
 /* GPU layer hint for elements that animate transform */
@@ -1025,4 +1035,641 @@ body {
   section { page-break-inside: avoid; }
   h1, h2, h3 { page-break-after: avoid; }
   table { page-break-inside: avoid; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LANDING v4 — DEPTH, ATMOSPHERE, SECTION SIGNATURES
+   Single layer. No duplicate definitions. Each class defined once.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── ATMOSPHERIC BACKDROPS ─────────────────────────────────────
+   Soft off-center radial glows that sit BEHIND content. Imply
+   depth and warmth without drawing attention to themselves. */
+
+.atmos-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Bottom-edge vignette — grounds the section */
+          linear-gradient(180deg, transparent 62%, rgba(0,0,0,0.28) 100%),
+            /* Warm horizon wash at the top */
+          linear-gradient(180deg, rgba(244,190,122,0.06) 0%, transparent 32%),
+            /* Small rose accent, mid-right */
+          radial-gradient(ellipse 38% 32% at 85% 48%, rgba(232,122,112,0.10), transparent 60%),
+            /* Deep gold pool, bottom-left */
+          radial-gradient(ellipse 52% 42% at 20% 86%, rgba(176,122,42,0.10), transparent 65%),
+            /* Large soft gold orb, top-left — the primary light source */
+          radial-gradient(ellipse 72% 55% at 18% 22%, rgba(244,190,122,0.17), transparent 65%);
+}
+
+.atmos-cream {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Top-edge soft wash */
+          linear-gradient(180deg, rgba(244,190,122,0.05) 0%, transparent 28%),
+            /* Right-side warm orb */
+          radial-gradient(ellipse 55% 40% at 88% 32%, rgba(244,190,122,0.07), transparent 65%),
+            /* Bottom-left ambient pool */
+          radial-gradient(ellipse 45% 35% at 12% 82%, rgba(196,150,90,0.035), transparent 65%);
+}
+
+.atmos-final {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* Bottom vignette */
+          linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.30) 100%),
+            /* Centered gold halo, slightly above center */
+          radial-gradient(ellipse 60% 50% at 50% 42%, rgba(244,190,122,0.12), transparent 70%),
+            /* Rose accent below */
+          radial-gradient(ellipse 40% 30% at 50% 90%, rgba(232,122,112,0.06), transparent 60%);
+}
+
+/* ─── ANIMATED GROWING TREE LINES ────────────────────────────────
+   Decorative SVG paths that draw themselves in like growing branches.
+   Used as ambient backdrop in hero + final CTA (creates bookend).
+   Quiet, slow, drawn once on viewport entry. */
+
+.tree-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tree-line-anim {
+  stroke-dasharray: var(--len, 1500);
+  stroke-dashoffset: var(--len, 1500);
+  animation: tree-grow 4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes tree-grow {
+  to { stroke-dashoffset: 0; }
+}
+
+/* When user prefers reduced motion, snap to drawn state */
+@media (prefers-reduced-motion: reduce) {
+  .tree-line-anim {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ─── PREMIUM GLASS — for elevated cards ─────────────────────────
+   Multi-layer treatment: gradient surface + inset highlight + drop.
+   Auto-adapts via scope. */
+
+.card-glass {
+  position: relative;
+  border-radius: var(--radius-lg);
+  background:
+          linear-gradient(
+                  135deg,
+                  rgba(255,255,255,0.06) 0%,
+                  rgba(255,255,255,0.02) 100%
+          );
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.06),
+          0 1px 2px rgba(0,0,0,0.25),
+          0 12px 32px -8px rgba(0,0,0,0.40),
+          0 32px 64px -20px rgba(0,0,0,0.30);
+}
+.scope-cream .card-glass {
+  background:
+          linear-gradient(
+                  180deg,
+                  rgba(255,255,255,0.92) 0%,
+                  rgba(250,247,240,0.80) 100%
+          );
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(60,40,20,0.06);
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.80),
+          0 1px 2px rgba(60,40,20,0.04),
+          0 4px 12px -2px rgba(60,40,20,0.06),
+          0 18px 36px -10px rgba(60,40,20,0.10);
+}
+
+/* Card lift on hover — used with card-glass */
+.card-lift {
+  transition:
+          transform 0.35s var(--ease-out-expo),
+          box-shadow 0.35s var(--ease-out-expo);
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+}
+.scope-cream .card-lift:hover {
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.80),
+          0 1px 2px rgba(60,40,20,0.05),
+          0 10px 24px -4px rgba(60,40,20,0.10),
+          0 32px 64px -16px rgba(60,40,20,0.16);
+}
+.scope-dark .card-lift:hover {
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.08),
+          0 1px 2px rgba(0,0,0,0.30),
+          0 18px 40px -8px rgba(0,0,0,0.50),
+          0 40px 80px -24px rgba(0,0,0,0.40);
+}
+
+/* ─── GRADIENT BORDER (mask-composite, crisp 1px) ───────────────
+   Single canonical definition. Applied to elements WITHOUT card-glass
+   border, since glass already has its own border. */
+
+.border-warm {
+  position: relative;
+  border-radius: var(--radius-lg);
+}
+.border-warm::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+          160deg,
+          rgba(244,190,122,0.45) 0%,
+          rgba(255,255,255,0.10) 35%,
+          rgba(255,255,255,0.04) 65%,
+          rgba(244,190,122,0.22) 100%
+  );
+  -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+  mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.scope-cream .border-warm::before {
+  background: linear-gradient(
+          160deg,
+          rgba(244,190,122,0.50) 0%,
+          rgba(60,40,20,0.08) 35%,
+          rgba(60,40,20,0.04) 65%,
+          rgba(244,190,122,0.30) 100%
+  );
+}
+
+/* Gold-accent variant (for featured bundle) */
+.border-gold::before {
+  background: linear-gradient(
+          135deg,
+          rgba(244,190,122,0.75) 0%,
+          rgba(232,122,112,0.35) 40%,
+          rgba(244,190,122,0.25) 70%,
+          rgba(244,190,122,0.60) 100%
+  ) !important;
+}
+
+/* ─── PREMIUM DARK CTA PANEL (bundle in cream section) ──────────
+   Dark gradient panel with inner glow. Reads as featured / premium
+   when embedded inside a cream section. */
+
+.cta-dark-panel {
+  position: relative;
+  background:
+          radial-gradient(ellipse 80% 60% at 0% 0%, rgba(244,190,122,0.16), transparent 55%),
+          radial-gradient(ellipse 70% 50% at 100% 100%, rgba(232,122,112,0.10), transparent 55%),
+          linear-gradient(180deg, #15141a 0%, #08070b 100%);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.08),
+          0 2px 4px rgba(0,0,0,0.10),
+          0 16px 40px -8px rgba(60,40,20,0.20),
+          0 40px 80px -20px rgba(60,40,20,0.30);
+}
+.cta-dark-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+          linear-gradient(rgba(255,255,255,0.30) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.30) 1px, transparent 1px);
+  background-size: 32px 32px;
+  opacity: 0.025;
+  pointer-events: none;
+}
+
+/* ─── SECTION SIGNATURES ────────────────────────────────────────
+   Distinct visual treatment per content section so each one feels
+   purposeful and memorable. All restrained. */
+
+/* Manuscript margin — for method steps (left vertical accent rule) */
+.manuscript-step {
+  position: relative;
+  padding-left: 2rem;
+}
+.manuscript-step::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 2px;
+  background: linear-gradient(
+          180deg,
+          rgba(244,190,122,0.50) 0%,
+          rgba(244,190,122,0.10) 50%,
+          transparent 100%
+  );
+  border-radius: 2px;
+}
+@media (min-width: 768px) {
+  .manuscript-step { padding-left: 3rem; }
+}
+
+/* Stat tile — for timeline / key numbers */
+.stat-tile {
+  position: relative;
+  padding: 1.75rem 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background:
+          linear-gradient(
+                  180deg,
+                  rgba(255,255,255,0.65) 0%,
+                  rgba(255,255,255,0.30) 100%
+          );
+  border: 1px solid rgba(60,40,20,0.06);
+  text-align: center;
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.80),
+          0 1px 2px rgba(60,40,20,0.04),
+          0 8px 24px -8px rgba(60,40,20,0.08);
+}
+
+/* Stat-tile gold underline at the bottom (1px gradient) */
+.stat-tile::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(244,190,122,0.5) 50%,
+          transparent 100%
+  );
+}
+
+/* Spec-sheet item — for includes list (subtle hover background) */
+.spec-item {
+  position: relative;
+  padding: 1.5rem 1rem;
+  border-radius: var(--radius);
+  transition: background 0.2s ease;
+}
+.spec-item:hover {
+  background: rgba(244,190,122,0.04);
+}
+
+/* Guarantee seal — small accent line + body, centered intimate moment */
+.guarantee-seal {
+  position: relative;
+  display: inline-block;
+  padding-top: 1rem;
+}
+.guarantee-seal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+}
+
+/* ─── HOVER SHEEN (subtle light sweep across cards) ─────────────
+   Only fires under non-reduced-motion preference. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hover-sheen {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hover-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+            135deg,
+            transparent 35%,
+            rgba(255,255,255,0.06) 50%,
+            transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hover-sheen:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ─── NAV SHELL — scope-aware backdrop ─────────────────────────── */
+.nav-shell {
+  --nav-tint-a: 0;
+  background: rgba(7, 6, 10, var(--nav-tint-a));
+  backdrop-filter: var(--nav-blur, none);
+  -webkit-backdrop-filter: var(--nav-blur, none);
+  border-bottom: 1px solid rgba(255,255,255, calc(0.06 * var(--nav-tint-a)));
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.nav-shell[data-solid="true"] {
+  --nav-blur: blur(20px) saturate(140%);
+}
+
+/* ─── PREMIUM AVATAR (initial circles in testimonials) ─────────── */
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  color: white;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* ─── SECTION DIVIDER ─ a fading hairline (not a hard border) ──── */
+.fade-rule {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--border) 25%,
+          var(--border) 75%,
+          transparent 100%
+  );
+  border: 0;
+}
+.scope-dark .fade-rule {
+  background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255,255,255,0.12) 25%,
+          rgba(255,255,255,0.12) 75%,
+          transparent 100%
+  );
+}
+
+/* ─── CROSSHAIR CORNER (clean version, replaces "+" Unicode) ───── */
+.crosshair-mark {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  color: currentColor;
+  opacity: 0.4;
+}
+.crosshair-mark::before,
+.crosshair-mark::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+.crosshair-mark::before {
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  transform: translateY(-50%);
+}
+.crosshair-mark::after {
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MATRIX GRID — lines draw themselves in once on viewport entry
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Vertical lines: stroke-dasharray equals full height, dashoffset
+   starts at full height (invisible), animates to 0 (fully drawn).
+   `forwards` keeps the final state — no infinite loop. */
+
+.matrix-grow-v {
+  stroke-dasharray: var(--len, 800);
+  stroke-dashoffset: var(--len, 800);
+  opacity: 0.55;
+  animation: matrix-grow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+.matrix-grow-h {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+  opacity: 0.55;
+  animation: matrix-grow 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes matrix-grow {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Accent cells — a brief one-time flash during the draw-in */
+.matrix-cell-flash {
+  fill-opacity: 0;
+  animation: matrix-cell-flash 1.6s ease-out forwards;
+  animation-delay: var(--delay, 0ms);
+  filter: blur(3px);
+}
+
+@keyframes matrix-cell-flash {
+  0%   { fill-opacity: 0; }
+  40%  { fill-opacity: 0.22; }
+  100% { fill-opacity: 0.06; }
+}
+
+/* Reduced motion: snap to drawn state */
+@media (prefers-reduced-motion: reduce) {
+  .matrix-grow-v,
+  .matrix-grow-h {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .matrix-cell-flash {
+    animation: none;
+    fill-opacity: 0.08;
+  }
+}
+
+/* ─── Hero architectural details ────────────────────────────────
+   Small composition anchors that read as "designed" rather than
+   "default". Used in the hero to give it editorial weight. */
+
+/* Short horizontal hairline (used under headline as visual punctuation) */
+.hero-rule {
+  display: block;
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(
+          90deg,
+          rgba(244,190,122,0.55) 0%,
+          rgba(244,190,122,0.15) 100%
+  );
+  border: 0;
+}
+
+/* Live indicator dot — small static gold dot with soft glow.
+   Conveys "this is real, running software" without animation. */
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--gold-bright, #f4be7a);
+  box-shadow: 0 0 8px rgba(244,190,122,0.7), 0 0 16px rgba(244,190,122,0.3);
+  flex-shrink: 0;
+}
+
+/* Extending hairline — used in eyebrow row, takes available space */
+.eyebrow-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+          90deg,
+          rgba(255,255,255,0.18) 0%,
+          transparent 100%
+  );
+}
+.scope-cream .eyebrow-line {
+  background: linear-gradient(
+          90deg,
+          rgba(60,40,20,0.18) 0%,
+          transparent 100%
+  );
+}
+
+/* Demo card header strip — sits above the matrix as "LIVE DEMO" indicator */
+.demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ─── SECTION COLOR TRANSITIONS ──────────────────────────────────
+   Soft gradient wedges at the TOP of receiving sections so they
+   "emerge from" the previous section's color rather than starting
+   abruptly. Used at dark→cream and cream→dark boundaries. */
+
+/* Section emerges from a dark section above — adds a subtle dark
+   horizon wash at the top of a cream section. */
+.emerges-from-dark {
+  position: relative;
+}
+.emerges-from-dark::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(
+          180deg,
+          rgba(8, 7, 11, 0.16) 0%,
+          rgba(8, 7, 11, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Section emerges from a cream section above — adds a subtle cream
+   wash at the top of a dark section. Creates a "dawn" feel. */
+.emerges-from-cream {
+  position: relative;
+}
+.emerges-from-cream::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(
+          180deg,
+          rgba(245, 241, 231, 0.10) 0%,
+          rgba(245, 241, 231, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CINEMATIC STAGE ANIMATIONS
+   Each stage's elements rise into place via stage-enter; the climax
+   center cell blooms with a soft gold halo.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Stage entrance — opacity + small lift. Used by every element inside
+   each cinematic stage with staggered animation-delay values. */
+@keyframes stage-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stage-enter {
+  opacity: 0;
+  animation: stage-enter 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Climax cell glow — soft gold halo blooms on entry, holds.
+   Used only on the center cell of stage V (the synthesis matrix). */
+@keyframes climax-cell-glow {
+  from {
+    box-shadow: 0 0 0 0 rgba(244,190,122,0);
+  }
+  to {
+    box-shadow:
+            0 0 24px rgba(244,190,122,0.45),
+            0 0 60px rgba(244,190,122,0.25),
+            0 0 120px rgba(244,190,122,0.12);
+  }
+}
+.climax-cell-glow {
+  animation: climax-cell-glow 1.6s ease-out forwards;
+  animation-delay: 0.7s;
+}
+
+/* Reduced motion — snap to final state, no animation */
+@media (prefers-reduced-motion: reduce) {
+  .stage-enter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .climax-cell-glow {
+    animation: none;
+    box-shadow:
+            0 0 24px rgba(244,190,122,0.35),
+            0 0 48px rgba(244,190,122,0.18);
+  }
 }

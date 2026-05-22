@@ -22,7 +22,7 @@ interface RevealOptions {
 }
 
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
-  options: RevealOptions = {},
+    options: RevealOptions = {},
 ): RefObject<T | null> {
   const ref = useRef<T | null>(null);
   const { threshold = 0.15, once = true, rootMargin = "-40px" } = options;
@@ -33,7 +33,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
 
     // Respect reduced motion — reveal immediately without animation.
     const prefersReduced = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)",
+        "(prefers-reduced-motion: reduce)",
     ).matches;
     if (prefersReduced) {
       el.classList.add("revealed");
@@ -41,13 +41,14 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     }
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add("revealed");
-          if (once) observer.unobserve(el);
-        }
-      },
-      { threshold, rootMargin },
+        ([entry]) => {
+          if (!entry) return;
+          if (entry.isIntersecting) {
+            el.classList.add("revealed");
+            if (once) observer.unobserve(el);
+          }
+        },
+        { threshold, rootMargin },
     );
 
     observer.observe(el);
@@ -64,8 +65,10 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
  * Returns a callback ref to attach to a parent container. All direct
  * children with `.reveal` or `.reveal-scale` will be observed.
  */
-export function useScrollRevealChildren(options: RevealOptions = {}): RefObject<HTMLDivElement | null> {
-  const ref = useRef<HTMLDivElement | null>(null);
+export function useScrollRevealChildren<T extends HTMLElement = HTMLDivElement>(
+    options: RevealOptions = {},
+): RefObject<T | null> {
+  const ref = useRef<T | null>(null);
   const { threshold = 0.1, once = true, rootMargin = "-40px" } = options;
 
   useEffect(() => {
@@ -73,7 +76,7 @@ export function useScrollRevealChildren(options: RevealOptions = {}): RefObject<
     if (!container) return;
 
     const prefersReduced = window.matchMedia?.(
-      "(prefers-reduced-motion: reduce)",
+        "(prefers-reduced-motion: reduce)",
     ).matches;
 
     const children = container.querySelectorAll(".reveal, .reveal-scale");
@@ -83,15 +86,15 @@ export function useScrollRevealChildren(options: RevealOptions = {}): RefObject<
     }
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            if (once) observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold, rootMargin },
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("revealed");
+              if (once) observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold, rootMargin },
     );
 
     children.forEach((c) => observer.observe(c));
