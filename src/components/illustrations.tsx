@@ -7,6 +7,7 @@
  */
 
 import { useState, type SVGProps } from "react";
+import { useTranslation } from "react-i18next";
 
 // ─── Brand mark: the 3×3 matrix ─────────────────────────────────
 // Clean, iconic, readable at any size from 16px favicon to 240px stamp.
@@ -177,26 +178,29 @@ export function SoundWave({ className = "" }: { className?: string }) {
 // ─── Day progression ────────────────────────────────────────────
 
 export function DayProgression({ className = "" }: { className?: string }) {
+    const { t } = useTranslation();
+    const dayPrefix = t("day_prog_prefix");
+    const milestones = [
+        { x: 30,  day: "01", labelKey: "day_prog_start",         filled: true },
+        { x: 165, day: "08", labelKey: "day_prog_sentences" },
+        { x: 300, day: "16", labelKey: "day_prog_conversations" },
+        { x: 435, day: "24", labelKey: "day_prog_fluency" },
+        { x: 570, day: "32", labelKey: "day_prog_confidence",    gold: true },
+    ];
     return (
         <svg className={className} viewBox="0 0 600 80" fill="none" preserveAspectRatio="xMidYMid meet">
             <line x1="30" y1="40" x2="570" y2="40" stroke="var(--border-2)" strokeWidth="1" strokeDasharray="2 4" />
-            {[
-                { x: 30, day: "01", label: "Start", filled: true },
-                { x: 165, day: "08", label: "First sentences" },
-                { x: 300, day: "16", label: "Conversations" },
-                { x: 435, day: "24", label: "Real fluency" },
-                { x: 570, day: "32", label: "Confidence", gold: true },
-            ].map((m) => (
+            {milestones.map((m) => (
                 <g key={m.day}>
                     <circle cx={m.x} cy="40" r={m.gold ? 8 : 5}
                             fill={m.gold ? "var(--gold)" : m.filled ? "var(--ink)" : "var(--surface)"}
                             stroke={m.gold ? "var(--gold)" : "var(--ink)"}
                             strokeWidth="1.5" />
                     <text x={m.x} y="20" textAnchor="middle" fontFamily="JetBrains Mono"
-                          fill="var(--ink-3)" fontSize="10" fontWeight="600" letterSpacing="0.1em">DAY {m.day}</text>
+                          fill="var(--ink-3)" fontSize="10" fontWeight="600" letterSpacing="0.1em">{dayPrefix} {m.day}</text>
                     <text x={m.x} y="62" textAnchor="middle"
                           fill={m.gold ? "var(--gold)" : "var(--ink-2)"}
-                          fontSize="11" fontWeight={m.gold ? "600" : "400"} fontFamily="Fraunces, serif">{m.label}</text>
+                          fontSize="11" fontWeight={m.gold ? "600" : "400"} fontFamily="Fraunces, serif">{t(m.labelKey)}</text>
                 </g>
             ))}
         </svg>

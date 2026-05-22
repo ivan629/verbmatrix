@@ -4,11 +4,12 @@
  * Maps target-language text → content-hash filename in
  * /public/audio/ro/.
  *
- * Populated by `node scripts/generate-audio.mjs ro`.
+ * Populated by:
+ *   node scripts/generate-audio.mjs ro          (lesson content)
+ *   node scripts/generate-landing-audio.mjs ro  (landing page content)
  *
  * When this map has an entry for the text being spoken, the app plays the
- * pre-generated MP3 instantly and offline. Otherwise it falls through to
- * Azure (if configured) → browser SpeechSynthesis.
+ * pre-generated MP3 instantly. Otherwise it falls through to Azure → browser TTS.
  */
 export const AUDIO_MANIFEST: Record<string, string> = {
   "300 de euro. Utilitățile sunt separate.": "aa74390c1593",
@@ -90,6 +91,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "Am lucrat eu?": "4052a3a297ea",
   "Am lucrat noi?": "425ddb6ca8a7",
   "Am mâncat la ora 12.": "28307ab94e1a",
+  "Am mers eu?": "5e14520bdc33",
   "Am nevoie de ajutor.": "531ac3951606",
   "Am nevoie de un doctor.": "bb806f1b07e0",
   "Am numai o bancnotă de 50. Aveți rest?": "4aab8fc4caab",
@@ -440,19 +442,23 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "Eu am făcut.": "c37c3aba1405",
   "Eu am fost.": "c213bd4fc059",
   "Eu am lucrat.": "33bc8152c464",
+  "Eu am mers.": "e027cb00d558",
   "Eu am vorbit.": "59ad5ca64af4",
   "Eu am.": "7a953bfad344",
   "Eu fac.": "3d7d6faf7820",
   "Eu lucrez.": "ebf522e934b1",
   "Eu merg la școală.": "40ddfa191a1f",
+  "Eu merg.": "79bb7cde3276",
   "Eu nu am făcut.": "3d91846424a3",
   "Eu nu am lucrat.": "91e58bc861fc",
   "Eu nu am vorbit.": "4f34184e288e",
   "Eu nu fac.": "f9f1d9d24268",
   "Eu nu lucrez.": "aa66ea0d0de7",
+  "Eu nu merg.": "1930ce9c0d32",
   "Eu nu vorbesc.": "9e191c99c802",
   "Eu o să fac.": "43245a1cf9d9",
   "Eu o să lucrez.": "529f82dae9d9",
+  "Eu o să merg.": "96500a6eb5dd",
   "Eu o să vorbesc.": "8c079eb5b446",
   "Eu sunt din Anglia.": "dea62aab0be7",
   "Eu sunt student.": "9237aff7a513",
@@ -477,6 +483,8 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "fată": "bcf66df743b9",
   "față": "62deabbb934b",
   "februarie": "1793e668a9e2",
+  "Felicitări. You just spoke Romanian.": "e4d4dc8d2005",
+  "Felicitări. Ти щойно говорив румунською.": "a082e9a06c18",
   "Femeia care lucrează aici e prietena mea.": "d89c712ee354",
   "femeie": "7c4393b6a200",
   "femeie → femeia": "6d09209096a8",
@@ -531,6 +539,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "hartă": "f1e6c0bdf9eb",
   "hotel": "14e833557d06",
   "i-am": "f620671bbc1a",
+  "I'd like a coffee, please.": "7b66dcc44dca",
   "ia": "f30accb48e68",
   "ianuarie": "06d950114917",
   "iarbă": "e0ddc5293423",
@@ -680,6 +689,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "mere": "ad189bc36728",
   "mereu / întotdeauna": "f6a18fb59b45",
   "merg": "bad691b3395d",
+  "Merg eu?": "ca9f3705601c",
   "Merg la școală.": "70c171714472",
   "merge": "14091a9f2461",
   "Mergeam la școală în fiecare zi.": "1d43d48a3228",
@@ -753,6 +763,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "N-o să lucrez.": "acd105edf8af",
   "N-o să lucreze.": "60aa57704d18",
   "N-o să lucrezi.": "b8567de60f9d",
+  "N-o să merg.": "c5bc95e0fa6c",
   "N-o să vorbesc.": "7848e9bf9bfd",
   "na": "5efb4ac2212f",
   "nas": "0e0c78c72d42",
@@ -808,7 +819,9 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "Nu ai fost.": "979bd19db498",
   "Nu ai.": "dbd7b5cc2f1f",
   "Nu am avut.": "17ef6b6247e3",
+  "Nu am făcut.": "d199967d1080",
   "Nu am fost.": "b3ff913cde76",
+  "Nu am mers.": "0bc3c0810102",
   "Nu am nimic.": "20f86fced187",
   "Nu am vorbit.": "8a5fe6057c3e",
   "Nu am.": "e13d20f35cb0",
@@ -881,6 +894,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "O să lucrez?": "3fa34cc7d0fa",
   "O să lucreze?": "61cddb396386",
   "O să lucrezi?": "b3069dcc54a3",
+  "O să merg?": "aea98ff72559",
   "O să vorbesc?": "82df590176fd",
   "O să vorbesc.": "5381492aa836",
   "o sută": "c77a634ef9fc",
@@ -1147,6 +1161,9 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "ți-am": "94e2797a8341",
   "Ți-am zis!": "937da1e329ff",
   "timp": "1df881bb84a7",
+  "to do": "0dc14e0059a1",
+  "to go": "cbd74c1a58ff",
+  "to speak": "7b1c5b597889",
   "toamnă": "7742de35bb2d",
   "tradiție": "f4b5d6bc0730",
   "tramvai": "afb06e3f0299",
@@ -1262,6 +1279,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "Vorbiți încet, vă rog.": "a9b14b6a257e",
   "vrea": "57e614c0471e",
   "vreau": "8cccf0dd8a22",
+  "Vreau o cafea, vă rog.": "175ab858c731",
   "Vreau să mănânc ceva.": "3d9ab6bb8065",
   "Vreau să merg acasă.": "694880e2dc15",
   "Vreau să-l ajut.": "60dfd4185fd1",
@@ -1272,4 +1290,8 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "zece": "89de6e911f1b",
   "zero": "aa8c41330509",
   "zi": "1396bc8a5619",
+  "говорити": "800350062c93",
+  "іти": "55e2e36970a6",
+  "робити": "5d0b830269e4",
+  "Я хочу каву, будь ласка.": "575eb73e8df9",
 };

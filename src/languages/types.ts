@@ -90,6 +90,24 @@ export interface LanguageModule {
    */
   locales: Record<string, Record<string, string>>;
 
+  /**
+   * Landing-page locale resources, keyed by *interface* language code.
+   * Contains two kinds of keys:
+   *   - landing_*    : interface copy specific to this language (e.g. landing_loss_title
+   *                    says "…never learn Romanian" not "…never learn a language").
+   *   - landing_tl_* : target-language strings shown on the landing page (demo matrix
+   *                    cells, speak phrase). These are the same in every UI language
+   *                    (the Romanian sentence is Romanian regardless of UI lang), but
+   *                    the translation gloss (landing_tl_speak_translation) is localised.
+   *
+   * The audio generator scans landing.*.json files for landing_tl_* keys and
+   * generates pronunciation audio for them separately from the lesson audio.
+   *
+   * Merged into the live bundle by <TargetLanguageProvider> on language switch,
+   * exactly like `locales` above.
+   */
+  landingLocales: Record<string, Record<string, string>>;
+
   /** Pronunciation function — produces a friendly phonetic guide for a word/phrase. */
   pronounce: (text: string) => string;
 

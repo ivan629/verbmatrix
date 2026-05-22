@@ -1,32 +1,24 @@
 {
   "_comment_for_translators": "Engine-level UI chrome. Per-language strings live in src/languages/<code>/locales/.",
-
   "language_selector_label": "Language",
   "target_language_selector_label": "I'm learning",
   "target_language_selector_aria": "Language I'm learning",
-
   "matrix_col_question": "Question",
   "matrix_col_affirmative": "Affirmative",
   "matrix_col_negative": "Negative",
-
   "theme_switch_to_label": "Switch to {{mode}} theme",
   "theme_light": "light",
   "theme_dark": "dark",
-
   "nav_open": "Open navigation",
   "nav_close": "Close navigation",
   "nav_go_home": "Go to home",
-
   "lesson_label": "Lesson",
   "test_helper": "Try translating, then click to reveal.",
   "verbcard_past": "past",
-
   "picker_current": "Current",
   "footer_replay_intro": "Replay intro",
-
   "app_brand": "VerbMatrix",
   "app_brand_suffix": "study",
-
   "onboarding_minutes_label": "5 minutes to your first sentence",
   "onboarding_skip": "Skip",
   "onboarding_step_label": "Step {{n}} of 5",
@@ -59,9 +51,7 @@
   "onboarding_tense_Future": "Future",
   "onboarding_tense_Present": "Present",
   "onboarding_tense_Past": "Past",
-
   "landing_nav_try": "Try free",
-
   "landing_hero_status": "Romanian · Spanish · Japanese",
   "landing_hero_meta": "32-day course · One-time payment",
   "landing_hero_kicker": "The verb matrix method",
@@ -77,17 +67,13 @@
   "landing_hero_corner_1": "",
   "landing_hero_corner_2": "",
   "landing_hero_corner_3": "",
-
   "landing_cta_primary": "Start for free",
   "landing_cta_secondary": "See the method",
-
   "landing_grid_future": "Future",
   "landing_grid_present": "Present",
   "landing_grid_past": "Past",
-
   "landing_problem_quote": "You can spend three years on language apps and still freeze the moment a real conversation starts. The problem isn't your effort — it's the method.",
   "landing_problem_attribution": "What most apps won't tell you",
-
   "landing_method_kicker": "The method",
   "landing_method_transition": "And here's how it works.",
   "landing_method_title_part1": "Learn the system,",
@@ -96,9 +82,8 @@
   "landing_method_1_body": "Three tenses (future, present, past) crossed with three forms (question, affirmative, negative) gives you nine sentence types. Master the grid and you can generate thousands of sentences from any verb — without memorising a single conjugation table.",
   "landing_method_2_title": "Thirty-two verbs cover almost everything.",
   "landing_method_2_body": "Ninety percent of daily speech runs on the same small set of high-frequency verbs. Drill each one through the matrix until the structure fires automatically — like knowing seven times eight equals fifty-six without thinking.",
-  "landing_method_3_title": "Five minutes, five times a day, for thirty-two days.",
+  "landing_method_3_title": "Five minutes, five times a day — for thirty-two days.",
   "landing_method_3_body": "Short bursts wire the brain more effectively than marathon sessions. The 32-day pacing schedule fits into ordinary life — between meetings, on the train, while coffee brews. By day thirty-two, the foundation is fireproof.",
-
   "landing_timeline_kicker": "What thirty-two days looks like",
   "landing_timeline_title": "A foundation strong enough that even months away, it never fully disappears.",
   "landing_timeline_caption": "Each milestone is a real, measurable shift. By day thirty-two, you ask, state, or deny anything — past, present, or future — without thinking about it.",
@@ -106,7 +91,6 @@
   "landing_timeline_milestone_2": "Conversation rhythm starts to click.",
   "landing_timeline_milestone_3": "Your thinking starts to shift.",
   "landing_timeline_milestone_4": "A real conversation — without thinking about grammar.",
-
   "landing_includes_kicker": "Inside each course",
   "landing_includes_title": "Everything you need. Nothing you don't.",
   "landing_includes_matrix": "Interactive Practice Matrix",
@@ -121,7 +105,6 @@
   "landing_includes_audio_desc": "Studio-quality pronunciation on every word and phrase. Adjustable playback speed for shadowing practice.",
   "landing_includes_plan": "Thirty-two-Day Study Plan",
   "landing_includes_plan_desc": "Daily micro-practice schedule — five minutes, five times a day. Designed to fit ordinary life.",
-
   "landing_languages_kicker": "Available courses",
   "landing_languages_title": "Pick your language.",
   "landing_languages_subtitle": "Each course is a complete guide — from zero to confident conversation. Try the free lessons first, then unlock the full course with a one-time payment.",
@@ -132,19 +115,15 @@
   "landing_get_access": "Get access",
   "landing_have_key": "I have a key",
   "landing_lifetime_access": "Lifetime",
-
   "landing_lang_es": "Spanish",
   "landing_lang_ja": "Japanese",
-
   "landing_bundle_kicker": "Best value",
   "landing_bundle_title": "All Access — every language, one price.",
   "landing_bundle_body": "Get every current course plus all future languages as they launch. One payment, lifetime access, all updates included.",
-
   "landing_guarantee_kicker": "Thirty-day guarantee",
   "landing_guarantee_body": "Use the course for thirty days. If you cannot hold a 60-second conversation in your target language by the end of it, email me. I refund every cent. No forms. No \"tell us why.\" One email.",
   "landing_guarantee_signature_name": "Stelian",
   "landing_guarantee_signature_role": "Founder, VerbMatrix",
-
   "landing_speak_kicker": "Try it now",
   "landing_speak_title": "Say this out loud.",
   "landing_speak_subtitle": "Don't just read it — say the sounds. You'll be surprised what your mouth already knows.",
@@ -154,12 +133,10 @@
   "landing_speak_done": "I said it",
   "landing_speak_celebration": "Felicitări. You just spoke Romanian.",
   "landing_speak_followup": "That's it. That's the whole secret. Now imagine doing this for ninety-nine more sentences, ordered into a system. That's the course.",
-
   "landing_loss_kicker": "The honest part",
   "landing_loss_title": "Most people who decide to learn a new language never do.",
   "landing_loss_body": "They download an app. They learn \"hello\" and \"thank you.\" They lose the streak after eight days. Three years later, they still freeze when the waiter asks what they want. This is the part where you decide if you want to be one of them.",
   "landing_loss_cta": "Decide differently",
-
   "landing_testimonials_kicker": "Learners",
   "landing_testimonials_title": "Built for people who've tried everything else.",
   "landing_testimonials_disclaimer": "Quotes published with permission. Replace placeholder testimonials with real ones before launch.",
@@ -175,7 +152,6 @@
   "landing_testimonial_3_name": "Dr. Helena Kraus",
   "landing_testimonial_3_role": "Linguistics, University of Vienna",
   "landing_testimonial_3_city": "Vienna",
-
   "landing_faq_kicker": "Questions",
   "landing_faq_title": "Before you start.",
   "landing_faq_1_q": "What exactly do I get?",
@@ -189,18 +165,15 @@
   "landing_faq_5_q": "Can I try before I buy?",
   "landing_faq_5_a": "Absolutely. The interactive matrix, the 5-minute onboarding, and the foundational lessons are entirely free. You experience the method before deciding. Most people know within five minutes whether it's for them.",
   "landing_faq_closing": "Still have questions?",
-
   "landing_final_cta_title": "You've seen the",
   "landing_final_cta_emphasis": "matrix. Now use it.",
   "landing_final_cta_subtitle": "Five minutes from now, your first sentence aloud. Thirty-two days from now, your first real conversation.",
-
   "landing_footer_rights": "All rights reserved.",
   "landing_footer_activate": "Activate key",
   "landing_footer_terms": "Terms",
   "landing_footer_privacy": "Privacy",
   "landing_footer_contact": "Contact",
   "landing_footer_made": "© VerbMatrix Study, 2026.",
-
   "paywall_kicker": "You've seen the system",
   "paywall_title": "Unlock the full course.",
   "paywall_body": "You've experienced the matrix method. The full course takes you from these foundations to confident conversation — seventeen lessons, thirty-two verbs, five hundred words, sixteen dialogues, and a complete study plan.",
@@ -213,7 +186,6 @@
   "paywall_cta": "Get full access — {{price}}",
   "paywall_have_key": "I have a license key",
   "paywall_guarantee": "30-day money-back guarantee. One-time payment. Yours forever.",
-
   "key_modal_title": "Activate license key",
   "key_modal_subtitle": "Enter your license key for {{lang}}.",
   "key_modal_subtitle_all": "Enter your All Access license key.",
@@ -223,5 +195,36 @@
   "key_success": "License activated! Redirecting…",
   "key_error_empty": "Please enter a license key.",
   "key_error_format": "That doesn't look like a valid license key.",
-  "key_error_already": "This key is already active."
+  "key_error_already": "This key is already active.",
+  "landing_nav_method": "Method",
+  "landing_nav_pricing": "Pricing",
+  "landing_nav_faq": "FAQ",
+  "landing_hero_demo_lang_label": "Romanian",
+  "landing_stat_daily": "5 min daily",
+  "landing_stat_verbs": "32 verbs",
+  "landing_stat_words": "500+ words",
+  "landing_stat_lessons": "17 lessons",
+  "landing_stat_dialogues": "16 dialogues",
+  "cinematic_1_word": "One word.",
+  "cinematic_1_entry": "the entry point",
+  "cinematic_1_speak_gloss": "I speak",
+  "cinematic_2_title": "Now structure.",
+  "cinematic_2_sub": "three tenses × three forms — nine cells",
+  "cinematic_3_title": "Now multiply.",
+  "cinematic_3_sub": "thirty-two verbs cover ninety percent of daily speech",
+  "cinematic_4_title": "And the words.",
+  "cinematic_4_sub": "five hundred essential — already in real sentences",
+  "cinematic_4_more": "+ 460 more",
+  "cinematic_5_roman": "V. — synthesis",
+  "cinematic_5_title": "It's already a language.",
+  "cinematic_5_stats": "1 grid · 9 cells · 32 verbs · 500 words",
+  "cinematic_5_close": "yours, in thirty-two days.",
+  "day_prog_start": "Start",
+  "day_prog_sentences": "First sentences",
+  "day_prog_conversations": "Conversations",
+  "day_prog_fluency": "Real fluency",
+  "day_prog_confidence": "Confidence",
+  "landing_lang_ro": "Romanian",
+  "landing_method_headline": "Learn the system, not the vocabulary.",
+  "day_prog_prefix": "DAY"
 }

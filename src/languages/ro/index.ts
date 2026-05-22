@@ -5,6 +5,8 @@ import { NAV_GROUPS } from "./data/schedule";
 import { ONBOARDING } from "./data/onboarding";
 import enLocale from "./locales/en.json";
 import ukLocale from "./locales/uk.json";
+import landingEnLocale from "./locales/landing.en.json";
+import landingUkLocale from "./locales/landing.uk.json";
 
 import { PracticeMatrix } from "./PracticeMatrix";
 import {
@@ -38,6 +40,11 @@ export const ro: LanguageModule = {
   locales: {
     en: enLocale,
     uk: ukLocale,
+  },
+
+  landingLocales: {
+    en: landingEnLocale,
+    uk: landingUkLocale,
   },
 
   heroExample:    { text: "Bună ziua!",   en: "Hello / Good day" },

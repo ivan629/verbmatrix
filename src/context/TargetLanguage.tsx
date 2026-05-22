@@ -71,10 +71,18 @@ function readLastPicked(): string | null {
  * Merge a language module's locale strings into the live i18n bundle.
  * `addResourceBundle(deep:true, overwrite:true)` deep-merges and replaces
  * existing keys — exactly what we want when swapping modules.
+ * Both `locales` (lesson/UI strings) and `landingLocales` (landing page
+ * target-language strings) are merged so the landing page can read them
+ * via `t("landing_tl_*")` regardless of active language.
  */
 function applyLocales(module: LanguageModule) {
   for (const [lng, resources] of Object.entries(module.locales)) {
     i18n.addResourceBundle(lng, "translation", resources, true, true);
+  }
+  if (module.landingLocales) {
+    for (const [lng, resources] of Object.entries(module.landingLocales)) {
+      i18n.addResourceBundle(lng, "translation", resources, true, true);
+    }
   }
 }
 

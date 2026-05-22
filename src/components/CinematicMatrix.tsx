@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useTTS } from "../lib/tts";
 
 /**
  * Scroll-driven cinematic section — v5, 10/10 pass.
@@ -179,6 +181,9 @@ function Stage({ variant }: { variant: StageVariant }) {
 // ─── Stage I — Single word, centered, intimate ──────────────────
 
 function StageSingle() {
+    const { t } = useTranslation();
+    const speak = useTTS();
+    const presentForm = t("landing_tl_demo_verb_1_p_a");
     return (
         <div className="absolute inset-0 z-10 flex items-center justify-center px-5">
             <div className="max-w-[900px] w-full text-center">
@@ -186,22 +191,25 @@ function StageSingle() {
                      style={{ animationDelay: "0s" }}>
                     I.
                 </div>
-                <div className="font-display text-[clamp(4.2rem,13vw,10.5rem)] text-white font-light tracking-[-0.04em] leading-[0.9] stage-enter"
-                     style={{ animationDelay: "0.15s" }}>
-                    vorbesc
-                </div>
+                <button
+                    type="button"
+                    onClick={() => speak(presentForm)}
+                    className="font-display text-[clamp(4.2rem,13vw,10.5rem)] text-white font-light tracking-[-0.04em] leading-[0.9] stage-enter cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0"
+                    style={{ animationDelay: "0.15s" }}>
+                    {presentForm.split(" ")[1] ?? "vorbesc"}
+                </button>
                 <div className="font-mono text-[clamp(0.85rem,1.3vw,1rem)] uppercase tracking-[0.16em] text-white/50 mt-4 stage-enter"
                      style={{ animationDelay: "0.35s" }}>
-                    — I speak
+                    — {t("cinematic_1_speak_gloss")}
                 </div>
                 <hr className="hero-rule mx-auto my-10 stage-enter" style={{ animationDelay: "0.55s" }} />
                 <h2 className="font-display text-[clamp(1.5rem,3vw,2.2rem)] text-white/85 font-light tracking-[-0.02em] leading-snug stage-enter"
                     style={{ animationDelay: "0.7s" }}>
-                    One word.
+                    {t("cinematic_1_word")}
                 </h2>
                 <p className="font-display italic text-[clamp(0.95rem,1.4vw,1.1rem)] text-white/45 mt-3 stage-enter"
                    style={{ animationDelay: "0.85s" }}>
-                    the entry point
+                    {t("cinematic_1_entry")}
                 </p>
             </div>
         </div>
@@ -211,6 +219,8 @@ function StageSingle() {
 // ─── Stage II — Matrix construction, architectural ──────────────
 
 function StageMatrix() {
+    const { t } = useTranslation();
+    const speak = useTTS();
     const cells: ReadonlyArray<ReadonlyArray<string>> = [
         ["O să vorbesc?", "Eu o să vorbesc.", "N-o să vorbesc."],
         ["Vorbesc eu?",   "Eu vorbesc.",      "Eu nu vorbesc."],
@@ -230,11 +240,11 @@ function StageMatrix() {
                     </div>
                     <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
                         style={{ animationDelay: "0.15s" }}>
-                        Now <span className="italic">structure</span>.
+                        {t("cinematic_2_title")}
                     </h2>
                     <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
                        style={{ animationDelay: "0.3s" }}>
-                        three tenses × three forms — nine cells
+                        {t("cinematic_2_sub")}
                     </p>
                 </div>
 
@@ -255,10 +265,13 @@ function StageMatrix() {
                                 {tenseLabels[row]}
                             </div>
                             {cells[row]?.map((text, col) => (
-                                <div key={col}
-                                     className={`bg-white/[0.04] border border-white/10 rounded-lg p-3.5 text-center font-mono text-[11.5px] md:text-[12.5px] leading-tight text-[var(--${colSemantics[col]})]`}>
+                                <button
+                                    key={col}
+                                    type="button"
+                                    onClick={() => speak(text)}
+                                    className={`bg-white/[0.04] border border-white/10 rounded-lg p-3.5 text-center font-mono text-[11.5px] md:text-[12.5px] leading-tight text-[var(--${colSemantics[col]})] cursor-pointer hover:opacity-70 transition-opacity w-full`}>
                                     {text}
-                                </div>
+                                </button>
                             ))}
                         </div>
                     ))}
@@ -271,6 +284,8 @@ function StageMatrix() {
 // ─── Stage III — Verb wall, weighted prominence ─────────────────
 
 function StageVerbs() {
+    const { t } = useTranslation();
+    const speak = useTTS();
     const sizeFor = (w: 1 | 2 | 3) =>
         w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
             w === 2 ? "text-[clamp(1.1rem,1.7vw,1.45rem)]" :
@@ -290,21 +305,24 @@ function StageVerbs() {
                 </div>
                 <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
                     style={{ animationDelay: "0.15s" }}>
-                    Now <span className="italic">multiply</span>.
+                    {t("cinematic_3_title")}
                 </h2>
                 <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
                    style={{ animationDelay: "0.3s" }}>
-                    thirty-two verbs cover ninety percent of daily speech
+                    {t("cinematic_3_sub")}
                 </p>
             </div>
 
             <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-5 gap-y-3 px-4 stage-enter"
                  style={{ animationDelay: "0.45s" }}>
                 {VERB_DATA.map(([verb, weight], i) => (
-                    <span key={i}
-                          className={`font-display italic tracking-tight ${sizeFor(weight)} ${colorFor(weight)}`}>
-            {verb}
-          </span>
+                    <button
+                        key={i}
+                        type="button"
+                        onClick={() => speak(verb)}
+                        className={`font-display italic tracking-tight ${sizeFor(weight)} ${colorFor(weight)} cursor-pointer hover:opacity-60 transition-opacity bg-transparent border-0 p-0`}>
+                        {verb}
+                    </button>
                 ))}
             </div>
         </div>
@@ -314,6 +332,8 @@ function StageVerbs() {
 // ─── Stage IV — Vocabulary cloud, weighted prominence ──────────
 
 function StageVocab() {
+    const { t } = useTranslation();
+    const speak = useTTS();
     const sizeFor = (w: 1 | 2 | 3) =>
         w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
             w === 2 ? "text-[clamp(1.1rem,1.6vw,1.4rem)]" :
@@ -333,23 +353,27 @@ function StageVocab() {
                 </div>
                 <h2 className="font-display text-[clamp(2.4rem,5.5vw,4.4rem)] text-white font-light tracking-[-0.03em] leading-[1.05] mb-3 stage-enter"
                     style={{ animationDelay: "0.15s" }}>
-                    And the <span className="italic">words</span>.
+                    {t("cinematic_4_title")}
                 </h2>
                 <p className="font-display italic text-[clamp(1rem,1.6vw,1.25rem)] text-white/55 stage-enter"
                    style={{ animationDelay: "0.3s" }}>
-                    five hundred essential — already in real sentences
+                    {t("cinematic_4_sub")}
                 </p>
             </div>
 
             <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-4 gap-y-2 px-4 stage-enter"
                  style={{ animationDelay: "0.45s" }}>
                 {VOCAB_DATA.map(([word, weight], i) => (
-                    <span key={i} className={`font-display ${sizeFor(weight)} ${colorFor(weight)}`}>
-            {word}
-          </span>
+                    <button
+                        key={i}
+                        type="button"
+                        onClick={() => speak(word)}
+                        className={`font-display ${sizeFor(weight)} ${colorFor(weight)} cursor-pointer hover:opacity-60 transition-opacity bg-transparent border-0 p-0`}>
+                        {word}
+                    </button>
                 ))}
                 <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--gold-bright)] self-center ml-3">
-          + 460 more
+          {t("cinematic_4_more")}
         </span>
             </div>
         </div>
@@ -359,13 +383,14 @@ function StageVocab() {
 // ─── Stage V — Climax: synthesis with glowing center ────────────
 
 function StageClimax() {
+    const { t } = useTranslation();
     return (
         <div className="absolute inset-0 z-10 flex items-center justify-center px-5 md:px-12">
             <div className="w-full max-w-[1100px]">
                 <div className="text-center mb-8">
                     <div className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-[var(--gold-bright)] mb-4 stage-enter"
                          style={{ animationDelay: "0s" }}>
-                        V. — synthesis
+                        {t("cinematic_5_roman")}
                     </div>
                 </div>
 
@@ -393,15 +418,15 @@ function StageClimax() {
                 <div className="text-center mt-12 max-w-[720px] mx-auto">
                     <h2 className="font-display text-[clamp(2rem,4.6vw,3.4rem)] text-white font-light tracking-[-0.025em] leading-[1.1] mb-4 stage-enter"
                         style={{ animationDelay: "0.55s" }}>
-                        It's already a <span className="italic">language</span>.
+                        {t("cinematic_5_title")}
                     </h2>
                     <p className="font-mono text-[clamp(0.85rem,1.3vw,1rem)] uppercase tracking-[0.16em] text-white/55 mb-3 stage-enter"
                        style={{ animationDelay: "0.75s" }}>
-                        1 grid · 9 cells · 32 verbs · 500 words
+                        {t("cinematic_5_stats")}
                     </p>
                     <p className="font-display italic text-[clamp(1rem,1.6vw,1.2rem)] text-white/55 stage-enter"
                        style={{ animationDelay: "0.9s" }}>
-                        yours, in thirty-two days.
+                        {t("cinematic_5_close")}
                     </p>
                 </div>
             </div>

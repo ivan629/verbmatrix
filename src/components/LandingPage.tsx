@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import i18n from "../lib/i18n";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { BRAND, PRICING, getPricing, trackEvent, type LanguagePricing } from "../config";
 import { useAccess } from "../context/Access";
@@ -28,47 +29,65 @@ import {
      10. Final CTA    — Dark + growing tree-line backdrop (bookend)
    ═══════════════════════════════════════════════════════════════════════ */
 
-// ─── Demo verbs for the interactive matrix ──────────────────────
+/* ═══════════════════════════════════════════════════════════════════════
+   DEMO VERB DATA — driven entirely from i18n (landing_tl_demo_verb_* keys).
+   The default language is read from the ?lang= URL param (fallback: the
+   first available module's code).  When a language is active (user navigated
+   to /ro), that module is already in i18n so the demo verbs update automatically.
 
-const DEMO_VERBS = [
-  { infinitive: "a vorbi", en: "to speak", cells: [
-      ["O să vorbesc?", "Eu o să vorbesc.", "N-o să vorbesc."],
-      ["Vorbesc eu?", "Eu vorbesc.", "Eu nu vorbesc."],
-      ["Am vorbit eu?", "Eu am vorbit.", "Nu am vorbit."],
-    ]},
-  { infinitive: "a face", en: "to do", cells: [
-      ["O să fac?", "Eu o să fac.", "N-o să fac."],
-      ["Fac eu?", "Eu fac.", "Eu nu fac."],
-      ["Am făcut eu?", "Eu am făcut.", "Nu am făcut."],
-    ]},
-  { infinitive: "a merge", en: "to go", cells: [
-      ["O să merg?", "Eu o să merg.", "N-o să merg."],
-      ["Merg eu?", "Eu merg.", "Eu nu merg."],
-      ["Am mers eu?", "Eu am mers.", "Nu am mers."],
-    ]},
-];
+   Key pattern in landing.en.json / landing.uk.json:
+     landing_tl_demo_verb_N_infinitive  — target-language infinitive
+     landing_tl_demo_verb_N_label       — English / UI-language meaning
+     landing_tl_demo_verb_N_f_q/f_a/f_n — Future: question/affirm/neg
+     landing_tl_demo_verb_N_p_q/p_a/p_n — Present: question/affirm/neg
+     landing_tl_demo_verb_N_pa_q/pa_a/pa_n — Past: question/affirm/neg
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const VERB_COUNT = 3; // how many landing_tl_demo_verb_N_* sets exist per language
 
 const AUTO_CYCLE_MS = 8500;
 const AUTO_RESUME_DELAY = 20_000;
 
 function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
-  const { t } = useTranslation();
+  const { t, i18n: i18nInst } = useTranslation();
+  const speak = useTTS();
   const [verbIdx, setVerbIdx] = useState(0);
   const [animKey, setAnimKey] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef(true);
   const lastInteractionRef = useRef(0);
-  const verb = DEMO_VERBS[verbIdx];
+
+  // Build demo verb array from i18n keys — re-derived when language module changes.
+  const demoVerbs = useMemo(() => {
+    const rows = [
+      ["f_q", "f_a", "f_n"],
+      ["p_q", "p_a", "p_n"],
+      ["pa_q", "pa_a", "pa_n"],
+    ] as const;
+    return Array.from({ length: VERB_COUNT }, (_, i) => {
+      const n = i + 1;
+      return {
+        infinitive: t(`landing_tl_demo_verb_${n}_infinitive`),
+        label: t(`landing_tl_demo_verb_${n}_label`),
+        cells: rows.map((row) =>
+          row.map((slot) => t(`landing_tl_demo_verb_${n}_${slot}`))
+        ),
+      };
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t, i18nInst.language]);
+
+  const verb = demoVerbs[verbIdx];
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry) return;
-          isVisibleRef.current = entry.isIntersecting;
-        },
-        { threshold: 0.3 }
+      ([entry]) => {
+        if (!entry) return;
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.3 }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -78,11 +97,11 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
     const timer = setInterval(() => {
       if (!isVisibleRef.current) return;
       if (performance.now() - lastInteractionRef.current < AUTO_RESUME_DELAY) return;
-      setVerbIdx((i) => (i + 1) % DEMO_VERBS.length);
+      setVerbIdx((i) => (i + 1) % demoVerbs.length);
       setAnimKey((k) => k + 1);
     }, AUTO_CYCLE_MS);
     return () => clearInterval(timer);
-  }, []);
+  }, [demoVerbs.length]);
 
   const handleVerbClick = useCallback((i: number) => {
     lastInteractionRef.current = performance.now();
@@ -97,68 +116,70 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
   const colSemantics = ["question", "affirm", "neg"] as const;
 
   return (
-      <div ref={containerRef} className="w-full max-w-[520px] mx-auto">
-        <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
-          {DEMO_VERBS.map((v, i) => (
-              <button
-                  key={v.infinitive}
-                  type="button"
-                  onClick={() => handleVerbClick(i)}
-                  className={`font-mono text-[0.74rem] px-3 py-1.5 rounded-full transition-all duration-200 ${
-                      i === verbIdx
-                          ? (dark ? "bg-white text-black" : "bg-[var(--ink)] text-[var(--bg)]")
-                          : (dark
-                              ? "text-white/55 hover:text-white bg-white/5 hover:bg-white/10"
-                              : "text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)]")
-                  }`}
-              >
-                {v.infinitive}
-              </button>
+    <div ref={containerRef} className="w-full max-w-[520px] mx-auto">
+      <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
+        {demoVerbs.map((v, i) => (
+          <button
+            key={v.infinitive}
+            type="button"
+            onClick={() => handleVerbClick(i)}
+            className={`font-mono text-[0.74rem] px-3 py-1.5 rounded-full transition-all duration-200 ${
+              i === verbIdx
+                ? (dark ? "bg-white text-black" : "bg-[var(--ink)] text-[var(--bg)]")
+                : (dark
+                    ? "text-white/55 hover:text-white bg-white/5 hover:bg-white/10"
+                    : "text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)]")
+            }`}
+          >
+            {v.infinitive}
+          </button>
+        ))}
+      </div>
+
+      <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
+        dark ? "bg-white/[0.03] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
+      }`}>
+        <CrossHair size={10} className={`absolute top-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
+        <CrossHair size={10} className={`absolute top-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
+        <CrossHair size={10} className={`absolute bottom-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
+        <CrossHair size={10} className={`absolute bottom-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
+
+        <div className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+          <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
+          {colSymbols.map((s, i) => (
+            <div key={s}
+                 className={`py-2.5 px-2 sm:px-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+              <span className="hidden sm:inline">{s} </span>
+              <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
+            </div>
           ))}
         </div>
 
-        <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
-            dark ? "bg-white/[0.03] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
-        }`}>
-          <CrossHair size={10} className={`absolute top-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-          <CrossHair size={10} className={`absolute top-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-          <CrossHair size={10} className={`absolute bottom-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-          <CrossHair size={10} className={`absolute bottom-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-
-          <div className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-            <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
-            {colSymbols.map((s, i) => (
-                <div key={s}
-                     className={`py-2.5 px-2 sm:px-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-                  <span className="hidden sm:inline">{s} </span>
-                  <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
-                </div>
-            ))}
-          </div>
-
-          <div key={animKey} className="matrix-stagger revealed">
-            {tenseLabels.map((tense, row) => (
-                <div key={tense} className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-                  <div className={`py-3.5 px-3 font-mono text-[9px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
-                    {tense}
-                  </div>
-                  {verb.cells[row]?.map((text, col) => (
-                      <div
-                          key={`${row}-${col}`}
-                          className={`py-3.5 px-2 sm:px-3 font-mono text-[0.7rem] sm:text-[0.78rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
-                      >
-                        {text}
-                      </div>
-                  ))}
-                </div>
-            ))}
-          </div>
+        <div key={animKey} className="matrix-stagger revealed">
+          {tenseLabels.map((tense, row) => (
+            <div key={tense} className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+              <div className={`py-3.5 px-3 font-mono text-[9px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
+                {tense}
+              </div>
+              {verb.cells[row]?.map((text, col) => (
+                <button
+                  key={`${row}-${col}`}
+                  type="button"
+                  onClick={() => speak(text)}
+                  className={`py-3.5 px-2 sm:px-3 font-mono text-[0.7rem] sm:text-[0.78rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+          ))}
         </div>
-
-        <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
-          <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.en}
-        </p>
       </div>
+
+      <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
+        <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.label}
+      </p>
+    </div>
   );
 }
 
@@ -270,6 +291,7 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
   hasAccess: boolean;
 }) {
   const { t } = useTranslation();
+  const speak = useTTS();
   return (
       <div className={`card-glass card-lift hover-sheen relative flex flex-col h-full p-7 md:p-8 overflow-hidden ${
           comingSoon ? "opacity-70 pointer-events-none" : ""
@@ -289,8 +311,12 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
         </div>
 
         <div className="relative z-[2]">
-          <div className="font-display text-[1.5rem] text-[var(--ink)] tracking-tight leading-tight mb-1.5">{lang.label}</div>
-          <div className="font-mono text-[11px] text-[var(--ink-3)] leading-tight mb-1">"{lang.heroExample.text}"</div>
+          <div className="font-display text-[1.5rem] text-[var(--ink)] tracking-tight leading-tight mb-1.5">{t(`landing_lang_${lang.code}`, { defaultValue: lang.label })}</div>
+          <button
+            type="button"
+            onClick={() => speak(lang.heroExample.text)}
+            className="font-mono text-[11px] text-[var(--ink-3)] leading-tight mb-1 cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0 text-left"
+          >"{lang.heroExample.text}"</button>
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)] mt-0.5 mb-6">
             {t(lang.heroExample.en, { defaultValue: lang.heroExample.en })}
           </div>
@@ -350,6 +376,35 @@ export function LandingPage() {
   const [keyModal, setKeyModal] = useState<string | null>(null);
   const [navSolid, setNavSolid] = useState(false);
 
+  // ─── ?lang= URL param ─────────────────────────────────────────
+  // Selects which target-language demo content is shown on the landing page.
+  // Default: first available module (Romanian while it's the only one).
+  // Usage: /?lang=ro, /?lang=es
+  //
+  // This does NOT navigate the user into a course — it only preloads the
+  // chosen module's landingLocales into the i18n bundle so the demo matrix,
+  // speak phrase, and language-specific copy update.
+  //
+  // When the user has already navigated to /ro (active module), that module
+  // is already applied. The param is mainly useful from the landing page
+  // before any course has been picked.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const langParam = params.get("lang");
+    const targetModule = langParam
+      ? available.find((l) => l.code === langParam)
+      : available[0];
+    if (!targetModule) return;
+    // Merge landingLocales for the target language into i18n.
+    // This is the same operation TargetLanguageProvider does on module switch.
+    if (targetModule.landingLocales) {
+      for (const [lng, resources] of Object.entries(targetModule.landingLocales)) {
+        i18n.addResourceBundle(lng, "translation", resources, true, true);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [available]);
+
   useEffect(() => {
     let rafPending = false;
     const compute = () => {
@@ -383,7 +438,6 @@ export function LandingPage() {
   const faqRef = useScrollReveal<HTMLElement>();
 
   const speak = useTTS();
-  const _handlePlay = useCallback((text: string) => { speak(text); }, [speak]);
 
   const comingSoonCodes = useMemo(
       () => Object.keys(PRICING).filter((code) => code !== "all" && !available.some((l) => l.code === code)),
@@ -403,13 +457,13 @@ export function LandingPage() {
             <LogoLockup size={22} tone="light" />
             <div className="flex items-center gap-2 md:gap-6">
               <a href="#method" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                Method
+                {t("landing_nav_method")}
               </a>
               <a href="#languages" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                Pricing
+                {t("landing_nav_pricing")}
               </a>
               <a href="#faq" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                FAQ
+                {t("landing_nav_faq")}
               </a>
               <a href="#languages" className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
                 {t("landing_get_access")}
@@ -506,7 +560,7 @@ export function LandingPage() {
                       </span>
                       </div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
-                        VerbMatrix · Romanian
+                        {t("app_brand")} · {t("landing_hero_demo_lang_label")}
                       </div>
                     </div>
 
@@ -535,15 +589,15 @@ export function LandingPage() {
 
               <div className="reveal mb-20 text-center">
                 <h2 className="font-display text-[clamp(2rem,4.4vw,3.2rem)] font-light text-[var(--ink)] tracking-[-0.025em] leading-[1.08] max-w-[720px] mx-auto">
-                  Learn the <span className="italic">system</span>, not the <span className="italic">vocabulary</span>.
+                  {t("landing_method_headline")}
                 </h2>
               </div>
 
               <div className="space-y-16 md:space-y-20">
                 {[
-                  { num: "01", title: <>The matrix is the <span className="italic">engine</span>.</>,                                  body: "landing_method_1_body" },
-                  { num: "02", title: <><span className="italic">Thirty-two verbs</span> cover almost everything.</>,                  body: "landing_method_2_body" },
-                  { num: "03", title: <>Five minutes, five times a day — for <span className="italic">thirty-two days</span>.</>,      body: "landing_method_3_body" },
+                  { num: "01", title: <>{t("landing_method_1_title")}</>,                                  body: "landing_method_1_body" },
+                  { num: "02", title: <>{t("landing_method_2_title")}</>,                  body: "landing_method_2_body" },
+                  { num: "03", title: <>{t("landing_method_3_title")}</>,      body: "landing_method_3_body" },
                 ].map((step) => (
                     <div key={step.num}
                          className="reveal grid grid-cols-1 md:grid-cols-[120px_1fr] gap-5 md:gap-12 items-start">
@@ -603,11 +657,11 @@ export function LandingPage() {
 
               {/* Small inline stat strip — context, not focus */}
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--ink-3)] tabular-nums pt-6 border-t border-[var(--border)] max-w-[760px] mx-auto">
-                <span><span className="text-[var(--ink)]">5 min</span> daily</span>
-                <span><span className="text-[var(--ink)]">32</span> verbs</span>
-                <span><span className="text-[var(--ink)]">500+</span> words</span>
-                <span><span className="text-[var(--ink)]">17</span> lessons</span>
-                <span><span className="text-[var(--ink)]">16</span> dialogues</span>
+                <span>{t("landing_stat_daily")}</span>
+                <span>{t("landing_stat_verbs")}</span>
+                <span>{t("landing_stat_words")}</span>
+                <span>{t("landing_stat_lessons")}</span>
+                <span>{t("landing_stat_dialogues")}</span>
               </div>
             </div>
           </section>
@@ -744,7 +798,7 @@ export function LandingPage() {
                                 </div>
                                 {savings > 0 && (
                                     <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--gold)] mt-2">
-                                      Save {currency}{savings}
+                                      Save {currency}{Math.round(savings)}
                                     </div>
                                 )}
                                 <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 mt-1">
