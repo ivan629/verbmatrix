@@ -59,6 +59,44 @@ export const STORAGE_KEYS = {
   focusMode: `${PREFIX}:focus-mode`,
 } as const;
 
+// ─── LemonSqueezy ───────────────────────────────────────────────
+//
+// You configure these AFTER signing up at https://lemonsqueezy.com,
+// creating your store, and adding two Products:
+//
+//   1. "Romanian Course" — one-time, $14.99, with license keys enabled
+//   2. "All Access"      — one-time, $99.99, with license keys enabled
+//
+// Each product gives you:
+//   - A "Buy Link" (the checkout URL — looks like
+//     https://YOURSTORE.lemonsqueezy.com/buy/UUID)
+//   - A Product ID (number, visible in the dashboard URL: /products/12345)
+//
+// Drop both into VITE_LEMONSQUEEZY_* env vars on Vercel (or .env.local for
+// dev). Once these are set AND VITE_REMOTE_VALIDATION=true, license keys
+// will be validated against LemonSqueezy's API on entry.
+//
+// API ref: https://docs.lemonsqueezy.com/api/license-keys
+
+export const LEMONSQUEEZY = {
+  /** Base URL for LemonSqueezy's REST API. */
+  apiBase: "https://api.lemonsqueezy.com",
+
+  /** Map of language code → LemonSqueezy product_id (as string).
+   *  When a customer enters a license key, we POST it to the validate
+   *  endpoint and LS returns the product_id it belongs to. We match that
+   *  back to a language using this map so the right course unlocks.
+   *
+   *  Values come from Vite env so a re-deploy can update them without
+   *  a code change. Default to empty strings — falsy product IDs are
+   *  treated as "no key for this product is valid yet". */
+  productMap: {
+    ro:  import.meta.env.VITE_LS_PRODUCT_RO  ?? "",
+    all: import.meta.env.VITE_LS_PRODUCT_ALL ?? "",
+    // es, ja added here when those courses ship.
+  } as Record<string, string>,
+} as const;
+
 // ─── Pricing ────────────────────────────────────────────────────
 
 export interface LanguagePricing {
@@ -79,16 +117,16 @@ export const PRICING: Record<string, LanguagePricing> = {
     code: "ro",
     price: 14.99,
     priceFormatted: "$14.99",
-    checkoutUrl: "",
-    productId: "",
+    checkoutUrl: import.meta.env.VITE_LS_CHECKOUT_RO ?? "",
+    productId:   import.meta.env.VITE_LS_PRODUCT_RO  ?? "",
   },
   // es and ja will be added here when those modules are built.
   all: {
     code: "all",
     price: 99.99,
     priceFormatted: "$99.99",
-    checkoutUrl: "",
-    productId: "",
+    checkoutUrl: import.meta.env.VITE_LS_CHECKOUT_ALL ?? "",
+    productId:   import.meta.env.VITE_LS_PRODUCT_ALL  ?? "",
   },
 };
 
@@ -131,9 +169,12 @@ export const FLAGS = {
    */
   paywallEnabled: import.meta.env.VITE_DISABLE_PAYWALL !== "true",
   /** When true, license keys are validated against the LemonSqueezy API
-   *  on every page load. When false, only the local key presence is checked
-   *  (useful for offline / development). */
-  remoteValidation: false,
+   *  on every page load and on entry. When false, only the local key
+   *  presence is checked (useful for offline / development).
+   *
+   *  Production: set VITE_REMOTE_VALIDATION=true in Vercel env vars.
+   *  Dev: leave unset to skip API calls when working offline. */
+  remoteValidation: import.meta.env.VITE_REMOTE_VALIDATION === "true",
   /** Show "Coming soon" badge on languages that aren't ready yet. */
   showComingSoon: true,
 } as const;

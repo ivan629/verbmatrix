@@ -9,8 +9,20 @@ import { FloatingUILanguage } from "./components/FloatingUILanguage";
 import { PaywallCard } from "./components/PaywallCard";
 import { LessonProgressBar } from "./components/LessonProgressBar";
 import { PhaseHeader } from "./components/PhaseHeader";
+import { LegalPage } from "./components/LegalPage";
 import { isFreeLessonId, FLAGS } from "./config";
 import type { ReactNode } from "react";
+
+/** Path-based check for the three legal pages. They render outside the
+ *  language/onboarding/textbook flow — pure static documents. */
+function getLegalPageFromPath(): "terms" | "privacy" | "refund" | null {
+  if (typeof window === "undefined") return null;
+  const p = window.location.pathname;
+  if (p === "/terms" || p === "/terms/") return "terms";
+  if (p === "/privacy" || p === "/privacy/") return "privacy";
+  if (p === "/refund" || p === "/refund/") return "refund";
+  return null;
+}
 
 /**
  * App content — rendered inside all providers.
@@ -34,6 +46,14 @@ function AppContent() {
   const { module, isUnchosen } = useTargetLanguage();
   const [showOnboarding, dismissOnboarding] = useShouldShowOnboarding();
   const { hasAccess } = useAccess();
+
+  // 0 — Legal pages. Path-based, takes precedence over any language state.
+  // (Hooks above must run unconditionally; this branch is the first render
+  // decision, after all hooks have been called.)
+  const legalPage = getLegalPageFromPath();
+  if (legalPage) {
+    return <LegalPage which={legalPage} />;
+  }
 
   // 1 — Landing page.
   if (isUnchosen) {

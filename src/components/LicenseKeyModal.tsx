@@ -11,7 +11,7 @@ interface LicenseKeyModalProps {
 
 export function LicenseKeyModal({ languageCode, onClose }: LicenseKeyModalProps) {
   const { t } = useTranslation();
-  const { activateKey } = useAccess();
+  const { activateKey, validating } = useAccess();
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [result, setResult] = useState<ActivationResult | null>(null);
@@ -38,8 +38,8 @@ export function LicenseKeyModal({ languageCode, onClose }: LicenseKeyModalProps)
     return () => { document.body.style.overflow = orig; };
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    const res = activateKey(languageCode, value);
+  const handleSubmit = useCallback(async () => {
+    const res = await activateKey(languageCode, value);
     setResult(res);
     if (res.ok) {
       // Brief success state, then close.
@@ -55,7 +55,13 @@ export function LicenseKeyModal({ languageCode, onClose }: LicenseKeyModalProps)
       ? t("key_error_empty")
       : result.reason === "invalid_format"
         ? t("key_error_format")
-        : t("key_error_already")
+        : result.reason === "already_active"
+          ? t("key_error_already")
+          : result.reason === "remote_invalid"
+            ? t("key_error_remote_invalid")
+            : result.reason === "wrong_product"
+              ? t("key_error_wrong_product")
+              : t("key_error_network")
     : null;
 
   return (
@@ -143,10 +149,10 @@ export function LicenseKeyModal({ languageCode, onClose }: LicenseKeyModalProps)
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={!value.trim()}
+              disabled={!value.trim() || validating}
               className="w-full py-3 rounded-[var(--radius)] bg-[var(--ink)] text-[var(--bg)] font-mono text-[12px] uppercase tracking-[0.1em] font-semibold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {t("key_modal_activate")}
+              {validating ? t("key_modal_validating") : t("key_modal_activate")}
             </button>
 
             <p className="text-[0.78rem] text-[var(--ink-4)] text-center mt-4 leading-[1.55]">

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- VerbMatrix social-share image (Open Graph + Twitter card).
+       1200×630 is the standard size. Renders well thumbnailed too.
+       Convert to PNG before launch — most social previewers prefer PNG/JPG over SVG.
+       Easiest: open this SVG in a browser, take a 1200×630 screenshot,
+       or use https://cloudconvert.com/svg-to-png. -->
+
+  <defs>
+    <style>
+      .display { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
+      .mono    { font-family: ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#faf7f2"/>
+
+  <!-- Subtle warm tint band along the right -->
+  <rect x="800" width="400" height="630" fill="#f4f1ea" opacity="0.5"/>
+
+  <!-- Wordmark, top-left -->
+  <g transform="translate(72, 92)">
+    <text class="display" font-size="48" font-weight="400" fill="#1a1614" letter-spacing="-1.5">VerbMatrix</text>
+    <text class="mono" font-size="13" font-weight="500" fill="#b07a2a" letter-spacing="2.6" y="28" text-transform="uppercase">LEARN ANY LANGUAGE WITH ONE SYSTEM</text>
+  </g>
+
+  <!-- The matrix grid — the visual heart of the product. -->
+  <g transform="translate(72, 220)">
+    <!-- Column headers -->
+    <text class="mono" font-size="11" fill="#6b6359" letter-spacing="1.8" x="210" y="0">? QUESTION</text>
+    <text class="mono" font-size="11" fill="#6b6359" letter-spacing="1.8" x="450" y="0">+ AFFIRM</text>
+    <text class="mono" font-size="11" fill="#6b6359" letter-spacing="1.8" x="680" y="0">− NEGATIVE</text>
+
+    <!-- Row 1: Future -->
+    <text class="display" font-size="16" fill="#1a1614" font-style="italic" x="0" y="50">Future</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="210" y="50">O să vorbesc?</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="450" y="50">Eu o să vorbesc.</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="680" y="50">N-o să vorbesc.</text>
+
+    <!-- Row 2: Present -->
+    <text class="display" font-size="16" fill="#1a1614" font-style="italic" x="0" y="100">Present</text>
+    <text class="mono" font-size="14" fill="#b07a2a" font-weight="500" x="210" y="100">Vorbesc eu?</text>
+    <text class="mono" font-size="14" fill="#b07a2a" font-weight="500" x="450" y="100">Eu vorbesc.</text>
+    <text class="mono" font-size="14" fill="#b07a2a" font-weight="500" x="680" y="100">Eu nu vorbesc.</text>
+
+    <!-- Row 3: Past -->
+    <text class="display" font-size="16" fill="#1a1614" font-style="italic" x="0" y="150">Past</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="210" y="150">Am vorbit eu?</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="450" y="150">Eu am vorbit.</text>
+    <text class="mono" font-size="14" fill="#1a1614" x="680" y="150">Eu nu am vorbit.</text>
+
+    <!-- Horizontal gold hairlines between rows -->
+    <line x1="0" y1="20" x2="900" y2="20" stroke="#dfc591" stroke-width="0.5"/>
+    <line x1="0" y1="70" x2="900" y2="70" stroke="#e3ddd0" stroke-width="0.5"/>
+    <line x1="0" y1="120" x2="900" y2="120" stroke="#e3ddd0" stroke-width="0.5"/>
+    <line x1="0" y1="170" x2="900" y2="170" stroke="#e3ddd0" stroke-width="0.5"/>
+  </g>
+
+  <!-- Bottom tagline + brand mark -->
+  <g transform="translate(72, 500)">
+    <line x1="0" y1="0" x2="36" y2="0" stroke="#b07a2a" stroke-width="2"/>
+    <text class="display" font-size="32" fill="#1a1614" font-weight="400" letter-spacing="-0.6" y="50">
+      One verb. Nine sentences. <tspan font-style="italic" fill="#b07a2a">Any language.</tspan>
+    </text>
+  </g>
+
+  <!-- Discrete URL bottom-right -->
+  <text class="mono" font-size="14" fill="#6b6359" letter-spacing="1.5" x="1056" y="582" text-anchor="end">verbmatrix.com</text>
+</svg>

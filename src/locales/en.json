@@ -253,5 +253,15 @@
   "phase_verbs_intro": "Three tenses, three forms, nine cells. The matrix is the textbook in miniature.",
   "phase_grammar_intro": "Articles, agreement, possession. The skeleton beneath every sentence.",
   "phase_tenses_intro": "Past, future, conditional. The shapes a sentence takes through time.",
-  "phase_reference_intro": "Vocabulary, dialogues, the thirty-two-day plan. The textbook becomes a reference book."
+  "phase_reference_intro": "Vocabulary, dialogues, the thirty-two-day plan. The textbook becomes a reference book.",
+  "key_modal_validating": "Validating…",
+  "key_error_remote_invalid": "This key isn't valid. Check the email you received after purchase.",
+  "key_error_wrong_product": "This key is for a different course. Try a different language tab.",
+  "key_error_network": "Couldn't reach the server. Check your connection and try again.",
+  "footer_legal_terms": "Terms",
+  "footer_legal_privacy": "Privacy",
+  "footer_legal_refund": "Refund policy",
+  "footer_legal_contact": "Contact",
+  "legal_back_to_app": "← Back to VerbMatrix",
+  "legal_last_updated": "Last updated"
 }

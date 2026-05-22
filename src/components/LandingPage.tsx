@@ -570,7 +570,6 @@ export function LandingPage() {
           <CinematicMatrix />
 
           {/* ═════════ 3. METHOD — MANUSCRIPT MARGIN ═════════ */}
-          {/* @ts-ignore */}
           <section id="method" ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36 scroll-mt-16">
             <div className="atmos-cream" />
             <div className="max-w-[920px] mx-auto relative" style={{ zIndex: 1 }}>
@@ -617,7 +616,6 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 4. TIMELINE — THE THIRTY-TWO-DAY JOURNEY ═════════ */}
-          {/* @ts-ignore */}
           <section ref={timelineRef} className="scope-cream reveal relative px-5 md:px-12 py-24 md:py-32">
             <div className="max-w-[1000px] mx-auto relative">
               <div className="text-center mb-12">
@@ -666,7 +664,6 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 5. INCLUDES — SPEC SHEET ═════════ */}
-          {/* @ts-ignore */}
           <section ref={insideRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32">
             <div className="max-w-[960px] mx-auto">
               <div className="reveal text-center mb-14">
@@ -711,7 +708,6 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 6. LANGUAGES + BUNDLE ═════════ */}
-          {/* @ts-ignore */}
           <section id="languages" ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32 scroll-mt-16">
             <div className="max-w-[1100px] mx-auto">
               <div className="reveal text-center mb-16">
@@ -768,7 +764,6 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 8. FAQ ═════════ */}
-          {/* @ts-ignore */}
           <section id="faq" ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24 scroll-mt-16">
             <div className="max-w-[800px] mx-auto">
               <div className="text-center mb-14">

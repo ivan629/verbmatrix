@@ -251,6 +251,17 @@ export function Footer() {
             >
                 {t("footer_replay_intro")}
             </button>
+
+            {/* Legal links + contact. Required for paid product distribution. */}
+            <div className="footer-legal-links">
+                <a href="/terms">{t("footer_legal_terms")}</a>
+                <span className="sep" aria-hidden="true">·</span>
+                <a href="/privacy">{t("footer_legal_privacy")}</a>
+                <span className="sep" aria-hidden="true">·</span>
+                <a href="/refund">{t("footer_legal_refund")}</a>
+                <span className="sep" aria-hidden="true">·</span>
+                <a href="mailto:hello@verbmatrix.com">{t("footer_legal_contact")}</a>
+            </div>
         </footer>
     );
 }
