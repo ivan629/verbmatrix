@@ -233,5 +233,9 @@
   "footer_legal_refund": "Повернення коштів",
   "footer_legal_contact": "Контакт",
   "legal_back_to_app": "← Назад до VerbMatrix",
-  "legal_last_updated": "Останнє оновлення"
+  "legal_last_updated": "Останнє оновлення",
+  "landing_try_free": "Спробувати безкоштовно → перші уроки + матриця",
+  "picker_title": "Обери мову",
+  "picker_subtitle": "Зможеш змінити в налаштуваннях у будь-який момент.",
+  "picker_footer": "Скоро з'являться нові мови."
 }

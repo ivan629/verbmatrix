@@ -263,5 +263,9 @@
   "footer_legal_refund": "Refund policy",
   "footer_legal_contact": "Contact",
   "legal_back_to_app": "← Back to VerbMatrix",
-  "legal_last_updated": "Last updated"
+  "legal_last_updated": "Last updated",
+  "landing_try_free": "Try free → first lessons + matrix",
+  "picker_title": "Pick a language",
+  "picker_subtitle": "You can change this anytime in settings.",
+  "picker_footer": "More languages coming soon."
 }

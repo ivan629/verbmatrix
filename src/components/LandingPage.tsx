@@ -352,24 +352,38 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                       {t("landing_open_course")} →
                     </button>
                 ) : (
-                    <div className="flex gap-2">
+                    <>
+                      <div className="flex gap-2">
+                        <button type="button"
+                                onClick={() => {
+                                  trackEvent("purchase-click", { language: lang.code, price: pricing.price });
+                                  if (pricing.checkoutUrl) window.open(pricing.checkoutUrl, "_blank");
+                                }}
+                                className="btn-tactile flex-1">
+                          {t("landing_get_access")}
+                        </button>
+                        <button type="button" onClick={() => {
+                          trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
+                          onActivate();
+                        }}
+                                className="px-4 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-3)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
+                                title={t("landing_have_key")}>
+                          Key
+                        </button>
+                      </div>
+                      {/* Free preview path — lets visitors taste the matrix
+                          demo + first lessons without buying. The textbook's
+                          PaywallCard handles the upsell when they scroll past
+                          the free lessons. */}
                       <button type="button"
                               onClick={() => {
-                                trackEvent("purchase-click", { language: lang.code, price: pricing.price });
-                                if (pricing.checkoutUrl) window.open(pricing.checkoutUrl, "_blank");
+                                trackEvent("try-free-click", { language: lang.code });
+                                onSelect();
                               }}
-                              className="btn-tactile flex-1">
-                        {t("landing_get_access")}
+                              className="block w-full mt-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--ink-4)] hover:text-[var(--gold)] transition-colors text-center">
+                        {t("landing_try_free")}
                       </button>
-                      <button type="button" onClick={() => {
-                        trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
-                        onActivate();
-                      }}
-                              className="px-4 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-3)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
-                              title={t("landing_have_key")}>
-                        Key
-                      </button>
-                    </div>
+                    </>
                 )}
               </>
           )}
@@ -855,8 +869,9 @@ export function LandingPage() {
                         className="hover:text-white transition-colors">
                   {t("landing_footer_activate")}
                 </button>
-                <a href="#terms" className="hover:text-white transition-colors">{t("landing_footer_terms")}</a>
-                <a href="#privacy" className="hover:text-white transition-colors">{t("landing_footer_privacy")}</a>
+                <a href="/terms" className="hover:text-white transition-colors">{t("landing_footer_terms")}</a>
+                <a href="/privacy" className="hover:text-white transition-colors">{t("landing_footer_privacy")}</a>
+                <a href="/refund" className="hover:text-white transition-colors">{t("footer_legal_refund")}</a>
                 <a href={`mailto:${BRAND.contactEmail}`} className="hover:text-white transition-colors">{t("landing_footer_contact")}</a>
               </div>
             </div>
