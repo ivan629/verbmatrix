@@ -355,11 +355,10 @@ function FooterLangSwitcher() {
 
 // ─── Language Card ──────────────────────────────────────────────
 
-function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActivate, hasAccess }: {
+function LanguageCard({ lang, pricing, isCurrent, onSelect, onActivate, hasAccess }: {
   lang: { code: string; label: string; heroExample: { text: string; en: string } };
   pricing: LanguagePricing;
   isCurrent: boolean;
-  comingSoon: boolean;
   onSelect: () => void;
   onActivate: () => void;
   hasAccess: boolean;
@@ -368,8 +367,8 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
   const speak = useTTS();
   return (
       <div className={`card-glass card-lift hover-sheen relative flex flex-col h-full p-7 md:p-8 overflow-hidden ${
-          comingSoon ? "opacity-70 pointer-events-none" : ""
-      } ${isCurrent && !comingSoon ? "border-warm" : ""}`}>
+          isCurrent ? "border-warm" : ""
+      }`}>
         <div className="flex items-start justify-between mb-6 relative z-[2]">
           <LanguageOrb code={lang.code} size={52} className="text-[var(--ink-3)]" />
           <div className="flex flex-col items-end gap-1.5">
@@ -377,9 +376,6 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                 <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[var(--affirm)] flex items-center gap-1.5 bg-[var(--affirm-bg)] px-2 py-1 rounded-full">
               <span aria-hidden="true">✓</span> {t("landing_owned")}
             </span>
-            )}
-            {comingSoon && (
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[var(--ink-4)]">{t("landing_coming_soon")}</span>
             )}
           </div>
         </div>
@@ -402,13 +398,7 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
         <div className="flex-1" />
 
         <div className="pt-5 border-t border-[var(--border)] relative z-[2]">
-          {comingSoon ? (
-              <div className="font-mono text-[11px] text-[var(--ink-4)] uppercase tracking-[0.12em] text-center py-2">
-                {t("landing_notify_soon")}
-              </div>
-          ) : (
-              <>
-                <div className="flex items-baseline justify-between mb-4">
+          <div className="flex items-baseline justify-between mb-4">
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-3)]">
                 {t("landing_lifetime_access")}
               </span>
@@ -458,8 +448,6 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                       </div>
                     </>
                 )}
-              </>
-          )}
         </div>
       </div>
   );
@@ -547,7 +535,21 @@ export function LandingPage() {
             style={{ ["--nav-tint-a" as string]: navSolid ? "0.85" : "0" }}
         >
           <div className="max-w-[1200px] mx-auto px-5 md:px-12 py-4 flex items-center justify-between">
-            <LogoLockup size={22} tone="light" />
+            <button
+              type="button"
+              onClick={() => {
+                trackEvent("logo-click", { source: "nav" });
+                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                // Clear any hash without triggering a navigation event.
+                if (window.location.hash) {
+                  history.replaceState(null, "", window.location.pathname);
+                }
+              }}
+              aria-label={t("nav_go_home")}
+              className="hover:opacity-80 transition-opacity cursor-pointer"
+            >
+              <LogoLockup size={22} tone="light" />
+            </button>
             <div className="flex items-center gap-2 md:gap-6">
               <NavLangToggle />
               <a href="#method" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
@@ -675,7 +677,7 @@ export function LandingPage() {
           <CinematicMatrix />
 
           {/* ═════════ 3. METHOD — MANUSCRIPT MARGIN ═════════ */}
-          <section id="method" ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36 scroll-mt-40">
+          <section ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36">
             <div className="atmos-cream" />
             <div className="max-w-[920px] mx-auto relative" style={{ zIndex: 1 }}>
 
@@ -687,7 +689,7 @@ export function LandingPage() {
                 </p>
               </div>
 
-              <div className="reveal mb-20 text-center">
+              <div id="method" className="reveal mb-20 text-center scroll-mt-24">
                 <h2 className="font-display text-[clamp(2rem,4.4vw,3.2rem)] font-light text-[var(--ink)] tracking-[-0.025em] leading-[1.08] max-w-[720px] mx-auto">
                   {t("landing_method_headline")}
                 </h2>
@@ -813,9 +815,9 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 6. LANGUAGES + BUNDLE ═════════ */}
-          <section id="languages" ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32 scroll-mt-24">
+          <section ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32">
             <div className="max-w-[1100px] mx-auto">
-              <div className="reveal text-center mb-16">
+              <div id="languages" className="reveal text-center mb-16 scroll-mt-24">
                 <div className="eyebrow mb-5">{t("landing_languages_kicker")}</div>
                 <h2 className="font-display text-[clamp(2rem,4vw,2.8rem)] font-light text-[var(--ink)] tracking-[-0.025em] leading-[1.08] mb-5">
                   {t("landing_languages_title")}
@@ -825,12 +827,12 @@ export function LandingPage() {
                 </p>
               </div>
 
-              <ul className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-[920px] mx-auto mb-12">
+              <ul className="grid gap-5 grid-cols-1 max-w-[420px] mx-auto mb-12">
                 {available.map((lang) => (
                     <li key={lang.code} className="reveal">
                       <LanguageCard
                           lang={lang} pricing={getPricing(lang.code)}
-                          isCurrent={lang.code === lastPickedCode} comingSoon={false}
+                          isCurrent={lang.code === lastPickedCode}
                           onSelect={() => {
                             trackEvent("language-selected", {
                               language: lang.code,
@@ -875,9 +877,9 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 8. FAQ ═════════ */}
-          <section id="faq" ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24 scroll-mt-24">
+          <section ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24">
             <div className="max-w-[800px] mx-auto">
-              <div className="text-center mb-14">
+              <div id="faq" className="text-center mb-14 scroll-mt-24">
                 <div className="eyebrow mb-4">{t("landing_faq_kicker")}</div>
                 <h2 className="font-display text-[clamp(1.8rem,3.4vw,2.4rem)] font-light text-[var(--ink)] tracking-tight">
                   {t("landing_faq_title")}
@@ -894,10 +896,12 @@ export function LandingPage() {
                 <p className="font-display italic text-[clamp(1rem,1.5vw,1.15rem)] text-[var(--ink-2)] mb-2">
                   {t("landing_faq_closing")}
                 </p>
-                <a href={`mailto:${BRAND.contactEmail}`}
-                   className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors">
+                <ContactLink
+                  source="other"
+                  className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
+                >
                   {BRAND.contactEmail}
-                </a>
+                </ContactLink>
               </div>
             </div>
           </section>
@@ -940,11 +944,24 @@ export function LandingPage() {
         <footer className="scope-dark relative px-5 md:px-12 py-14 border-t border-white/[0.06]">
           <div className="max-w-[1100px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
-              <LogoLockup size={20} tone="light" />
+              <button
+                type="button"
+                onClick={() => {
+                  trackEvent("logo-click", { source: "footer" });
+                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                  if (window.location.hash) {
+                    history.replaceState(null, "", window.location.pathname);
+                  }
+                }}
+                aria-label={t("nav_go_home")}
+                className="self-start hover:opacity-80 transition-opacity cursor-pointer"
+              >
+                <LogoLockup size={20} tone="light" />
+              </button>
               <div className="flex flex-wrap items-center gap-x-7 gap-y-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55">
                 <button type="button" onClick={() => {
                   trackEvent("key-modal-open", { source: "footer" });
-                  setKeyModal("all");
+                  setKeyModal("ro");
                 }}
                         className="hover:text-white transition-colors">
                   {t("landing_footer_activate")}
@@ -968,9 +985,12 @@ export function LandingPage() {
               </div>
               <div className="flex items-center gap-4">
                 <FooterLangSwitcher />
-                <span className="font-mono text-[10px] text-white/40">
+                <ContactLink
+                  source="footer-landing"
+                  className="font-mono text-[10px] text-white/40 hover:text-white transition-colors"
+                >
                   {BRAND.contactEmail}
-                </span>
+                </ContactLink>
               </div>
             </div>
           </div>

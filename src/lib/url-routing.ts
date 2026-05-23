@@ -58,14 +58,15 @@ export function navigateToCode(code: string): void {
   const currentPath = window.location.pathname + window.location.hash;
   if (currentPath === next) return;
   const previousPath = window.location.pathname;
-  window.history.pushState({ code }, "", next);
-  window.dispatchEvent(new PopStateEvent("popstate"));
-  // Reset scroll to top only on actual view changes (not when the only
-  // difference is a hash). The view changes when the path's first segment
-  // differs from the new path's first segment.
+  // Reset scroll FIRST (instant, while still in the old view), then push the
+  // URL change. This way the user doesn't see the old view smooth-scroll up
+  // before the new view appears — it's just an instant cut to the new view
+  // already at the top. Only reset if the view is actually changing.
   if (previousPath !== `${b}${code}`) {
     resetScrollIfNoHash();
   }
+  window.history.pushState({ code }, "", next);
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }
 
 /**
@@ -75,28 +76,40 @@ export function navigateToCode(code: string): void {
  * not to a section.
  *
  * Scroll reset: always reset to top when going home. The home page is a
- * fresh context; the user isn't returning to a reading position.
+ * fresh context; the user isn't returning to a reading position. Reset is
+ * done BEFORE the URL change so the user doesn't see the old view smooth-
+ * scroll up before the home page appears.
  */
 export function navigateToHome(): void {
   if (typeof window === "undefined") return;
   const b = basePrefix();
   if (window.location.pathname === b && !window.location.hash) return;
+  resetScrollIfNoHash();
   window.history.pushState(null, "", b);
   window.dispatchEvent(new PopStateEvent("popstate"));
-  resetScrollIfNoHash();
 }
 
 /**
  * Scroll to the top of the page — unless the URL has a hash, in which case
  * the browser's native anchor-scrolling (with our scroll-padding-top) will
  * land the user on the right section. Called by navigation helpers above.
+ *
+ * Critical: CSS `html { scroll-behavior: smooth }` will override the JS
+ * `behavior: "auto"` request. To get a truly instant jump (no visible
+ * smooth-scroll through the old view's content), we temporarily switch
+ * scroll-behavior off, scroll, then restore it on the next frame.
  */
 function resetScrollIfNoHash(): void {
   if (typeof window === "undefined") return;
   if (window.location.hash) return;
-  // Use auto behavior so the reset is instant — smooth-scrolling from the
-  // bottom of a long page back to the top is jarring on view changes.
-  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  const html = document.documentElement;
+  const prev = html.style.scrollBehavior;
+  html.style.scrollBehavior = "auto";
+  window.scrollTo(0, 0);
+  // Restore on the next frame so the instant jump takes effect first.
+  requestAnimationFrame(() => {
+    html.style.scrollBehavior = prev;
+  });
 }
 
 /**

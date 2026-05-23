@@ -4,7 +4,7 @@ import { useAccess, type ActivationResult } from "../context/Access";
 import { BRAND } from "../config";
 
 interface LicenseKeyModalProps {
-  /** The language code this key is for (or "all" for bundle). */
+  /** The language code this key is for. */
   languageCode: string;
   onClose: () => void;
 }
@@ -89,9 +89,7 @@ export function LicenseKeyModal({ languageCode, onClose }: LicenseKeyModalProps)
               {t("key_modal_title")}
             </h2>
             <p className="text-[0.85rem] text-[var(--ink-3)] mt-1">
-              {languageCode === "all"
-                ? t("key_modal_subtitle_all")
-                : t("key_modal_subtitle", { lang: languageCode.toUpperCase() })}
+              {t("key_modal_subtitle", { lang: languageCode.toUpperCase() })}
             </p>
           </div>
           <button

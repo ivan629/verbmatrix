@@ -1,53 +1,29 @@
 {
   "_comment": "Ukrainian translations of Romanian landing-page content. Mirrors landing.en.json key-for-key. landing_tl_* keys hold target-language (Romanian) strings — the values are identical to en.json because Romanian doesn't change per UI language.",
-
   "_section_interface": "=== Interface copy (overlays engine src/locales/uk.json for RO context) ===",
-
-  "landing_hero_status": "Румунська · Іспанська · Японська",
+  "landing_hero_status": "Курс румунської · v1.0",
   "landing_speak_kicker": "Спробуй зараз",
   "landing_speak_title": "Скажи це вголос.",
   "landing_speak_subtitle": "Не просто читай — вимовляй звуки. Тебе здивує, що твій рот вже знає.",
   "landing_speak_listen": "Почути",
   "landing_speak_done": "Я сказав(ла)",
   "landing_speak_followup": "Ось і весь секрет. Тепер уяви, що робиш це ще для дев'яноста дев'яти речень, впорядкованих у систему. Це і є курс.",
-
-  "landing_testimonials_kicker": "Учасники",
-  "landing_testimonials_title": "Для тих, хто вже спробував усе інше.",
-  "landing_testimonial_1_quote": "Я використовував Duolingo чотирнадцять місяців і не міг замовити каву. П'ять сесій з матрицею — і я впіймав себе на думках румунською. Структура клацає так, як ніщо інше.",
-  "landing_testimonial_1_name": "Аліна Попеску",
-  "landing_testimonial_1_role": "Маркетинг-менеджер",
-  "landing_testimonial_1_city": "Лондон",
-  "landing_testimonial_2_quote": "32-денний план спрацював. На 33-й день я був у Клуж-Напоці і питав у незнайомців дорогу. Вони виправляли мій акцент і не переходили на англійську. Зі жодним іншим методом такого не було.",
-  "landing_testimonial_2_name": "Марк Дітріх",
-  "landing_testimonial_2_role": "Розробник програмного забезпечення",
-  "landing_testimonial_2_city": "Берлін",
-  "landing_testimonial_3_quote": "Я лінгвіст. Купив це, очікуючи розчаруватися. Матриця — справді оригінальний педагогічний хід: вона дозволяє генерувати мову, а не запам'ятовувати її. Тепер рекомендую її студентам.",
-  "landing_testimonial_3_name": "Д-р Гелена Краус",
-  "landing_testimonial_3_role": "Лінгвістика, Університет Відня",
-  "landing_testimonial_3_city": "Відень",
-
   "landing_loss_kicker": "Чесна частина",
   "landing_loss_title": "Більшість людей, які вирішують вивчити румунську, так і не роблять цього.",
   "landing_loss_body": "Вони завантажують додаток. Вчать «привіт» і «дякую». Втрачають серію через вісім днів. Три роки потому — все ще завмирають, коли офіціант питає, що вони хочуть. Тут ти вирішуєш — бути одним із них чи ні.",
   "landing_loss_cta": "Обрати інакше",
-
   "landing_guarantee_signature_name": "Стеліан",
   "landing_guarantee_signature_role": "Засновник, VerbMatrix",
-
   "landing_method_transition": "І ось як це працює.",
   "landing_timeline_milestone_1": "Перше речення — вголос.",
   "landing_timeline_milestone_2": "Ритм розмови починає відчуватися.",
   "landing_timeline_milestone_3": "Твоє мислення починає змінюватися.",
   "landing_timeline_milestone_4": "Справжня розмова — без думок про граматику.",
-
   "landing_faq_closing": "Ще є питання?",
-
   "_section_tl": "=== Target-language strings — Romanian text, identical regardless of UI language ===",
-
   "landing_tl_speak_phrase": "Vreau o cafea, vă rog.",
   "landing_tl_speak_translation": "Я хочу каву, будь ласка.",
   "landing_tl_speak_celebration": "Felicitări. Ти щойно говорив румунською.",
-
   "landing_tl_demo_verb_1_infinitive": "a vorbi",
   "landing_tl_demo_verb_1_label": "говорити",
   "landing_tl_demo_verb_1_f_q": "O să vorbesc?",
@@ -59,7 +35,6 @@
   "landing_tl_demo_verb_1_pa_q": "Am vorbit eu?",
   "landing_tl_demo_verb_1_pa_a": "Eu am vorbit.",
   "landing_tl_demo_verb_1_pa_n": "Nu am vorbit.",
-
   "landing_tl_demo_verb_2_infinitive": "a face",
   "landing_tl_demo_verb_2_label": "робити",
   "landing_tl_demo_verb_2_f_q": "O să fac?",
@@ -71,7 +46,6 @@
   "landing_tl_demo_verb_2_pa_q": "Am făcut eu?",
   "landing_tl_demo_verb_2_pa_a": "Eu am făcut.",
   "landing_tl_demo_verb_2_pa_n": "Nu am făcut.",
-
   "landing_tl_demo_verb_3_infinitive": "a merge",
   "landing_tl_demo_verb_3_label": "іти",
   "landing_tl_demo_verb_3_f_q": "O să merg?",

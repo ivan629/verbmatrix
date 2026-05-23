@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { BRAND } from "../config";
+import { ContactLink } from "./ContactLink";
 
 /**
  * Three legal pages — Terms of Service, Privacy Policy, Refund Policy.
@@ -107,10 +108,10 @@ function TermsBodyEn() {
 
       <h2>What we provide</h2>
       <p>
-        {BRAND.name} sells access to interactive language-learning textbooks. Free content
-        (landing page, onboarding, Practice Matrix, free lessons) is available to anyone.
-        Paid content requires a one-time purchase per language or a bundle that grants
-        access to every current and future language.
+        {BRAND.name} sells access to an interactive Romanian language-learning
+        textbook. Free content (landing page, onboarding, Practice Matrix, free
+        lessons) is available to anyone. Paid content requires a one-time
+        purchase.
       </p>
 
       <h2>Your purchase</h2>
@@ -167,7 +168,7 @@ function TermsBodyEn() {
 
       <h2>Contact</h2>
       <p>
-        Questions: <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>
+        Questions: <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink>
       </p>
     </>
   );
@@ -222,7 +223,7 @@ function PrivacyBodyEn() {
 
       <h2>Email</h2>
       <p>
-        If you contact us at <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>,
+        If you contact us at <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink>,
         we keep that email so we can reply. We don't add you to any marketing list
         without your explicit opt-in.
       </p>
@@ -259,7 +260,7 @@ function RefundBodyEn() {
 
       <p>
         If you buy a course and decide within 30 days that it isn't for you, email
-        us at <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a> from
+        us at <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink> from
         the address you used to purchase, mention "refund", and we'll process it
         within a few business days.
       </p>
@@ -301,10 +302,9 @@ function TermsBodyUk() {
 
       <h2>Що ми надаємо</h2>
       <p>
-        {BRAND.name} продає доступ до інтерактивних підручників з вивчення мов.
-        Безкоштовний контент (лендінг, онбординг, Practice Matrix, безкоштовні уроки)
-        доступний усім. Платний контент потребує одноразової покупки за окрему мову
-        або пакет, який відкриває всі поточні й майбутні мови.
+        {BRAND.name} продає доступ до інтерактивного підручника румунської мови.
+        Безкоштовний контент (лендінг, онбординг, Practice Matrix, безкоштовні
+        уроки) доступний усім. Платний контент потребує одноразової покупки.
       </p>
 
       <h2>Твоя покупка</h2>
@@ -362,7 +362,7 @@ function TermsBodyUk() {
 
       <h2>Контакт</h2>
       <p>
-        Питання: <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>
+        Питання: <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink>
       </p>
     </>
   );
@@ -417,7 +417,7 @@ function PrivacyBodyUk() {
 
       <h2>Email</h2>
       <p>
-        Якщо ти напишеш нам на <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a>,
+        Якщо ти напишеш нам на <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink>,
         ми збережемо цей лист, щоб відповісти. Ми не додаємо тебе до жодного
         маркетингового списку без явної згоди.
       </p>
@@ -454,7 +454,7 @@ function RefundBodyUk() {
 
       <p>
         Якщо купиш курс і протягом 30 днів вирішиш, що він тобі не підходить — напиши
-        нам на <a href={`mailto:${BRAND.contactEmail}`}>{BRAND.contactEmail}</a> з тієї
+        нам на <ContactLink source="legal-page">{BRAND.contactEmail}</ContactLink> з тієї
         самої адреси, з якої купував(ла), зазнач "повернення", і ми обробимо запит
         протягом кількох робочих днів.
       </p>

@@ -18,10 +18,10 @@ export const BRAND = {
   /** Tagline shown in the sidebar next to the name. */
   suffix: "study",
   /** One-liner for meta / OG. */
-  tagline: "Learn any language with one system.",
+  tagline: "Learn Romanian with the verb matrix.",
   /** Longer pitch for the landing page hero. */
   pitch:
-    "Three tenses. Three forms. Nine sentence types. Master the verb matrix and speak any language with confidence.",
+    "Three tenses. Three forms. Nine sentence types. Master the matrix and speak Romanian with confidence.",
   /** Contact email shown in legal pages. */
   contactEmail: "hello@verbmatrix.com",
   /** Full domain (no protocol). */
@@ -62,12 +62,11 @@ export const STORAGE_KEYS = {
 // ─── LemonSqueezy ───────────────────────────────────────────────
 //
 // You configure these AFTER signing up at https://lemonsqueezy.com,
-// creating your store, and adding two Products:
+// creating your store, and adding the product:
 //
-//   1. "Romanian Course" — one-time, $14.99, with license keys enabled
-//   2. "All Access"      — one-time, $99.99, with license keys enabled
+//   "Romanian Course" — one-time, $14.99, with license keys enabled
 //
-// Each product gives you:
+// The product gives you:
 //   - A "Buy Link" (the checkout URL — looks like
 //     https://YOURSTORE.lemonsqueezy.com/buy/UUID)
 //   - A Product ID (number, visible in the dashboard URL: /products/12345)
@@ -92,8 +91,6 @@ export const LEMONSQUEEZY = {
    *  treated as "no key for this product is valid yet". */
   productMap: {
     ro:  import.meta.env.VITE_LS_PRODUCT_RO  ?? "",
-    all: import.meta.env.VITE_LS_PRODUCT_ALL ?? "",
-    // es, ja added here when those courses ship.
   } as Record<string, string>,
 } as const;
 
@@ -120,19 +117,11 @@ export const PRICING: Record<string, LanguagePricing> = {
     checkoutUrl: import.meta.env.VITE_LS_CHECKOUT_RO ?? "",
     productId:   import.meta.env.VITE_LS_PRODUCT_RO  ?? "",
   },
-  // es and ja will be added here when those modules are built.
-  all: {
-    code: "all",
-    price: 99.99,
-    priceFormatted: "$99.99",
-    checkoutUrl: import.meta.env.VITE_LS_CHECKOUT_ALL ?? "",
-    productId:   import.meta.env.VITE_LS_PRODUCT_ALL  ?? "",
-  },
 };
 
-/** Return pricing for a language code, falling back to the "all" bundle. */
+/** Return pricing for a language code, falling back to Romanian if unknown. */
 export function getPricing(code: string): LanguagePricing {
-  return PRICING[code] ?? PRICING.all;
+  return PRICING[code] ?? PRICING.ro;
 }
 
 // ─── Free Content Boundary ──────────────────────────────────────
@@ -175,8 +164,6 @@ export const FLAGS = {
    *  Production: set VITE_REMOTE_VALIDATION=true in Vercel env vars.
    *  Dev: leave unset to skip API calls when working offline. */
   remoteValidation: import.meta.env.VITE_REMOTE_VALIDATION === "true",
-  /** Show "Coming soon" badge on languages that aren't ready yet. */
-  showComingSoon: true,
 } as const;
 
 // ─── Analytics ──────────────────────────────────────────────────

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { ThemeToggle } from "./ThemeToggle";
 import { ContactLink } from "./ContactLink";
+import { MatrixMark } from "./illustrations";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { useLessonNav } from "../context/LessonNav";
 import { BRAND, STORAGE_KEYS } from "../config";
@@ -79,11 +80,11 @@ export function Sidebar() {
                         type="button"
                         onClick={() => { goHome(); setOpen(false); }}
                         aria-label={t("nav_go_home")}
-                        className="block flex-1 text-left hover:opacity-80 transition-opacity cursor-pointer"
+                        className="flex flex-1 items-center gap-2.5 text-left hover:opacity-80 transition-opacity cursor-pointer min-w-0"
                     >
-                        <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none">
-                            {t("app_brand")}
-                            <span className="text-[var(--ink-4)] ml-1.5 font-normal">{t("app_brand_suffix")}</span>
+                        <MatrixMark size={22} className="text-[var(--ink)] shrink-0" />
+                        <div className="font-display text-[1.05rem] text-[var(--ink)] tracking-tight leading-none truncate">
+                            {t(`landing_lang_${module.code}`, { defaultValue: module.label })}
                         </div>
                     </button>
                     <ThemeToggle />

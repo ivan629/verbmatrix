@@ -1,53 +1,29 @@
 {
   "_comment": "Romanian landing-page content. Split into two kinds of keys:\n  - landing_tl_*  : target-language strings that WILL be spoken aloud (TTS audio generated for these).\n  - landing_*     : interface copy that overlays the engine's en.json — translated per UI language.\n  The audio generator scans landing.*.json for all tl_ keys.",
-
   "_section_interface": "=== Interface copy (overlays engine src/locales/en.json for RO context) ===",
-
-  "landing_hero_status": "Romanian · Spanish · Japanese",
+  "landing_hero_status": "Romanian course · v1.0",
   "landing_speak_kicker": "Try it now",
   "landing_speak_title": "Say this out loud.",
   "landing_speak_subtitle": "Don't just read it — say the sounds. You'll be surprised what your mouth already knows.",
   "landing_speak_listen": "Hear it",
   "landing_speak_done": "I said it",
   "landing_speak_followup": "That's it. That's the whole secret. Now imagine doing this for ninety-nine more sentences, ordered into a system. That's the course.",
-
-  "landing_testimonials_kicker": "Learners",
-  "landing_testimonials_title": "Built for people who've tried everything else.",
-  "landing_testimonial_1_quote": "I'd been on Duolingo for fourteen months and couldn't order a coffee. Five sessions of the matrix and I caught myself thinking in Romanian present tense. The structure clicks in a way nothing else has.",
-  "landing_testimonial_1_name": "Alina Popescu",
-  "landing_testimonial_1_role": "Marketing manager",
-  "landing_testimonial_1_city": "London",
-  "landing_testimonial_2_quote": "The 32-day plan worked. Day 33 I was in Cluj asking strangers for directions. They corrected my accent and didn't switch to English. That has never happened to me with any other method.",
-  "landing_testimonial_2_name": "Marc Dietrich",
-  "landing_testimonial_2_role": "Software engineer",
-  "landing_testimonial_2_city": "Berlin",
-  "landing_testimonial_3_quote": "I'm a linguist. I bought this expecting to be unimpressed. The matrix is a genuinely original pedagogical move — it lets you generate language instead of memorising it. I now recommend it to my students.",
-  "landing_testimonial_3_name": "Dr. Helena Kraus",
-  "landing_testimonial_3_role": "Linguistics, University of Vienna",
-  "landing_testimonial_3_city": "Vienna",
-
   "landing_loss_kicker": "The honest part",
   "landing_loss_title": "Most people who decide to learn Romanian never do.",
   "landing_loss_body": "They download an app. They learn \"hello\" and \"thank you.\" They lose the streak after eight days. Three years later, they still freeze when the waiter asks what they want. This is the part where you decide if you want to be one of them.",
   "landing_loss_cta": "Decide differently",
-
   "landing_guarantee_signature_name": "Stelian",
   "landing_guarantee_signature_role": "Founder, VerbMatrix",
-
   "landing_method_transition": "And here's how it works.",
   "landing_timeline_milestone_1": "Your first sentence, aloud.",
   "landing_timeline_milestone_2": "Conversation rhythm starts to click.",
   "landing_timeline_milestone_3": "Your thinking starts to shift.",
   "landing_timeline_milestone_4": "A real conversation — without thinking about grammar.",
-
   "landing_faq_closing": "Still have questions?",
-
   "_section_tl": "=== Target-language strings — these ARE spoken aloud, audio is generated for them ===",
-
   "landing_tl_speak_phrase": "Vreau o cafea, vă rog.",
   "landing_tl_speak_translation": "I'd like a coffee, please.",
   "landing_tl_speak_celebration": "Felicitări. You just spoke Romanian.",
-
   "landing_tl_demo_verb_1_infinitive": "a vorbi",
   "landing_tl_demo_verb_1_label": "to speak",
   "landing_tl_demo_verb_1_f_q": "O să vorbesc?",
@@ -59,7 +35,6 @@
   "landing_tl_demo_verb_1_pa_q": "Am vorbit eu?",
   "landing_tl_demo_verb_1_pa_a": "Eu am vorbit.",
   "landing_tl_demo_verb_1_pa_n": "Nu am vorbit.",
-
   "landing_tl_demo_verb_2_infinitive": "a face",
   "landing_tl_demo_verb_2_label": "to do",
   "landing_tl_demo_verb_2_f_q": "O să fac?",
@@ -71,7 +46,6 @@
   "landing_tl_demo_verb_2_pa_q": "Am făcut eu?",
   "landing_tl_demo_verb_2_pa_a": "Eu am făcut.",
   "landing_tl_demo_verb_2_pa_n": "Nu am făcut.",
-
   "landing_tl_demo_verb_3_infinitive": "a merge",
   "landing_tl_demo_verb_3_label": "to go",
   "landing_tl_demo_verb_3_f_q": "O să merg?",

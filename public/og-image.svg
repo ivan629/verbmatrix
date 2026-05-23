@@ -21,7 +21,7 @@
   <!-- Wordmark, top-left -->
   <g transform="translate(72, 92)">
     <text class="display" font-size="48" font-weight="400" fill="#1a1614" letter-spacing="-1.5">VerbMatrix</text>
-    <text class="mono" font-size="13" font-weight="500" fill="#b07a2a" letter-spacing="2.6" y="28" text-transform="uppercase">LEARN ANY LANGUAGE WITH ONE SYSTEM</text>
+    <text class="mono" font-size="13" font-weight="500" fill="#b07a2a" letter-spacing="2.6" y="28" text-transform="uppercase">LEARN ROMANIAN WITH THE MATRIX METHOD</text>
   </g>
 
   <!-- The matrix grid — the visual heart of the product. -->
@@ -60,7 +60,7 @@
   <g transform="translate(72, 500)">
     <line x1="0" y1="0" x2="36" y2="0" stroke="#b07a2a" stroke-width="2"/>
     <text class="display" font-size="32" fill="#1a1614" font-weight="400" letter-spacing="-0.6" y="50">
-      One verb. Nine sentences. <tspan font-style="italic" fill="#b07a2a">Any language.</tspan>
+      One verb. Nine sentences. <tspan font-style="italic" fill="#b07a2a">Speak Romanian.</tspan>
     </text>
   </g>
 

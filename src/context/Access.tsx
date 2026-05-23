@@ -11,14 +11,16 @@ import { STORAGE_KEYS, FLAGS, trackEvent, LEMONSQUEEZY } from "../config";
 
 // ─── Types ──────────────────────────────────────────────────────
 
-/** Map of language code → license key string. "all" grants every language. */
+/** Map of language code → license key string. The reserved code "all"
+ *  is supported for a future bundle SKU; the current launch sells only
+ *  the Romanian course. */
 type LicenseMap = Record<string, string>;
 
 interface AccessContextValue {
   /** Does the user have a valid license for `code`? */
   hasAccess: (code: string) => boolean;
-  /** Store a license key for a language (or "all"). Validates against
-   *  LemonSqueezy when `FLAGS.remoteValidation` is on. */
+  /** Store a license key for a language. Validates against LemonSqueezy
+   *  when `FLAGS.remoteValidation` is on. */
   activateKey: (code: string, key: string) => Promise<ActivationResult>;
   /** Remove a license for a language. */
   removeKey: (code: string) => void;

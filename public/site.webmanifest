@@ -1,7 +1,7 @@
 {
   "name": "VerbMatrix",
   "short_name": "VerbMatrix",
-  "description": "Learn any language with one system. Three tenses, three forms, nine sentence types.",
+  "description": "Learn Romanian with the verb matrix. Three tenses, three forms, nine sentence types.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#faf7f2",
