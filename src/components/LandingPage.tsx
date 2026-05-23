@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "../lib/i18n";
 import { useTargetLanguage } from "../context/TargetLanguage";
-import { BRAND, getPricing, trackEvent, type LanguagePricing } from "../config";
+import { BRAND, trackEvent } from "../config";
 import { useAccess } from "../context/Access";
 import { LicenseKeyModal } from "./LicenseKeyModal";
 import { ContactLink } from "./ContactLink";
@@ -71,11 +71,11 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
         infinitive: t(`landing_tl_demo_verb_${n}_infinitive`),
         label: t(`landing_tl_demo_verb_${n}_label`),
         cells: rows.map((row) =>
-          row.map((slot) => t(`landing_tl_demo_verb_${n}_${slot}`))
+            row.map((slot) => t(`landing_tl_demo_verb_${n}_${slot}`))
         ),
       };
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t, i18nInst.language]);
 
   const verb = demoVerbs[verbIdx];
@@ -84,11 +84,11 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
     const el = containerRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry) return;
-        isVisibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0.3 }
+        ([entry]) => {
+          if (!entry) return;
+          isVisibleRef.current = entry.isIntersecting;
+        },
+        { threshold: 0.3 }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -118,69 +118,69 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
   const colSemantics = ["question", "affirm", "neg"] as const;
 
   return (
-    <div ref={containerRef} className="w-full max-w-[520px] mx-auto">
-      <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
-        {demoVerbs.map((v, i) => (
-          <button
-            key={v.infinitive}
-            type="button"
-            onClick={() => handleVerbClick(i)}
-            className={`font-mono text-[0.74rem] px-3 py-1.5 rounded-full transition-all duration-200 ${
-              i === verbIdx
-                ? (dark ? "bg-white text-black" : "bg-[var(--ink)] text-[var(--bg)]")
-                : (dark
-                    ? "text-white/55 hover:text-white bg-white/5 hover:bg-white/10"
-                    : "text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)]")
-            }`}
-          >
-            {v.infinitive}
-          </button>
-        ))}
-      </div>
-
-      <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
-        dark ? "bg-[#0d0c11] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
-      }`}>
-
-        <div className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-          <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
-          {colSymbols.map((s, i) => (
-            <div key={s}
-                 className={`py-3.5 px-3 sm:px-4 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-              <span className="hidden sm:inline">{s} </span>
-              <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
-            </div>
-          ))}
-        </div>
-
-        <div key={animKey} className="matrix-stagger revealed">
-          {tenseLabels.map((tense, row) => (
-            <div key={tense} className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-              <div className={`py-5 px-3 sm:px-4 font-mono text-[10px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
-                {tense}
-              </div>
-              {verb.cells[row]?.map((text, col) => (
-                <button
-                  key={`${row}-${col}`}
+      <div ref={containerRef} className="w-full max-w-[520px] mx-auto">
+        <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
+          {demoVerbs.map((v, i) => (
+              <button
+                  key={v.infinitive}
                   type="button"
-                  onClick={() => speak(text)}
-                  className={`py-5 px-3 sm:px-4 font-mono text-[0.78rem] sm:text-[0.88rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
-                >
-                  {text}
-                </button>
-              ))}
-            </div>
+                  onClick={() => handleVerbClick(i)}
+                  className={`font-mono text-[0.74rem] px-3 py-1.5 rounded-full transition-all duration-200 ${
+                      i === verbIdx
+                          ? (dark ? "bg-white text-black" : "bg-[var(--ink)] text-[var(--bg)]")
+                          : (dark
+                              ? "text-white/55 hover:text-white bg-white/5 hover:bg-white/10"
+                              : "text-[var(--ink-3)] hover:text-[var(--ink)] bg-[var(--surface-2)] hover:bg-[var(--surface-3)]")
+                  }`}
+              >
+                {v.infinitive}
+              </button>
           ))}
         </div>
-      </div>
 
-      <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
-        <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.label}
-      </p>
-      <p className={`text-center font-mono text-[9.5px] uppercase tracking-[0.18em] mt-2 ${dark ? "text-white/35" : "text-[var(--ink-4)]"}`}>
-        <span aria-hidden="true">♪</span> {t("landing_matrix_tap_hint")}
-      </p>
-    </div>
+        <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
+            dark ? "bg-[#0d0c11] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
+        }`}>
+
+          <div className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+            <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
+            {colSymbols.map((s, i) => (
+                <div key={s}
+                     className={`py-3.5 px-3 sm:px-4 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+                  <span className="hidden sm:inline">{s} </span>
+                  <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
+                </div>
+            ))}
+          </div>
+
+          <div key={animKey} className="matrix-stagger revealed">
+            {tenseLabels.map((tense, row) => (
+                <div key={tense} className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+                  <div className={`py-5 px-3 sm:px-4 font-mono text-[10px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
+                    {tense}
+                  </div>
+                  {verb.cells[row]?.map((text, col) => (
+                      <button
+                          key={`${row}-${col}`}
+                          type="button"
+                          onClick={() => speak(text)}
+                          className={`py-5 px-3 sm:px-4 font-mono text-[0.78rem] sm:text-[0.88rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                      >
+                        {text}
+                      </button>
+                  ))}
+                </div>
+            ))}
+          </div>
+        </div>
+
+        <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
+          <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.label}
+        </p>
+        <p className={`text-center font-mono text-[9.5px] uppercase tracking-[0.18em] mt-2 ${dark ? "text-white/35" : "text-[var(--ink-4)]"}`}>
+          <span aria-hidden="true">♪</span> {t("landing_matrix_tap_hint")}
+        </p>
+      </div>
   );
 }
 
@@ -295,18 +295,18 @@ function NavLangToggle() {
   const switchTo = current === "en" ? "uk" : "en";
   const switchLabel = switchTo === "uk" ? "УК" : "EN";
   return (
-    <button
-      type="button"
-      onClick={() => {
-        trackEvent("ui-language-switch", { from: i18n.language, to: switchTo, source: "nav" });
-        i18n.changeLanguage(switchTo);
-      }}
-      className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55 hover:text-white transition-colors py-2 px-2"
-      aria-label={`Switch interface language to ${switchTo === "uk" ? "Ukrainian" : "English"}`}
-      title={`Switch to ${switchTo === "uk" ? "Українська" : "English"}`}
-    >
-      {switchLabel}
-    </button>
+      <button
+          type="button"
+          onClick={() => {
+            trackEvent("ui-language-switch", { from: i18n.language, to: switchTo, source: "nav" });
+            i18n.changeLanguage(switchTo);
+          }}
+          className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55 hover:text-white transition-colors py-2 px-2"
+          aria-label={`Switch interface language to ${switchTo === "uk" ? "Ukrainian" : "English"}`}
+          title={`Switch to ${switchTo === "uk" ? "Українська" : "English"}`}
+      >
+        {switchLabel}
+      </button>
   );
 }
 
@@ -323,37 +323,36 @@ function FooterLangSwitcher() {
     { code: "uk", label: "Українська" },
   ];
   return (
-    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
-      {langs.map((l, i) => (
-        <span key={l.code} className="flex items-center gap-2">
+      <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+        {langs.map((l, i) => (
+            <span key={l.code} className="flex items-center gap-2">
           <button
-            type="button"
-            onClick={() => {
-              if (l.code !== current) {
-                trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "footer" });
-                i18n.changeLanguage(l.code);
+              type="button"
+              onClick={() => {
+                if (l.code !== current) {
+                  trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "footer" });
+                  i18n.changeLanguage(l.code);
+                }
+              }}
+              className={
+                l.code === current
+                    ? "text-white"
+                    : "text-white/45 hover:text-white transition-colors"
               }
-            }}
-            className={
-              l.code === current
-                ? "text-white"
-                : "text-white/45 hover:text-white transition-colors"
-            }
           >
             {l.label}
           </button>
-          {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
+              {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
         </span>
-      ))}
-    </div>
+        ))}
+      </div>
   );
 }
 
 // ─── Language Card ──────────────────────────────────────────────
 
-function LanguageCard({ lang, pricing, isCurrent, onSelect, onActivate, hasAccess }: {
+function LanguageCard({ lang, isCurrent, onSelect, onActivate, hasAccess }: {
   lang: { code: string; label: string; heroExample: { text: string; en: string } };
-  pricing: LanguagePricing;
   isCurrent: boolean;
   onSelect: () => void;
   onActivate: () => void;
@@ -379,12 +378,12 @@ function LanguageCard({ lang, pricing, isCurrent, onSelect, onActivate, hasAcces
         <div className="relative z-[2]">
           <div className="font-display text-[1.5rem] text-[var(--ink)] tracking-tight leading-tight mb-1.5">{t(`landing_lang_${lang.code}`, { defaultValue: lang.label })}</div>
           <button
-            type="button"
-            onClick={() => {
-              trackEvent("hero-audio-play", { language: lang.code });
-              speak(lang.heroExample.text);
-            }}
-            className="font-mono text-[11px] text-[var(--ink-3)] leading-tight mb-1 cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0 text-left"
+              type="button"
+              onClick={() => {
+                trackEvent("hero-audio-play", { language: lang.code });
+                speak(lang.heroExample.text);
+              }}
+              className="font-mono text-[11px] text-[var(--ink-3)] leading-tight mb-1 cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0 text-left"
           >"{lang.heroExample.text}"</button>
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)] mt-0.5 mb-6">
             {t(lang.heroExample.en, { defaultValue: lang.heroExample.en })}
@@ -394,56 +393,41 @@ function LanguageCard({ lang, pricing, isCurrent, onSelect, onActivate, hasAcces
         <div className="flex-1" />
 
         <div className="pt-5 border-t border-[var(--border)] relative z-[2]">
-          <div className="flex items-baseline justify-between mb-4">
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-3)]">
-                {t("landing_lifetime_access")}
-              </span>
-                  <span className="font-display text-[1.4rem] text-[var(--ink)] font-medium tracking-tight tabular-nums">
-                {pricing.priceFormatted}
-              </span>
-                </div>
-                {hasAccess ? (
-                    <button type="button" onClick={onSelect} className="btn-tactile w-full">
-                      {t("landing_open_course")} →
-                    </button>
-                ) : (
-                    <>
-                      {/* PRIMARY action — preview the course free. This is the
-                          first move for any hesitant visitor. PaywallCard
-                          handles the upsell when they hit a paid lesson. */}
-                      <button type="button"
-                              onClick={() => {
-                                trackEvent("try-free-click", { language: lang.code });
-                                onSelect();
-                              }}
-                              className="btn-tactile w-full flex items-center justify-center gap-2 mb-3">
-                        {t("landing_try_free")}
-                        <span aria-hidden="true">→</span>
-                      </button>
-
-                      {/* Secondary row — buy now (for visitors who already
-                          know they want it), and license-key entry (for
-                          returning customers). */}
-                      <div className="flex gap-2">
-                        <button type="button"
-                                onClick={() => {
-                                  trackEvent("purchase-click", { language: lang.code, price: pricing.price });
-                                  if (pricing.checkoutUrl) window.open(pricing.checkoutUrl, "_blank");
-                                }}
-                                className="flex-1 py-2.5 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-2)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-2)] hover:text-[var(--ink)] transition-colors">
-                          {t("landing_get_access")} {pricing.priceFormatted}
-                        </button>
-                        <button type="button" onClick={() => {
-                          trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
-                          onActivate();
+          {hasAccess ? (
+              <button type="button" onClick={onSelect} className="btn-tactile w-full">
+                {t("landing_open_course")} →
+              </button>
+          ) : (
+              <>
+                {/* PRIMARY action — preview the course free. This is the
+                          only CTA on the landing page. The in-app PaywallCard
+                          handles the purchase ask at the right moment, once
+                          the user has actually felt the product. */}
+                <button type="button"
+                        onClick={() => {
+                          trackEvent("try-free-click", { language: lang.code });
+                          onSelect();
                         }}
-                                className="px-4 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-3)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
-                                title={t("landing_have_key")}>
-                          Key
-                        </button>
-                      </div>
-                    </>
-                )}
+                        className="btn-tactile w-full flex items-center justify-center gap-2">
+                  {t("landing_try_free")}
+                  <span aria-hidden="true">→</span>
+                </button>
+
+                {/* Returning customer escape hatch — a quiet text link,
+                          not a competing button. Premature payment CTAs are
+                          handled in the in-app paywall instead. */}
+                <div className="mt-3 text-center">
+                  <button type="button"
+                          onClick={() => {
+                            trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
+                            onActivate();
+                          }}
+                          className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--ink-4)] hover:text-[var(--ink-2)] transition-colors">
+                    {t("landing_have_key")}
+                  </button>
+                </div>
+              </>
+          )}
         </div>
       </div>
   );
@@ -474,8 +458,8 @@ export function LandingPage() {
     const params = new URLSearchParams(window.location.search);
     const langParam = params.get("lang");
     const targetModule = langParam
-      ? available.find((l) => l.code === langParam)
-      : available[0];
+        ? available.find((l) => l.code === langParam)
+        : available[0];
     if (!targetModule) return;
     // Merge landingLocales for the target language into i18n.
     // This is the same operation TargetLanguageProvider does on module switch.
@@ -484,7 +468,7 @@ export function LandingPage() {
         i18n.addResourceBundle(lng, "translation", resources, true, true);
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [available]);
 
   useEffect(() => {
@@ -521,6 +505,22 @@ export function LandingPage() {
 
   const speak = useTTS();
 
+  /**
+   * The one true CTA on the landing page: drop the visitor straight into the
+   * 5-minute onboarding for their (or the default) language. Every primary
+   * button on this page calls this — hero, nav, language cards, final CTA.
+   *
+   * Default-language rule: respect `lastPickedCode` (returning visitor who
+   * already chose), otherwise fall through to the first available module.
+   * While Romanian is the only module this is simply "ro" either way.
+   */
+  const startOnboarding = useCallback((source: string, code?: string) => {
+    const target = code ?? lastPickedCode ?? available[0]?.code;
+    if (!target) return;
+    trackEvent("start-onboarding", { language: target, source });
+    setCode(target);
+  }, [available, lastPickedCode, setCode]);
+
   return (
       <div className="min-h-screen flex flex-col bg-[var(--bg)] relative">
 
@@ -532,36 +532,27 @@ export function LandingPage() {
         >
           <div className="max-w-[1200px] mx-auto px-5 md:px-12 py-4 flex items-center justify-between">
             <button
-              type="button"
-              onClick={() => {
-                trackEvent("logo-click", { source: "nav" });
-                window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-                // Clear any hash without triggering a navigation event.
-                if (window.location.hash) {
-                  history.replaceState(null, "", window.location.pathname);
-                }
-              }}
-              aria-label={t("nav_go_home")}
-              className="hover:opacity-80 transition-opacity cursor-pointer"
+                type="button"
+                onClick={() => {
+                  trackEvent("logo-click", { source: "nav" });
+                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                  // Clear any hash without triggering a navigation event.
+                  if (window.location.hash) {
+                    history.replaceState(null, "", window.location.pathname);
+                  }
+                }}
+                aria-label={t("nav_go_home")}
+                className="hover:opacity-80 transition-opacity cursor-pointer"
             >
               <LogoLockup size={22} tone="light" />
             </button>
             <div className="flex items-center gap-2 md:gap-6">
               <NavLangToggle />
-              <a href="#method" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                {t("landing_nav_method")}
-              </a>
-              <a href="#languages" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                {t("landing_nav_pricing")}
-              </a>
-              <a href="#faq" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
-                {t("landing_nav_faq")}
-              </a>
-              <a href="#languages"
-                 onClick={() => trackEvent("nav-cta-click")}
-                 className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
+              <button type="button"
+                      onClick={() => startOnboarding("nav")}
+                      className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
                 {t("landing_nav_start")}
-              </a>
+              </button>
             </div>
           </div>
         </header>
@@ -621,16 +612,11 @@ export function LandingPage() {
 
                   <div className="flex flex-col sm:flex-row items-start gap-3 mb-6 reveal-blur revealed"
                        style={{ animationDelay: "0.55s" }}>
-                    <a href="#method"
-                       onClick={() => trackEvent("hero-cta-primary-click", { target: "method" })}
-                       className="btn-tactile btn-gold w-full sm:w-auto inline-flex">
+                    <button type="button"
+                            onClick={() => startOnboarding("hero")}
+                            className="btn-tactile btn-gold w-full sm:w-auto inline-flex">
                       {t("landing_cta_primary")} <span aria-hidden="true">→</span>
-                    </a>
-                    <a href="#languages"
-                       onClick={() => trackEvent("hero-cta-secondary-click", { target: "languages" })}
-                       className="btn-glass w-full sm:w-auto inline-flex">
-                      {t("landing_cta_secondary")}
-                    </a>
+                    </button>
                   </div>
 
                   {/* Proof line — crosshair anchor + spec-style trust line */}
@@ -812,7 +798,7 @@ export function LandingPage() {
                 {available.map((lang) => (
                     <li key={lang.code} className="reveal">
                       <LanguageCard
-                          lang={lang} pricing={getPricing(lang.code)}
+                          lang={lang}
                           isCurrent={lang.code === lastPickedCode}
                           onSelect={() => {
                             trackEvent("language-selected", {
@@ -878,8 +864,8 @@ export function LandingPage() {
                   {t("landing_faq_closing")}
                 </p>
                 <ContactLink
-                  source="other"
-                  className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
+                    source="other"
+                    className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--gold)] hover:text-[var(--ink)] transition-colors"
                 >
                   {BRAND.contactEmail}
                 </ContactLink>
@@ -912,11 +898,11 @@ export function LandingPage() {
               <p className="text-[1rem] text-white/60 mb-10 max-w-[480px] mx-auto leading-[1.65]">
                 {t("landing_final_cta_subtitle")}
               </p>
-              <a href="#languages"
-                 onClick={() => trackEvent("final-cta-click")}
-                 className="btn-tactile btn-gold inline-flex">
+              <button type="button"
+                      onClick={() => startOnboarding("final-cta")}
+                      className="btn-tactile btn-gold inline-flex">
                 {t("landing_final_cta_button")} <span aria-hidden="true">→</span>
-              </a>
+              </button>
             </div>
           </section>
         </main>
@@ -926,16 +912,16 @@ export function LandingPage() {
           <div className="max-w-[1100px] mx-auto">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
               <button
-                type="button"
-                onClick={() => {
-                  trackEvent("logo-click", { source: "footer" });
-                  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-                  if (window.location.hash) {
-                    history.replaceState(null, "", window.location.pathname);
-                  }
-                }}
-                aria-label={t("nav_go_home")}
-                className="self-start hover:opacity-80 transition-opacity cursor-pointer"
+                  type="button"
+                  onClick={() => {
+                    trackEvent("logo-click", { source: "footer" });
+                    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                    if (window.location.hash) {
+                      history.replaceState(null, "", window.location.pathname);
+                    }
+                  }}
+                  aria-label={t("nav_go_home")}
+                  className="self-start hover:opacity-80 transition-opacity cursor-pointer"
               >
                 <LogoLockup size={20} tone="light" />
               </button>
@@ -967,8 +953,8 @@ export function LandingPage() {
               <div className="flex items-center gap-4">
                 <FooterLangSwitcher />
                 <ContactLink
-                  source="footer-landing"
-                  className="font-mono text-[10px] text-white/40 hover:text-white transition-colors"
+                    source="footer-landing"
+                    className="font-mono text-[10px] text-white/40 hover:text-white transition-colors"
                 >
                   {BRAND.contactEmail}
                 </ContactLink>
