@@ -67,8 +67,8 @@
   "landing_hero_corner_1": "",
   "landing_hero_corner_2": "",
   "landing_hero_corner_3": "",
-  "landing_cta_primary": "Start for free",
-  "landing_cta_secondary": "See the method",
+  "landing_cta_primary": "See how it works",
+  "landing_cta_secondary": "Pick a language",
   "landing_grid_future": "Future",
   "landing_grid_present": "Present",
   "landing_grid_past": "Past",
@@ -264,9 +264,13 @@
   "footer_legal_contact": "Contact",
   "legal_back_to_app": "← Back to VerbMatrix",
   "legal_last_updated": "Last updated",
-  "landing_try_free": "Try free → first lessons + matrix",
+  "landing_try_free": "Start the free lessons",
   "picker_title": "Pick a language",
   "picker_subtitle": "You can change this anytime in settings.",
   "picker_footer": "More languages coming soon.",
-  "contact_copied": "Copied — hello@verbmatrix.com"
+  "contact_copied": "Copied — hello@verbmatrix.com",
+  "landing_nav_start": "Start",
+  "landing_matrix_tap_hint": "Tap any sentence to hear it",
+  "landing_final_cta_button": "Start your first lesson",
+  "landing_footer_built_by": "Built by Ivan Holovach"
 }

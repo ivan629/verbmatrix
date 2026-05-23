@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { BRAND } from "../config";
 
@@ -42,6 +43,14 @@ const LAST_UPDATED_LABEL: Record<Lang, string> = {
 
 export function LegalPage({ which }: { which: LegalPageKey }) {
   const { t, i18n } = useTranslation();
+
+  // Scroll to top whenever a legal page mounts or switches (e.g. terms →
+  // privacy). Browsers usually do this on full-page navigation, but
+  // SPA route changes preserve scroll by default. This is the belt-and-
+  // suspenders fix.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [which]);
 
   // Resolve current UI language → "en" or "uk". Default to en for anything
   // we haven't translated yet.

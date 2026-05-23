@@ -208,6 +208,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* Global anchor offset — keeps content clear of the fixed nav (~55px)
+     and adds breathing room. Individual sections can override with
+     scroll-mt-* utilities for sections that have decorative gradients
+     at the top (e.g. emerges-from-dark adds a 140px wash). */
+  scroll-padding-top: 80px;
   font-size: 17px;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;

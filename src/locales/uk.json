@@ -67,8 +67,8 @@
   "landing_hero_corner_1": "Створено, не згенеровано",
   "landing_hero_corner_2": "Читай уголос · Говори першим · Чуй скрізь",
   "landing_hero_corner_3": "Випуск №1 · MMXXVI",
-  "landing_cta_primary": "Почати безкоштовно",
-  "landing_cta_secondary": "Подивись метод",
+  "landing_cta_primary": "Подивись, як це працює",
+  "landing_cta_secondary": "Вибери мову",
   "landing_grid_future": "Майбутній",
   "landing_grid_present": "Теперішній",
   "landing_grid_past": "Минулий",
@@ -234,9 +234,13 @@
   "footer_legal_contact": "Контакт",
   "legal_back_to_app": "← Назад до VerbMatrix",
   "legal_last_updated": "Останнє оновлення",
-  "landing_try_free": "Спробувати безкоштовно → перші уроки + матриця",
+  "landing_try_free": "Почати безкоштовні уроки",
   "picker_title": "Обери мову",
   "picker_subtitle": "Зможеш змінити в налаштуваннях у будь-який момент.",
   "picker_footer": "Скоро з'являться нові мови.",
-  "contact_copied": "Скопійовано — hello@verbmatrix.com"
+  "contact_copied": "Скопійовано — hello@verbmatrix.com",
+  "landing_nav_start": "Почати",
+  "landing_matrix_tap_hint": "Натисни будь-яке речення, щоб почути",
+  "landing_final_cta_button": "Почати перший урок",
+  "landing_footer_built_by": "Створив Іван Головач"
 }

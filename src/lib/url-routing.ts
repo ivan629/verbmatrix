@@ -46,14 +46,26 @@ export function readCodeFromPath(): string | null {
 /**
  * Replace the URL so its first segment (under the base) is `<code>`,
  * preserving any hash. Uses `history.pushState` so the back button works.
+ *
+ * Scroll reset: when changing language (landing → /ro, or /ro → /es),
+ * scroll to top of the new view. Last-position restoration (in LessonNav)
+ * handles the case where the user reloads or returns via back-button.
  */
 export function navigateToCode(code: string): void {
   if (typeof window === "undefined") return;
   const b = basePrefix();
   const next = `${b}${code}${window.location.hash}`;
-  if (window.location.pathname + window.location.hash === next) return;
+  const currentPath = window.location.pathname + window.location.hash;
+  if (currentPath === next) return;
+  const previousPath = window.location.pathname;
   window.history.pushState({ code }, "", next);
   window.dispatchEvent(new PopStateEvent("popstate"));
+  // Reset scroll to top only on actual view changes (not when the only
+  // difference is a hash). The view changes when the path's first segment
+  // differs from the new path's first segment.
+  if (previousPath !== `${b}${code}`) {
+    resetScrollIfNoHash();
+  }
 }
 
 /**
@@ -61,6 +73,9 @@ export function navigateToCode(code: string): void {
  * any language code. Used by the header chip to return to the language-picker
  * home page. The hash is intentionally cleared too — the user is going home,
  * not to a section.
+ *
+ * Scroll reset: always reset to top when going home. The home page is a
+ * fresh context; the user isn't returning to a reading position.
  */
 export function navigateToHome(): void {
   if (typeof window === "undefined") return;
@@ -68,6 +83,20 @@ export function navigateToHome(): void {
   if (window.location.pathname === b && !window.location.hash) return;
   window.history.pushState(null, "", b);
   window.dispatchEvent(new PopStateEvent("popstate"));
+  resetScrollIfNoHash();
+}
+
+/**
+ * Scroll to the top of the page — unless the URL has a hash, in which case
+ * the browser's native anchor-scrolling (with our scroll-padding-top) will
+ * land the user on the right section. Called by navigation helpers above.
+ */
+function resetScrollIfNoHash(): void {
+  if (typeof window === "undefined") return;
+  if (window.location.hash) return;
+  // Use auto behavior so the reset is instant — smooth-scrolling from the
+  // bottom of a long page back to the top is jarring on view changes.
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 }
 
 /**

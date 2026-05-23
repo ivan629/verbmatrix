@@ -181,6 +181,9 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
       <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
         <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.label}
       </p>
+      <p className={`text-center font-mono text-[9.5px] uppercase tracking-[0.18em] mt-2 ${dark ? "text-white/35" : "text-[var(--ink-4)]"}`}>
+        <span aria-hidden="true">♪</span> {t("landing_matrix_tap_hint")}
+      </p>
     </div>
   );
 }
@@ -285,6 +288,71 @@ function FAQItem({ q, a, num }: { q: string; a: string; num: string }) {
   );
 }
 
+/**
+ * Compact UI-language toggle for the top nav. EN | UK shown inline.
+ * Replaces the FloatingUILanguage on landing — same functionality, no
+ * overlap with the nav.
+ */
+function NavLangToggle() {
+  const { i18n } = useTranslation();
+  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
+  const switchTo = current === "en" ? "uk" : "en";
+  const switchLabel = switchTo === "uk" ? "УК" : "EN";
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        trackEvent("ui-language-switch", { from: i18n.language, to: switchTo, source: "nav" });
+        i18n.changeLanguage(switchTo);
+      }}
+      className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55 hover:text-white transition-colors py-2 px-2"
+      aria-label={`Switch interface language to ${switchTo === "uk" ? "Ukrainian" : "English"}`}
+      title={`Switch to ${switchTo === "uk" ? "Українська" : "English"}`}
+    >
+      {switchLabel}
+    </button>
+  );
+}
+
+/**
+ * Inline UI language switcher for the landing footer. Replaces the
+ * FloatingUILanguage (which overlapped with the top nav). Shows the
+ * current language and lets the user toggle to the other one.
+ */
+function FooterLangSwitcher() {
+  const { i18n } = useTranslation();
+  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
+  const langs: Array<{ code: string; label: string }> = [
+    { code: "en", label: "English" },
+    { code: "uk", label: "Українська" },
+  ];
+  return (
+    <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
+      {langs.map((l, i) => (
+        <span key={l.code} className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              if (l.code !== current) {
+                trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "footer" });
+                i18n.changeLanguage(l.code);
+              }
+            }}
+            className={
+              l.code === current
+                ? "text-white"
+                : "text-white/45 hover:text-white transition-colors"
+            }
+          >
+            {l.label}
+          </button>
+          {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 // ─── Language Card ──────────────────────────────────────────────
 
 function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActivate, hasAccess }: {
@@ -354,14 +422,30 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                     </button>
                 ) : (
                     <>
+                      {/* PRIMARY action — preview the course free. This is the
+                          first move for any hesitant visitor. PaywallCard
+                          handles the upsell when they hit a paid lesson. */}
+                      <button type="button"
+                              onClick={() => {
+                                trackEvent("try-free-click", { language: lang.code });
+                                onSelect();
+                              }}
+                              className="btn-tactile w-full flex items-center justify-center gap-2 mb-3">
+                        {t("landing_try_free")}
+                        <span aria-hidden="true">→</span>
+                      </button>
+
+                      {/* Secondary row — buy now (for visitors who already
+                          know they want it), and license-key entry (for
+                          returning customers). */}
                       <div className="flex gap-2">
                         <button type="button"
                                 onClick={() => {
                                   trackEvent("purchase-click", { language: lang.code, price: pricing.price });
                                   if (pricing.checkoutUrl) window.open(pricing.checkoutUrl, "_blank");
                                 }}
-                                className="btn-tactile flex-1">
-                          {t("landing_get_access")}
+                                className="flex-1 py-2.5 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-2)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-2)] hover:text-[var(--ink)] transition-colors">
+                          {t("landing_get_access")} {pricing.priceFormatted}
                         </button>
                         <button type="button" onClick={() => {
                           trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
@@ -372,18 +456,6 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                           Key
                         </button>
                       </div>
-                      {/* Free preview path — lets visitors taste the matrix
-                          demo + first lessons without buying. The textbook's
-                          PaywallCard handles the upsell when they scroll past
-                          the free lessons. */}
-                      <button type="button"
-                              onClick={() => {
-                                trackEvent("try-free-click", { language: lang.code });
-                                onSelect();
-                              }}
-                              className="block w-full mt-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--ink-4)] hover:text-[var(--gold)] transition-colors text-center">
-                        {t("landing_try_free")}
-                      </button>
                     </>
                 )}
               </>
@@ -477,6 +549,7 @@ export function LandingPage() {
           <div className="max-w-[1200px] mx-auto px-5 md:px-12 py-4 flex items-center justify-between">
             <LogoLockup size={22} tone="light" />
             <div className="flex items-center gap-2 md:gap-6">
+              <NavLangToggle />
               <a href="#method" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
                 {t("landing_nav_method")}
               </a>
@@ -486,8 +559,10 @@ export function LandingPage() {
               <a href="#faq" className="hidden sm:inline-flex font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors py-2">
                 {t("landing_nav_faq")}
               </a>
-              <a href="#languages" className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
-                {t("landing_get_access")}
+              <a href="#languages"
+                 onClick={() => trackEvent("nav-cta-click")}
+                 className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
+                {t("landing_nav_start")}
               </a>
             </div>
           </div>
@@ -548,10 +623,14 @@ export function LandingPage() {
 
                   <div className="flex flex-col sm:flex-row items-start gap-3 mb-6 reveal-blur revealed"
                        style={{ animationDelay: "0.55s" }}>
-                    <a href="#languages" className="btn-tactile btn-gold w-full sm:w-auto inline-flex">
+                    <a href="#method"
+                       onClick={() => trackEvent("hero-cta-primary-click", { target: "method" })}
+                       className="btn-tactile btn-gold w-full sm:w-auto inline-flex">
                       {t("landing_cta_primary")} <span aria-hidden="true">→</span>
                     </a>
-                    <a href="#method" className="btn-glass w-full sm:w-auto inline-flex">
+                    <a href="#languages"
+                       onClick={() => trackEvent("hero-cta-secondary-click", { target: "languages" })}
+                       className="btn-glass w-full sm:w-auto inline-flex">
                       {t("landing_cta_secondary")}
                     </a>
                   </div>
@@ -596,7 +675,7 @@ export function LandingPage() {
           <CinematicMatrix />
 
           {/* ═════════ 3. METHOD — MANUSCRIPT MARGIN ═════════ */}
-          <section id="method" ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36 scroll-mt-16">
+          <section id="method" ref={methodRef} className="scope-cream emerges-from-dark relative px-5 md:px-12 py-28 md:py-36 scroll-mt-40">
             <div className="atmos-cream" />
             <div className="max-w-[920px] mx-auto relative" style={{ zIndex: 1 }}>
 
@@ -734,7 +813,7 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 6. LANGUAGES + BUNDLE ═════════ */}
-          <section id="languages" ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32 scroll-mt-16">
+          <section id="languages" ref={langRef} className="scope-cream relative px-5 md:px-12 py-24 md:py-32 scroll-mt-24">
             <div className="max-w-[1100px] mx-auto">
               <div className="reveal text-center mb-16">
                 <div className="eyebrow mb-5">{t("landing_languages_kicker")}</div>
@@ -796,7 +875,7 @@ export function LandingPage() {
           <hr className="fade-rule mx-auto max-w-[800px]" />
 
           {/* ═════════ 8. FAQ ═════════ */}
-          <section id="faq" ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24 scroll-mt-16">
+          <section id="faq" ref={faqRef} className="scope-cream reveal px-5 md:px-12 py-24 scroll-mt-24">
             <div className="max-w-[800px] mx-auto">
               <div className="text-center mb-14">
                 <div className="eyebrow mb-4">{t("landing_faq_kicker")}</div>
@@ -851,7 +930,7 @@ export function LandingPage() {
               <a href="#languages"
                  onClick={() => trackEvent("final-cta-click")}
                  className="btn-tactile btn-gold inline-flex">
-                {t("landing_cta_primary")} <span aria-hidden="true">→</span>
+                {t("landing_final_cta_button")} <span aria-hidden="true">→</span>
               </a>
             </div>
           </section>
@@ -879,12 +958,20 @@ export function LandingPage() {
               </div>
             </div>
             <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
-            <span className="font-mono text-[10px] text-white/40">
-              © {BRAND.launchYear} {BRAND.name}. {t("landing_footer_rights")}
-            </span>
-              <span className="font-mono text-[10px] text-white/40">
-              {BRAND.contactEmail}
-            </span>
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className="font-mono text-[10px] text-white/40">
+                  © {BRAND.launchYear} {BRAND.name}. {t("landing_footer_rights")}
+                </span>
+                <span className="font-mono text-[10px] text-white/30">
+                  {t("landing_footer_built_by")}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <FooterLangSwitcher />
+                <span className="font-mono text-[10px] text-white/40">
+                  {BRAND.contactEmail}
+                </span>
+              </div>
             </div>
           </div>
         </footer>

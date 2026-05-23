@@ -55,14 +55,10 @@ function AppContent() {
     return <LegalPage which={legalPage} />;
   }
 
-  // 1 — Landing page.
+  // 1 — Landing page. UI language switcher lives in the landing footer
+  //     (inline) to avoid overlapping the top nav.
   if (isUnchosen) {
-    return (
-      <>
-        <FloatingUILanguage />
-        <LandingPage />
-      </>
-    );
+    return <LandingPage />;
   }
 
   // 2 — Onboarding (always free).
