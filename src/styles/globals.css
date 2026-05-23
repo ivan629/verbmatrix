@@ -2244,3 +2244,50 @@ body[data-focus-mode="on"]::after {
 }
 .footer-legal-links a:hover { color: var(--gold); }
 .footer-legal-links .sep { color: var(--ink-5); }
+
+/* ─────────────────────────────────────────────────────────────────────
+   CONTACT LINK — mailto with click-to-copy fallback toast
+   ─────────────────────────────────────────────────────────────────── */
+.contact-link-wrap {
+  position: relative;
+  display: inline-block;
+}
+.contact-toast {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: var(--shadow-1);
+  animation: contact-toast-in 180ms ease-out;
+  z-index: 50;
+  pointer-events: none;
+}
+.contact-toast::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: var(--ink);
+}
+.contact-toast-failed {
+  background: var(--gold);
+  color: var(--ink);
+}
+.contact-toast-failed::after {
+  border-top-color: var(--gold);
+}
+@keyframes contact-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}

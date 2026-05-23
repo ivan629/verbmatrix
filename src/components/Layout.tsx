@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { RO } from "./RO";
 import { ThemeToggle } from "./ThemeToggle";
+import { ContactLink } from "./ContactLink";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { useLessonNav } from "../context/LessonNav";
 import { BRAND, STORAGE_KEYS } from "../config";
@@ -260,7 +261,7 @@ export function Footer() {
                 <span className="sep" aria-hidden="true">·</span>
                 <a href="/refund">{t("footer_legal_refund")}</a>
                 <span className="sep" aria-hidden="true">·</span>
-                <a href="mailto:hello@verbmatrix.com">{t("footer_legal_contact")}</a>
+                <ContactLink source="footer-textbook" />
             </div>
         </footer>
     );

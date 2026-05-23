@@ -5,6 +5,7 @@ import { useTargetLanguage } from "../context/TargetLanguage";
 import { BRAND, getPricing, trackEvent, type LanguagePricing } from "../config";
 import { useAccess } from "../context/Access";
 import { LicenseKeyModal } from "./LicenseKeyModal";
+import { ContactLink } from "./ContactLink";
 import { useScrollReveal, useScrollRevealChildren } from "../lib/useScrollReveal";
 import { useTTS } from "../lib/tts";
 import { CinematicMatrix } from "./CinematicMatrix";
@@ -872,7 +873,9 @@ export function LandingPage() {
                 <a href="/terms" className="hover:text-white transition-colors">{t("landing_footer_terms")}</a>
                 <a href="/privacy" className="hover:text-white transition-colors">{t("landing_footer_privacy")}</a>
                 <a href="/refund" className="hover:text-white transition-colors">{t("footer_legal_refund")}</a>
-                <a href={`mailto:${BRAND.contactEmail}`} className="hover:text-white transition-colors">{t("landing_footer_contact")}</a>
+                <ContactLink source="footer-landing" className="hover:text-white transition-colors">
+                  {t("landing_footer_contact")}
+                </ContactLink>
               </div>
             </div>
             <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
