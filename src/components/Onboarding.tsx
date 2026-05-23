@@ -4,7 +4,7 @@ import { useTTS } from "../lib/tts";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { tryGetActiveLanguage } from "../lib/active-language";
 import { RO } from "./RO";
-import { STORAGE_KEYS } from "../config";
+import { STORAGE_KEYS, trackEvent } from "../config";
 
 /**
  * Five-minute first-contact flow, run once per (browser × language).
@@ -63,19 +63,37 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [step4Revealed, setStep4Revealed] = useState(false);
   const speak = useTTS();
 
-  const next = useCallback(() => {
-    setStep((s) => (s < 5 ? ((s + 1) as Step) : s));
+  // Fire once when the onboarding overlay mounts. The top of the funnel
+  // — every funnel-drop analysis below uses this as the denominator.
+  useEffect(() => {
+    trackEvent("onboarding-start", { language: module.code });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const finish = useCallback(() => {
+  const next = useCallback(() => {
+    setStep((s) => {
+      const nextStep = s < 5 ? ((s + 1) as Step) : s;
+      if (nextStep !== s) {
+        trackEvent("onboarding-step", { language: module.code, step: nextStep });
+      }
+      return nextStep;
+    });
+  }, [module.code]);
+
+  const finish = useCallback((completed: boolean = true) => {
     markOnboardingSeen(module.code);
+    trackEvent(completed ? "onboarding-complete" : "onboarding-skip", {
+      language: module.code,
+      last_step: step,
+    });
     onComplete();
-  }, [onComplete, module.code]);
+  }, [onComplete, module.code, step]);
 
   const revealStep4 = useCallback(() => {
     setStep4Revealed(true);
+    trackEvent("onboarding-step4-reveal", { language: module.code });
     window.setTimeout(() => speak(onboarding.firstSentence.text), 200);
-  }, [speak, onboarding.firstSentence.text]);
+  }, [speak, onboarding.firstSentence.text, module.code]);
 
   // Keyboard: Space/Enter advance, Esc skip. Step 4 has a two-stage
   // interaction — first reveal, then advance.
@@ -88,9 +106,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           return;
         }
         if (step < 5) next();
-        else finish();
+        else finish(true);
       } else if (e.code === "Escape") {
-        finish();
+        finish(false); // user pressed Esc → counted as skip, not complete
       }
     }
     window.addEventListener("keydown", onKey);
@@ -113,7 +131,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           </span>
           <button
             type="button"
-            onClick={finish}
+            onClick={() => finish(false)}
             className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--ink-4)] hover:text-[var(--ink-2)] transition-colors"
           >
             {t("onboarding_skip")}
@@ -132,7 +150,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 onReveal={revealStep4}
               />
             )}
-            {step === 5 && <StepReveal onComplete={finish} />}
+            {step === 5 && <StepReveal onComplete={() => finish(true)} />}
           </div>
         </main>
 

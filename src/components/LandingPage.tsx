@@ -107,7 +107,8 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
     lastInteractionRef.current = performance.now();
     setVerbIdx(i);
     setAnimKey((k) => k + 1);
-  }, []);
+    trackEvent("matrix-demo-verb-click", { verb: demoVerbs[i].infinitive });
+  }, [demoVerbs]);
 
   if (!verb) return null;
 
@@ -262,7 +263,11 @@ function FAQItem({ q, a, num }: { q: string; a: string; num: string }) {
   const [open, setOpen] = useState(false);
   return (
       <div className="border-b border-[var(--border)] last:border-b-0 group">
-        <button type="button" onClick={() => setOpen(!open)}
+        <button type="button" onClick={() => {
+          const next = !open;
+          setOpen(next);
+          if (next) trackEvent("faq-open", { question_num: num });
+        }}
                 className="w-full text-left py-6 flex items-start gap-5">
           <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--ink-4)] mt-1.5 shrink-0 w-6 tabular-nums">{num}</span>
           <span className="flex-1 font-display text-[1.05rem] sm:text-[1.15rem] text-[var(--ink)] leading-snug group-hover:text-[var(--gold)] transition-colors">
@@ -314,7 +319,10 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
           <div className="font-display text-[1.5rem] text-[var(--ink)] tracking-tight leading-tight mb-1.5">{t(`landing_lang_${lang.code}`, { defaultValue: lang.label })}</div>
           <button
             type="button"
-            onClick={() => speak(lang.heroExample.text)}
+            onClick={() => {
+              trackEvent("hero-audio-play", { language: lang.code });
+              speak(lang.heroExample.text);
+            }}
             className="font-mono text-[11px] text-[var(--ink-3)] leading-tight mb-1 cursor-pointer hover:opacity-70 transition-opacity bg-transparent border-0 p-0 text-left"
           >"{lang.heroExample.text}"</button>
           <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--ink-4)] mt-0.5 mb-6">
@@ -353,7 +361,10 @@ function LanguageCard({ lang, pricing, isCurrent, comingSoon, onSelect, onActiva
                               className="btn-tactile flex-1">
                         {t("landing_get_access")}
                       </button>
-                      <button type="button" onClick={onActivate}
+                      <button type="button" onClick={() => {
+                        trackEvent("key-modal-open", { language: lang.code, source: "landing-card" });
+                        onActivate();
+                      }}
                               className="px-4 rounded-[var(--radius)] border border-[var(--border)] text-[var(--ink-3)] font-mono text-[11px] uppercase tracking-[0.1em] hover:border-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
                               title={t("landing_have_key")}>
                         Key
@@ -726,7 +737,13 @@ export function LandingPage() {
                       <LanguageCard
                           lang={lang} pricing={getPricing(lang.code)}
                           isCurrent={lang.code === lastPickedCode} comingSoon={false}
-                          onSelect={() => setCode(lang.code)}
+                          onSelect={() => {
+                            trackEvent("language-selected", {
+                              language: lang.code,
+                              has_access: hasAccess(lang.code),
+                            });
+                            setCode(lang.code);
+                          }}
                           onActivate={() => setKeyModal(lang.code)}
                           hasAccess={hasAccess(lang.code)}
                       />
@@ -816,7 +833,9 @@ export function LandingPage() {
               <p className="text-[1rem] text-white/60 mb-10 max-w-[480px] mx-auto leading-[1.65]">
                 {t("landing_final_cta_subtitle")}
               </p>
-              <a href="#languages" className="btn-tactile btn-gold inline-flex">
+              <a href="#languages"
+                 onClick={() => trackEvent("final-cta-click")}
+                 className="btn-tactile btn-gold inline-flex">
                 {t("landing_cta_primary")} <span aria-hidden="true">→</span>
               </a>
             </div>
@@ -829,7 +848,10 @@ export function LandingPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-10">
               <LogoLockup size={20} tone="light" />
               <div className="flex flex-wrap items-center gap-x-7 gap-y-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55">
-                <button type="button" onClick={() => setKeyModal("all")}
+                <button type="button" onClick={() => {
+                  trackEvent("key-modal-open", { source: "footer" });
+                  setKeyModal("all");
+                }}
                         className="hover:text-white transition-colors">
                   {t("landing_footer_activate")}
                 </button>

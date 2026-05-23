@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block crawlers from the legal pages — these have no SEO value and just
+# dilute the page-rank of the actual product pages.
+Disallow: /terms
+Disallow: /privacy
+Disallow: /refund
+
+Sitemap: https://verbmatrix.com/sitemap.xml

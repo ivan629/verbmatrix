@@ -36,14 +36,19 @@ before the next.
 
 ---
 
-## 2. Set up Plausible Analytics
+## 2. Analytics (Umami Cloud — already set up)
 
-1. Sign up at <https://plausible.io>. Choose the cheapest plan (~$9/month
-   for the volume you'll launch at).
-2. Add `verbmatrix.com` as your site.
-3. The tracking script is already in `index.html` — no additional code needed.
-4. Custom events fire automatically (`onboarding-start`, `paywall-seen`,
-   `purchase-click`, `license-activated`, etc.) via `trackEvent()`.
+VerbMatrix uses Umami Cloud (EU region) for privacy-friendly analytics. The
+tracking script is already in `index.html` and wired to website ID
+`8f88f6b9-ab5d-4392-9d4f-8316bce875c0`.
+
+1. Dashboard: <https://eu.umami.is/>
+2. Free tier covers 10,000 events/month — plenty for launch traffic.
+3. Custom events fire automatically (`onboarding-complete`, `paywall-seen`,
+   `purchase-click`, `license-activated`, `lesson-completed`) once the site
+   is live. No additional code or goal setup required.
+4. Once data starts flowing, build a conversion funnel report in Umami:
+   Reports → New Report → Funnel → add each event in order.
 
 ---
 
@@ -115,7 +120,7 @@ Open your deployed site in an **incognito window** to skip cached data:
 - [ ] Refresh the page → still unlocked, sidebar shows completion dots if any
 - [ ] Click `/terms`, `/privacy`, `/refund` → legal pages render with back-link
 - [ ] Open on phone → mobile layout works, sidebar toggles
-- [ ] Open Plausible dashboard → see your test sessions
+- [ ] Open Umami dashboard → see your test sessions
 
 If all 12 pass, you're live.
 
@@ -126,8 +131,7 @@ If all 12 pass, you're live.
 - [ ] Email yourself a test purchase confirmation, verify the license key works
 - [ ] Refund your test purchase via LemonSqueezy dashboard
 - [ ] Confirm on next page load, the key is auto-revoked and paywall reappears
-- [ ] Set up Plausible custom event goals: `purchase-click`, `license-activated`,
-  `onboarding-complete` — these show conversion rate over time
+- [ ] Build a Umami funnel report with steps: `pageview /` → `onboarding-complete` → `paywall-seen` → `purchase-click` → `license-activated` — this gives conversion rate over time
 
 ---
 
@@ -146,6 +150,7 @@ against.
 returned by LemonSqueezy doesn't match `VITE_LS_PRODUCT_RO` (or `_ALL`).
 Verify those env vars match the dashboard.
 
-**Custom events not showing in Plausible:** Confirm the Plausible script
-loads (Network tab). Browsers with aggressive blockers (Brave, Firefox
-strict mode) may block it — that's expected and not actionable.
+**Custom events not showing in Umami:** Confirm the Umami script
+loads (Network tab — should see a request to `cloud.umami.is/script.js`).
+Browsers with aggressive blockers (Brave, Firefox strict mode, uBlock Origin)
+may block it — that's expected and not actionable.

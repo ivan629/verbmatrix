@@ -2,7 +2,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useState,
   type ReactNode,
 } from "react";
-import { STORAGE_KEYS } from "../config";
+import { STORAGE_KEYS, trackEvent } from "../config";
 
 const MEDIA = "(prefers-color-scheme: dark)";
 const STORAGE_KEY = STORAGE_KEYS.theme;
@@ -70,6 +70,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setPreference = useCallback((p: ThemePreference) => {
     setPreferenceState(p);
+    trackEvent("theme-change", { preference: p });
     try {
       localStorage.setItem(STORAGE_KEY, p);
     } catch {

@@ -208,7 +208,15 @@ export function LessonNavProvider({ children }: { children: ReactNode }) {
   // last reading position — but only if the URL has no anchor. An anchor
   // is the user's explicit intent and beats the persisted position.
 
+  // Tracks which lessons have already fired a `lesson-view` analytics event
+  // in the current session. Reset when the user switches to a different
+  // target language. Used by the lesson-view effect lower down.
+  const viewedRef = useRef<Set<string>>(new Set());
+
   useEffect(() => {
+    // Clear the per-session viewed set so lesson-view events fire afresh
+    // for the new language.
+    viewedRef.current = new Set();
     const t = setTimeout(() => {
       try {
         if (window.location.hash) return;
@@ -229,6 +237,19 @@ export function LessonNavProvider({ children }: { children: ReactNode }) {
     const t = setTimeout(() => {
       try { localStorage.setItem(key, activeId); } catch { /* ignore */ }
     }, 1000);
+    return () => clearTimeout(t);
+  }, [activeId, module.code]);
+
+  // Fire `lesson-view` once per lesson per session, when the user has
+  // actually dwelled on it for >1.5s (filters out fast scroll-throughs).
+  // Funnel use: where does the reading actually stop?
+  useEffect(() => {
+    if (!activeId) return;
+    if (viewedRef.current.has(activeId)) return;
+    const t = setTimeout(() => {
+      viewedRef.current.add(activeId);
+      trackEvent("lesson-view", { language: module.code, lesson: activeId });
+    }, 1500);
     return () => clearTimeout(t);
   }, [activeId, module.code]);
 

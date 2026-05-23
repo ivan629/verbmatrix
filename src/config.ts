@@ -182,18 +182,42 @@ export const FLAGS = {
 // ─── Analytics ──────────────────────────────────────────────────
 
 /**
- * Thin wrapper around Plausible's custom event API.
- * No-ops gracefully when Plausible isn't loaded (dev, ad-blockers).
+ * Thin wrapper around Umami Cloud's custom event API.
+ * No-ops gracefully when Umami isn't loaded (dev, ad-blockers, etc).
+ *
+ * Umami's tracker exposes `window.umami.track(name, properties)`.
+ * Properties is a flat object.
+ *
+ * Setup: <script defer src="https://cloud.umami.is/script.js"
+ *          data-website-id="8f88f6b9-ab5d-4392-9d4f-8316bce875c0"></script>
+ * Dashboard: https://eu.umami.is/
+ *
+ * Production-only filter:
+ *   The Umami script in index.html is also configured to only fire on
+ *   verbmatrix.com itself (data-domains attribute), but we add a
+ *   client-side guard here for defense in depth — so even if someone
+ *   forgets the script attribute, dev and preview hostnames never pollute
+ *   the live dashboard. Set VITE_ANALYTICS_OVERRIDE=true in a local .env
+ *   to opt in temporarily while debugging.
  */
+function isProductionEnvironment(): boolean {
+  if (typeof window === "undefined") return false;
+  if (import.meta.env.VITE_ANALYTICS_OVERRIDE === "true") return true;
+  const host = window.location.hostname;
+  return host === "verbmatrix.com" || host === "www.verbmatrix.com";
+}
+
 export function trackEvent(
   name: string,
   props?: Record<string, string | number | boolean>,
 ): void {
+  if (!isProductionEnvironment()) return;
   try {
+    type TrackProps = Record<string, string | number | boolean>;
     const w = window as unknown as {
-      plausible?: (name: string, opts?: { props: typeof props }) => void;
+      umami?: { track: (name: string, props?: TrackProps) => void };
     };
-    w.plausible?.(name, props ? { props } : undefined);
+    w.umami?.track(name, props);
   } catch {
     /* swallow — analytics should never break the app */
   }

@@ -50,25 +50,23 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- ─── Analytics (Plausible) ───────────────────────────────
+    <!-- ─── Analytics (Umami Cloud, EU region) ──────────────────
          Privacy-friendly, no cookies, GDPR-compliant by default.
-         Set up at https://plausible.io with domain verbmatrix.com.
-         The tagged-events script is what lets trackEvent() fire
-         custom events from inside the app. -->
+         Dashboard: https://eu.umami.is/
+         Site ID: 8f88f6b9-ab5d-4392-9d4f-8316bce875c0
+
+         data-domains: only auto-track pageviews when served from these
+         hostnames. Vite dev server (localhost), Vercel preview deploys
+         (*.vercel.app), and other environments are silent.
+
+         The trackEvent() helper in config.ts adds the same guard for
+         custom events. -->
     <script
       defer
-      data-domain="verbmatrix.com"
-      src="https://plausible.io/js/script.tagged-events.js"
+      src="https://cloud.umami.is/script.js"
+      data-website-id="8f88f6b9-ab5d-4392-9d4f-8316bce875c0"
+      data-domains="verbmatrix.com,www.verbmatrix.com"
     ></script>
-    <script>
-      // Plausible's official queueing snippet — captures events fired
-      // before the main script has loaded.
-      window.plausible =
-        window.plausible ||
-        function () {
-          (window.plausible.q = window.plausible.q || []).push(arguments);
-        };
-    </script>
 
     <!-- ─── Preconnect to font CDN ──────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

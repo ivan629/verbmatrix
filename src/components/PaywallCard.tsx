@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { getPricing, trackEvent } from "../config";
@@ -17,9 +17,31 @@ export function PaywallCard() {
   const pricing = getPricing(module.code);
   const [showKeyModal, setShowKeyModal] = useState(false);
 
+  // Fire `paywall-seen` exactly once per page load when the card actually
+  // enters the viewport. The bottom of the conversion funnel: every
+  // visitor that scrolls past free lessons gets counted here.
+  const cardRef = useRef<HTMLElement | null>(null);
+  const seenRef = useRef(false);
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el || seenRef.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting) && !seenRef.current) {
+          seenRef.current = true;
+          trackEvent("paywall-seen", { language: module.code, price: pricing.price });
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.4 }, // ~40% visible = the user actually looked at it
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [module.code, pricing.price]);
+
   return (
     <>
-      <section className="my-16 scroll-mt-20 paywall-enter" id="paywall">
+      <section ref={cardRef} className="my-16 scroll-mt-20 paywall-enter" id="paywall">
         <div className="bg-[var(--gold-soft)] border border-[var(--gold-border)] rounded-[var(--radius-xl)] p-8 md:p-12 max-w-[680px]">
           {/* Decorative mark */}
           <div className="font-mono text-[var(--gold)] text-[0.7rem] uppercase tracking-[0.18em] font-semibold mb-5">
@@ -72,7 +94,10 @@ export function PaywallCard() {
 
             <button
               type="button"
-              onClick={() => setShowKeyModal(true)}
+              onClick={() => {
+                trackEvent("key-modal-open", { language: module.code, source: "paywall" });
+                setShowKeyModal(true);
+              }}
               className="font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--ink-3)] hover:text-[var(--ink)] transition-colors"
             >
               {t("paywall_have_key")}

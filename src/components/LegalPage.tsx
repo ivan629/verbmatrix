@@ -158,10 +158,11 @@ function PrivacyBody() {
 
       <h2>What our servers see</h2>
       <p>
-        We use Plausible Analytics to count page views and a few custom events
-        (onboarding started, paywall seen, license activated). Plausible doesn't use
+        We use Umami Cloud (EU region) to count page views and a few custom events
+        (onboarding started, paywall seen, license activated). Umami doesn't use
         cookies, doesn't collect personal information, and aggregates everything at
-        the IP-anonymised level. <a href="https://plausible.io/data-policy" target="_blank" rel="noopener noreferrer">Plausible's privacy policy</a>.
+        the IP-anonymised level. Data is stored within the European Union.
+        <a href="https://umami.is/privacy" target="_blank" rel="noopener noreferrer"> Umami's privacy policy</a>.
       </p>
       <p>
         Static files (HTML, JS, audio) are served via a CDN (Vercel or Cloudflare).

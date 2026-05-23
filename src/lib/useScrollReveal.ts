@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Scroll-triggered reveal animation.
@@ -14,6 +14,12 @@ import { useEffect, useRef, type RefObject } from "react";
  *   - threshold: how much of the element must be visible (0–1, default 0.15)
  *   - once: if true (default), the animation only fires once
  *   - rootMargin: offset to trigger earlier/later (default "-40px")
+ *
+ * The returned ref is typed as React.RefObject<T> rather than
+ * RefObject<T | null> so it can be attached directly to JSX without
+ * triggering the LegacyRef type mismatch in older @types/react versions.
+ * The .current is still null until the element mounts — typed cast is
+ * safe because React never reads .current synchronously during render.
  */
 interface RevealOptions {
   threshold?: number;
@@ -23,7 +29,7 @@ interface RevealOptions {
 
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     options: RevealOptions = {},
-): RefObject<T | null> {
+): React.RefObject<T> {
   const ref = useRef<T | null>(null);
   const { threshold = 0.15, once = true, rootMargin = "-40px" } = options;
 
@@ -55,7 +61,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     return () => observer.disconnect();
   }, [threshold, once, rootMargin]);
 
-  return ref;
+  return ref as React.RefObject<T>;
 }
 
 /**
@@ -67,7 +73,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
  */
 export function useScrollRevealChildren<T extends HTMLElement = HTMLDivElement>(
     options: RevealOptions = {},
-): RefObject<T | null> {
+): React.RefObject<T> {
   const ref = useRef<T | null>(null);
   const { threshold = 0.1, once = true, rootMargin = "-40px" } = options;
 
@@ -101,5 +107,5 @@ export function useScrollRevealChildren<T extends HTMLElement = HTMLDivElement>(
     return () => observer.disconnect();
   }, [threshold, once, rootMargin]);
 
-  return ref;
+  return ref as React.RefObject<T>;
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AVAILABLE_LANGUAGES } from "../lib/i18n";
+import { trackEvent } from "../config";
 
 /**
  * Floating interface-language toggle, fixed in the top-right corner of
@@ -56,6 +57,7 @@ export function FloatingUILanguage() {
     ) ?? AVAILABLE_LANGUAGES[0];
 
   function handleSelect(code: string) {
+    trackEvent("ui-language-switch", { from: i18n.language, to: code });
     i18n.changeLanguage(code);
     setOpen(false);
   }
