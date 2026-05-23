@@ -61,7 +61,7 @@ export async function fetchAzureSpeech(text: string): Promise<string> {
             "Ocp-Apim-Subscription-Key": KEY!,
             "Content-Type": "application/ssml+xml",
             "X-Microsoft-OutputFormat": "audio-24khz-48kbitrate-mono-mp3",
-            "User-Agent": "romanian-study",
+            "User-Agent": "verbmatrix-study",
           },
           body: ssml,
         }
