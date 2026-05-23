@@ -141,6 +141,7 @@
   "paywall_inc_updates": "Всі майбутні оновлення включені",
   "paywall_cta": "Отримати повний доступ — {{price}}",
   "paywall_have_key": "Маю ліцензійний ключ",
+  "paywall_lost_access": "Втратили доступ? Відновіть через email",
   "paywall_guarantee": "30-денна гарантія. Разовий платіж. Назавжди.",
   "key_modal_title": "Активувати ліцензійний ключ",
   "key_modal_subtitle": "Введи ліцензійний ключ для {{lang}}.",

@@ -162,6 +162,7 @@
   "paywall_inc_updates": "All future updates included",
   "paywall_cta": "Get full access — {{price}}",
   "paywall_have_key": "I have a license key",
+  "paywall_lost_access": "Lost your access? Recover via email",
   "paywall_guarantee": "30-day money-back guarantee. One-time payment. Yours forever.",
   "key_modal_title": "Activate license key",
   "key_modal_subtitle": "Enter your license key for {{lang}}.",

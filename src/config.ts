@@ -21,7 +21,7 @@ export const BRAND = {
   tagline: "Learn Romanian with the verb matrix.",
   /** Longer pitch for the landing page hero. */
   pitch:
-    "Three tenses. Three forms. Nine sentence types. Master the matrix and speak Romanian with confidence.",
+      "Three tenses. Three forms. Nine sentence types. Master the matrix and speak Romanian with confidence.",
   /** Contact email shown in legal pages. */
   contactEmail: "hello@verbmatrix.com",
   /** Full domain (no protocol). */
@@ -49,6 +49,10 @@ export const STORAGE_KEYS = {
   /** License keys — JSON object mapping language code → key string.
    *  e.g. `{ "ro": "XXXX-XXXX-XXXX", "all": "YYYY-YYYY-YYYY" }` */
   licenses: `${PREFIX}:licenses`,
+  /** Customer email captured at activation (when redirect URL carries
+   *  the [email] LS variable). Display-only — used in the account UI
+   *  and prefilled in support-mail-to links. Not used for auth. */
+  customerEmail: `${PREFIX}:customer-email`,
   /** Per-lesson completion. Suffixed with `<lang>:<lessonId>` at runtime:
    *  e.g. `vm:completed:ro:L3 = "1"`. Absence means not completed. */
   completedPrefix: `${PREFIX}:completed:`,
@@ -81,6 +85,17 @@ export const LEMONSQUEEZY = {
   /** Base URL for LemonSqueezy's REST API. */
   apiBase: "https://api.lemonsqueezy.com",
 
+  /** Your store's LS subdomain — e.g. "verbmatrix" if your store is at
+   *  https://verbmatrix.lemonsqueezy.com. Used to build the customer
+   *  portal URL so customers can recover lost license keys via LS's
+   *  built-in email magic-link flow. Set via VITE_LS_STORE env var.
+   *
+   *  When set, "Lost your access?" links in the UI point to:
+   *    https://<store>.lemonsqueezy.com/billing
+   *  LS handles the magic-link sign-in and shows the customer all their
+   *  license keys — no backend required on our side. */
+  storeSubdomain: import.meta.env.VITE_LS_STORE ?? "",
+
   /** Map of language code → LemonSqueezy product_id (as string).
    *  When a customer enters a license key, we POST it to the validate
    *  endpoint and LS returns the product_id it belongs to. We match that
@@ -93,6 +108,15 @@ export const LEMONSQUEEZY = {
     ro:  import.meta.env.VITE_LS_PRODUCT_RO  ?? "",
   } as Record<string, string>,
 } as const;
+
+/** Customer portal URL for license-key recovery, or null if not configured.
+ *  LS hosts an email magic-link sign-in at this URL where customers can see
+ *  all their license keys. Use it as the "Lost your access?" target. */
+export function getCustomerPortalUrl(): string | null {
+  const sub = LEMONSQUEEZY.storeSubdomain;
+  if (!sub) return null;
+  return `https://${sub}.lemonsqueezy.com/billing`;
+}
 
 // ─── Pricing ────────────────────────────────────────────────────
 
@@ -195,8 +219,8 @@ function isProductionEnvironment(): boolean {
 }
 
 export function trackEvent(
-  name: string,
-  props?: Record<string, string | number | boolean>,
+    name: string,
+    props?: Record<string, string | number | boolean>,
 ): void {
   if (!isProductionEnvironment()) return;
   try {
