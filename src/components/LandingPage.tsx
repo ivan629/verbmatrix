@@ -139,18 +139,14 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
       </div>
 
       <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
-        dark ? "bg-white/[0.03] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
+        dark ? "bg-[#0d0c11] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
       }`}>
-        <CrossHair size={10} className={`absolute top-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-        <CrossHair size={10} className={`absolute top-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-        <CrossHair size={10} className={`absolute bottom-2 left-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
-        <CrossHair size={10} className={`absolute bottom-2 right-2 ${dark ? "text-white/25" : "text-[var(--ink-4)]"}`} />
 
-        <div className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+        <div className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
           <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
           {colSymbols.map((s, i) => (
             <div key={s}
-                 className={`py-2.5 px-2 sm:px-3 text-center font-mono text-[10px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+                 className={`py-3.5 px-3 sm:px-4 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
               <span className="hidden sm:inline">{s} </span>
               <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
             </div>
@@ -159,8 +155,8 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
 
         <div key={animKey} className="matrix-stagger revealed">
           {tenseLabels.map((tense, row) => (
-            <div key={tense} className={`grid grid-cols-[70px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-              <div className={`py-3.5 px-3 font-mono text-[9px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
+            <div key={tense} className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+              <div className={`py-5 px-3 sm:px-4 font-mono text-[10px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
                 {tense}
               </div>
               {verb.cells[row]?.map((text, col) => (
@@ -168,7 +164,7 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
                   key={`${row}-${col}`}
                   type="button"
                   onClick={() => speak(text)}
-                  className={`py-3.5 px-2 sm:px-3 font-mono text-[0.7rem] sm:text-[0.78rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                  className={`py-5 px-3 sm:px-4 font-mono text-[0.78rem] sm:text-[0.88rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
                 >
                   {text}
                 </button>
@@ -578,7 +574,8 @@ export function LandingPage() {
             {/* Atmospheric backdrop */}
             <div className="atmos-hero" />
 
-            {/* Static grid texture — no animation, just the squares */}
+            {/* Static grid texture — gives the dark backdrop micro-depth.
+                Near-invisible at opacity 0.04, but the eye feels the texture. */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{
               backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
               backgroundSize: "60px 60px",
@@ -587,13 +584,12 @@ export function LandingPage() {
 
             <div className="max-w-[1200px] mx-auto relative" style={{ zIndex: 2 }}>
 
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_540px] gap-14 lg:gap-20 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_620px] gap-14 lg:gap-16 items-start">
 
                 <div>
-                  {/* Eyebrow: dot + status + extending hairline.
-                    Reads as editorial / live software, not marketing tagline. */}
+                  {/* Eyebrow: status + extending hairline.
+                    Reads as editorial mark, not marketing tagline. */}
                   <div className="flex items-center gap-3 mb-7 reveal-blur revealed">
-                    <span className="live-dot" />
                     <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-white/55 whitespace-nowrap">
                     {t("landing_hero_status")}
                   </span>
@@ -647,25 +643,10 @@ export function LandingPage() {
                   </div>
                 </div>
 
-                {/* Demo card — premium glass with editorial header strip */}
+                {/* Demo card — premium glass, no header chrome. The matrix
+                    is the content; no need to label it. */}
                 <div className="relative reveal-blur revealed" style={{ animationDelay: "0.55s" }}>
-                  <div className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.16em] text-white/45">
-                    {t("landing_hero_demo_label")}
-                  </div>
                   <div className="card-glass p-5 md:p-6">
-                    {/* Header strip — LIVE indicator + brand */}
-                    <div className="demo-header">
-                      <div className="flex items-center gap-2">
-                        <span className="live-dot" />
-                        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/65 font-semibold">
-                        Live
-                      </span>
-                      </div>
-                      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
-                        {t("app_brand")} · {t("landing_hero_demo_lang_label")}
-                      </div>
-                    </div>
-
                     <InteractiveMatrix dark />
                   </div>
                 </div>
@@ -910,7 +891,7 @@ export function LandingPage() {
           <section className="scope-dark bg-noir emerges-from-cream relative px-5 md:px-12 py-28 md:py-36 overflow-hidden border-t border-white/[0.06]">
             <div className="atmos-final" />
 
-            {/* Static grid texture */}
+            {/* Static grid texture — matches the hero treatment for bookend symmetry */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
               backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
               backgroundSize: "60px 60px",

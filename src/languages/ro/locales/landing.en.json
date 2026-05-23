@@ -1,7 +1,7 @@
 {
   "_comment": "Romanian landing-page content. Split into two kinds of keys:\n  - landing_tl_*  : target-language strings that WILL be spoken aloud (TTS audio generated for these).\n  - landing_*     : interface copy that overlays the engine's en.json — translated per UI language.\n  The audio generator scans landing.*.json for all tl_ keys.",
   "_section_interface": "=== Interface copy (overlays engine src/locales/en.json for RO context) ===",
-  "landing_hero_status": "Romanian course · v1.0",
+  "landing_hero_status": "Romanian course",
   "landing_speak_kicker": "Try it now",
   "landing_speak_title": "Say this out loud.",
   "landing_speak_subtitle": "Don't just read it — say the sounds. You'll be surprised what your mouth already knows.",

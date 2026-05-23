@@ -1,7 +1,7 @@
 {
   "_comment": "Ukrainian translations of Romanian landing-page content. Mirrors landing.en.json key-for-key. landing_tl_* keys hold target-language (Romanian) strings — the values are identical to en.json because Romanian doesn't change per UI language.",
   "_section_interface": "=== Interface copy (overlays engine src/locales/uk.json for RO context) ===",
-  "landing_hero_status": "Курс румунської · v1.0",
+  "landing_hero_status": "Курс румунської",
   "landing_speak_kicker": "Спробуй зараз",
   "landing_speak_title": "Скажи це вголос.",
   "landing_speak_subtitle": "Не просто читай — вимовляй звуки. Тебе здивує, що твій рот вже знає.",
