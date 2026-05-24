@@ -6,7 +6,7 @@ import { ContactLink } from "./ContactLink";
 import { MatrixMark } from "./illustrations";
 import { useTargetLanguage } from "../context/TargetLanguage";
 import { useLessonNav } from "../context/LessonNav";
-import { BRAND, STORAGE_KEYS } from "../config";
+import { BRAND, STORAGE_KEYS, trackEvent } from "../config";
 
 // ─── Sidebar ────────────────────────────────────────────────────
 
@@ -162,7 +162,7 @@ export function Sidebar() {
                     ))}
                 </nav>
 
-                {/* Sidebar footer — focus mode toggle + progress */}
+                {/* Sidebar footer — focus mode toggle + UI lang toggle + progress */}
                 <div className="border-t border-[var(--border)] px-4 py-3 space-y-2">
                     {totalLessons > 0 && (
                         <div className="px-3 font-mono text-[10px] tracking-[0.12em] uppercase text-[var(--ink-4)]">
@@ -180,14 +180,54 @@ export function Sidebar() {
                         <span className="flex-1 text-left">{t("focus_mode_label")}</span>
                         <span className="focus-mode-shortcut" aria-hidden="true">F</span>
                     </button>
+                    <SidebarLangToggle />
                 </div>
-
-                {/* UI language + audio speed live in the bottom-right
-                    <SessionControls /> cluster. The sidebar holds only
-                    navigation; switching learning languages happens at the
-                    home page ("/"), reachable via the brand link above. */}
             </aside>
         </>
+    );
+}
+
+/**
+ * SidebarLangToggle — minimal "EN · UK" pair in the lesson-page sidebar
+ * footer. Matches the LandingPage NavLangToggle style but in the sidebar
+ * palette (--ink-4 muted → --ink active) so it sits naturally next to the
+ * focus-mode toggle without competing with it.
+ */
+function SidebarLangToggle() {
+    const { i18n } = useTranslation();
+    const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
+    const langs: Array<{ code: string; label: string }> = [
+        { code: "en", label: "EN" },
+        { code: "uk", label: "UK" },
+    ];
+    return (
+        <div className="flex items-center justify-center gap-2 pt-1 font-mono text-[10px] uppercase tracking-[0.14em] select-none">
+            {langs.map((l, i) => (
+                <span key={l.code} className="flex items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (l.code !== current) {
+                                trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "sidebar" });
+                                i18n.changeLanguage(l.code);
+                            }
+                        }}
+                        className={
+                            l.code === current
+                                ? "text-[var(--ink)] font-medium"
+                                : "text-[var(--ink-4)] hover:text-[var(--ink)] transition-colors"
+                        }
+                        aria-current={l.code === current ? "true" : undefined}
+                        aria-label={`Switch interface language to ${l.code === "uk" ? "Ukrainian" : "English"}`}
+                    >
+                        {l.label}
+                    </button>
+                    {i < langs.length - 1 && (
+                        <span className="text-[var(--ink-5)]" aria-hidden="true">·</span>
+                    )}
+                </span>
+            ))}
+        </div>
     );
 }
 

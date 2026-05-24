@@ -11,7 +11,6 @@ import { PaywallCard } from "./components/PaywallCard";
 import { LessonProgressBar } from "./components/LessonProgressBar";
 import { PhaseHeader } from "./components/PhaseHeader";
 import { LegalPage } from "./components/LegalPage";
-import { SessionControls } from "./components/SessionControls";
 import { isFreeLessonId, FLAGS, trackEvent } from "./config";
 
 /** Path-based check for the three legal pages. They render outside the
@@ -202,7 +201,6 @@ function AppContent() {
   return (
       <>
         {body}
-        {!legalPage && <SessionControls />}
         <ActivationToast state={toast} onDismiss={() => setToast({ kind: "idle" })} />
       </>
   );

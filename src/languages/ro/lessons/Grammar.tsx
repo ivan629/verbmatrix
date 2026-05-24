@@ -119,7 +119,7 @@ export function Lesson8() {
           ["tired", "obosit", "obosită", "obosiți", "obosite"],
         ]}
         highlightCols={[1, 2, 3, 4]}
-        speakableCols={[1]}
+        speakableCols={[1, 2, 3, 4]}
       />
 
       <SectionHeading>lesson_8_h_adverbs</SectionHeading>

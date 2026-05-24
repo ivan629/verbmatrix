@@ -385,7 +385,7 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
  * "bun / bună / buni / bune" would play "bun". Now each form gets its own
  * <RO> wrapper.
  */
-function SpeakableCell({ raw }: { raw: string }) {
+function SpeakableCell({ raw, en }: { raw: string; en?: string }) {
   // Strip a trailing "(English gloss)" so audio plays only the Romanian
   // while the display keeps the parenthetical. Example:
   //   raw = "apă (water)" → audio "apă", display "apă (water)"
@@ -407,7 +407,7 @@ function SpeakableCell({ raw }: { raw: string }) {
       if (trimmed) {
         const { audio, display } = splitGloss(trimmed);
         parts.push(
-          <RO key={`${sIdx}-${vIdx}`} text={audio} className="font-mono">{display}</RO>
+          <RO key={`${sIdx}-${vIdx}`} text={audio} en={en} className="font-mono">{display}</RO>
         );
       }
       if (vIdx < variants.length - 1) parts.push(<span key={`${sIdx}-${vIdx}-sep`} className="text-[var(--ink-4)] mx-1">/</span>);
@@ -437,8 +437,60 @@ export function PhraseGrid({ items }: { items: PhraseItem[] }) {
 
 // ─── VocabGrid ──────────────────────────────────────────────────
 
+/**
+ * Single-form helper — picks the FIRST variant before "/" or "→".
+ * Used by NumberGrid (numbers are always single forms; arrow/slash
+ * never appears in number data) and as a fallback elsewhere.
+ */
 function vocabSpeakable(ro: string): string {
   return ro.split("/")[0]?.split("→")[0]?.trim() ?? ro;
+}
+
+/**
+ * For vocab entries that show a transformation or variant pair, render each
+ * side as its own clickable <RO> chip so users can drill BOTH forms:
+ *   "om → omul"   → two chips: [om] [→] [omul]
+ *   "alb / albă"  → two chips: [alb] [/] [albă]
+ *
+ * Mirrors SpeakableCell's behaviour for DataTables, ported into VocabGrid so
+ * NOUNS_WITH_ARTICLES, COLORS, and any similar dataset get the same treatment.
+ * Strips trailing "(english gloss)" from the audio text only, keeps it visible.
+ */
+function vocabVariants(ro: string): string[] {
+  return ro
+    .split(/\s*→\s*|\s*\/\s*/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function stripGlossForAudio(s: string): string {
+  // "apă (water)" → "apă" for audio only
+  return s.replace(/\s*\([^)]*\)\s*$/, "").trim();
+}
+
+function VocabRomanianChips({ ro, en }: { ro: string; en: string }) {
+  const variants = vocabVariants(ro);
+  if (variants.length <= 1) {
+    return <RO text={stripGlossForAudio(ro)} en={en}>{ro}</RO>;
+  }
+  const tokens = ro.split(/(\s*→\s*|\s*\/\s*)/);
+  return (
+    <>
+      {tokens.map((tok, i) => {
+        const isSep = /^\s*(→|\/)\s*$/.test(tok);
+        if (isSep) {
+          return (
+            <span key={i} className="text-[var(--ink-4)] mx-1">
+              {tok.trim()}
+            </span>
+          );
+        }
+        const trimmed = tok.trim();
+        if (!trimmed) return null;
+        return <RO key={i} text={stripGlossForAudio(trimmed)} en={en}>{trimmed}</RO>;
+      })}
+    </>
+  );
 }
 
 export function VocabGrid({ items }: { items: VocabItem[] }) {
@@ -448,7 +500,7 @@ export function VocabGrid({ items }: { items: VocabItem[] }) {
       {items.map((v, i) => (
         <div key={i} className="flex justify-between items-baseline py-2 border-b border-[var(--border)] text-[0.9rem]">
           <span className="font-mono text-[var(--ink)]">
-            <RO text={vocabSpeakable(v.ro)} en={v.en}>{v.ro}</RO>
+            <VocabRomanianChips ro={v.ro} en={v.en} />
           </span>
           <span className="text-[var(--ink-2)] text-[0.85rem] text-right ml-2">{t(v.en)}</span>
         </div>

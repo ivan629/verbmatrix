@@ -6,7 +6,7 @@ import { useTargetLanguage } from "../context/TargetLanguage";
  *
  * Structure:
  *   - top bar: brand mark on the left. (UI language toggle lives in the
- *     bottom-right <SessionControls /> cluster.)
+ *     landing-page nav top-right and lesson-page sidebar footer.)
  *     **No back button** — this is the destination, not a transient overlay.
  *   - hero: large display question with a warm subtitle.
  *   - card grid: each registered language presenting itself.

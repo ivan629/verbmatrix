@@ -36,7 +36,7 @@ export function Lesson12() {
           ["ei / ele", "erau", "aveau", "mergeau", "vorbeau", "lucrau"],
         ]}
         highlightCols={[1, 2, 3, 4, 5]}
-        speakableCols={[1, 2, 3, 4, 5]}
+        speakableCols={[0, 1, 2, 3, 4, 5]}
       />
 
       <InfoBox variant="blue" title="lesson_12_pattern_title">
@@ -222,7 +222,7 @@ export function Lesson15() {
           ["ei / ele", "ar", "ar face", "ar fi", "ar merge"],
         ]}
         highlightCols={[1]}
-        speakableCols={[2]}
+        speakableCols={[0, 1, 2, 3, 4]}
       />
 
       <SectionHeading>lesson_15_h_if</SectionHeading>

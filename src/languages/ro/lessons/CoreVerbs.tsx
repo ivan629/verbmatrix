@@ -108,8 +108,8 @@ export function Lesson5() {
       />
 
       <InfoBox variant="blue" title="lesson_5_perfect_title">
-        <p>
-          <Trans i18nKey="lesson_5_perfect_body" components={[<b />]} /> <br />
+        <div>
+          <Trans i18nKey="lesson_5_perfect_body" components={[<b />]} />
           <MonoBlock>
             <RO text="Eu am vorbit." en="I spoke." /> &nbsp;·&nbsp;
             <RO text="Tu ai vorbit." en="You spoke." /> &nbsp;·&nbsp;
@@ -118,7 +118,7 @@ export function Lesson5() {
             <RO text="Voi ați vorbit." en="You (pl) spoke." /> &nbsp;·&nbsp;
             <RO text="Ei au vorbit." en="They spoke." />
           </MonoBlock>
-        </p>
+        </div>
       </InfoBox>
     </LessonSection>
   );

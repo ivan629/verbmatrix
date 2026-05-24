@@ -49,6 +49,90 @@ const VERB_COUNT = 3; // how many landing_tl_demo_verb_N_* sets exist per langua
 const AUTO_CYCLE_MS = 8500;
 const AUTO_RESUME_DELAY = 20_000;
 
+/**
+ * NavLangToggle — minimal "EN · UK" pair shown in the landing-page nav.
+ *
+ * Premium-restraint styling: both languages always visible (so the user
+ * sees their option without hovering), current bold and white, the other
+ * 45%-muted with a hover bump to 100%. Mono uppercase, tracked tight to
+ * match the existing nav typography. Center dot in 25% white for rhythm
+ * without weight. No box, no border — pure text.
+ */
+function NavLangToggle() {
+  const { i18n } = useTranslation();
+  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
+  const langs: Array<{ code: string; label: string }> = [
+    { code: "en", label: "EN" },
+    { code: "uk", label: "UK" },
+  ];
+  return (
+      <div className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] select-none">
+        {langs.map((l, i) => (
+            <span key={l.code} className="flex items-center gap-1.5">
+              <button
+                  type="button"
+                  onClick={() => {
+                    if (l.code !== current) {
+                      trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "nav" });
+                      i18n.changeLanguage(l.code);
+                    }
+                  }}
+                  className={
+                    l.code === current
+                        ? "text-white font-medium"
+                        : "text-white/45 hover:text-white transition-colors"
+                  }
+                  aria-current={l.code === current ? "true" : undefined}
+                  aria-label={`Switch interface language to ${l.code === "uk" ? "Ukrainian" : "English"}`}
+              >
+                {l.label}
+              </button>
+              {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
+            </span>
+        ))}
+      </div>
+  );
+}
+
+/**
+ * FooterLangSwitcher — same idea as NavLangToggle but with full language
+ * names ("English · Українська") for the footer, where there's room and a
+ * more verbose tone feels appropriate. Same color rules.
+ */
+function FooterLangSwitcher() {
+  const { i18n } = useTranslation();
+  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
+  const langs: Array<{ code: string; label: string }> = [
+    { code: "en", label: "English" },
+    { code: "uk", label: "Українська" },
+  ];
+  return (
+      <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] select-none">
+        {langs.map((l, i) => (
+            <span key={l.code} className="flex items-center gap-2">
+              <button
+                  type="button"
+                  onClick={() => {
+                    if (l.code !== current) {
+                      trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "footer" });
+                      i18n.changeLanguage(l.code);
+                    }
+                  }}
+                  className={
+                    l.code === current
+                        ? "text-white"
+                        : "text-white/45 hover:text-white transition-colors"
+                  }
+              >
+                {l.label}
+              </button>
+              {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
+            </span>
+        ))}
+      </div>
+  );
+}
+
 function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
   const { t, i18n: i18nInst } = useTranslation();
   const speak = useTTS();
@@ -482,6 +566,7 @@ export function LandingPage() {
               <LogoLockup size={22} tone="light" />
             </button>
             <div className="flex items-center gap-2 md:gap-6">
+              <NavLangToggle />
               <button type="button"
                       onClick={() => startOnboarding("nav")}
                       className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
@@ -885,6 +970,7 @@ export function LandingPage() {
                 </span>
               </div>
               <div className="flex items-center gap-4">
+                <FooterLangSwitcher />
                 <ContactLink
                     source="footer-landing"
                     className="font-mono text-[10px] text-white/40 hover:text-white transition-colors"
