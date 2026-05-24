@@ -11,9 +11,14 @@
  * This file remains so `lib/tts.ts` keeps its single source-of-truth import
  * for playback knobs. If a future tier system is added (e.g. per-language
  * slow MP3s), it lives here.
+ *
+ * ─── Backwards-compat exports ─────────────────────────────────────────
+ * The names below (SPEEDS / SpeedKey / usePlayback) are kept ONLY so any
+ * old SessionControls.tsx / SpeedPill.tsx files in the codebase still
+ * compile until they are deleted. They are not used anywhere actively.
  */
 
-import type { ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 
 export interface PlaybackSettings {
   /** Multiplier passed to audio.playbackRate / SpeechSynthesisUtterance.rate */
@@ -28,10 +33,37 @@ export function getPlaybackSettings(): PlaybackSettings {
   return { speed: 1.0, repeat: REPEAT_COUNT };
 }
 
+// ─── Legacy speed-tier exports (kept for compilation only) ─────────────
+
+export const SPEEDS = {
+  slow:   { rate: 0.7, label: "Slow"   },
+  normal: { rate: 1.0, label: "Normal" },
+} as const;
+
+export type SpeedKey = keyof typeof SPEEDS;
+
+interface PlaybackContextValue {
+  speed: SpeedKey;
+  setSpeed: (s: SpeedKey) => void;
+}
+
+const PlaybackContext = createContext<PlaybackContextValue>({
+  speed: "normal",
+  setSpeed: () => {},
+});
+
 /**
- * No-op provider — kept for backwards-compatibility with App.tsx, can be
- * deleted in a future cleanup once App stops wrapping with it.
+ * No-op provider — kept for backwards-compatibility with App.tsx. The
+ * speed state is fixed at "normal"; setSpeed is a no-op.
  */
 export function PlaybackProvider({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+  return (
+    <PlaybackContext.Provider value={{ speed: "normal", setSpeed: () => {} }}>
+      {children}
+    </PlaybackContext.Provider>
+  );
+}
+
+export function usePlayback() {
+  return useContext(PlaybackContext);
 }

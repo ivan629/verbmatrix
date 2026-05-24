@@ -1295,7 +1295,7 @@ export const AUDIO_MANIFEST: Record<string, string> = {
   "față": "62deabbb934b",
   "februarie": "1793e668a9e2",
   "Felicitări. You just spoke Romanian.": "e4d4dc8d2005",
-  "Felicitări. Ти щойно говорив румунською.": "a082e9a06c18",
+  "Felicitări. Це й була румунська.": "d9f34a317155",
   "femeia": "2286ea40fac7",
   "Femeia care lucrează aici e prietena mea.": "d89c712ee354",
   "femeie": "7c4393b6a200",
