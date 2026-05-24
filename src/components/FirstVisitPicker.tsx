@@ -5,8 +5,8 @@ import { useTargetLanguage } from "../context/TargetLanguage";
  * Home page (URL "/"). Renders for both first-time and returning visitors.
  *
  * Structure:
- *   - top bar: brand mark on the left. (Interface-language toggle floats
- *     in the top-right corner of the viewport — see <FloatingUILanguage />.)
+ *   - top bar: brand mark on the left. (UI language toggle lives in the
+ *     bottom-right <SessionControls /> cluster.)
  *     **No back button** — this is the destination, not a transient overlay.
  *   - hero: large display question with a warm subtitle.
  *   - card grid: each registered language presenting itself.

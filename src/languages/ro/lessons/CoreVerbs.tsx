@@ -104,6 +104,7 @@ export function Lesson5() {
           ["Group IV", "-i / -î", "-it / -ât", "a vorbi → vorbit · a coborî → coborât"],
         ]}
         highlightCols={[2]}
+        speakableCols={[3]}
       />
 
       <InfoBox variant="blue" title="lesson_5_perfect_title">

@@ -36,7 +36,7 @@ export function Lesson7() {
           ["Neuter", "un", "niște", "un lucru → niște lucruri"],
         ]}
         highlightCols={[1, 2]}
-        speakableCols={[3]}
+        speakableCols={[1, 2, 3]}
       />
 
       <SectionHeading>lesson_7_h_def</SectionHeading>
@@ -50,7 +50,7 @@ export function Lesson7() {
           ["F. pl.", "-ele", "fete", "fetele"],
         ]}
         highlightCols={[1, 3]}
-        speakableCols={[3]}
+        speakableCols={[2, 3]}
       />
 
       <InfoBox variant="blue" title="lesson_7_gender_title">

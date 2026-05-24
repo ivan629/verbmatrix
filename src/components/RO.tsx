@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useTTS } from "../lib/tts";
 import { tryGetActiveLanguage } from "../lib/active-language";
+import { usePlayback } from "../context/Playback";
 
 interface ROProps {
   /** The target-language text. Used for TTS, pronunciation, and (if no children) display. */
@@ -47,6 +48,7 @@ export function RO({
 }: ROProps) {
   const { t } = useTranslation();
   const speak = useTTS();
+  const { requestSlowOverride } = usePlayback();
   const triggerRef = useRef<HTMLSpanElement>(null);
   const [active, setActive] = useState(false);
   const tapTimeoutRef = useRef<number | undefined>(undefined);
@@ -74,9 +76,13 @@ export function RO({
         if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
         tapTimeoutRef.current = window.setTimeout(() => setActive(false), 2400);
       }
+      // Shift-click → play this word at Slow tier, just this once, regardless
+      // of the current global speed. Lets fast learners zoom in on a tricky
+      // word without changing their default tier.
+      if (e.shiftKey) requestSlowOverride();
       speak(speakAs ?? text, e.currentTarget);
     },
-    [speak, text, speakAs]
+    [speak, text, speakAs, requestSlowOverride]
   );
 
   useEffect(() => {

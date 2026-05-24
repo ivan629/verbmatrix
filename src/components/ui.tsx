@@ -360,12 +360,7 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
                 const cls = `py-3 px-4 align-top ${isHi ? "text-[var(--gold)] font-medium font-mono text-[0.9rem]" : ""}`;
                 if (typeof cell !== "string") return <td key={j} className={cls}>{cell}</td>;
                 if (isSpeak && cell) {
-                  const main = cell.split("→")[0]?.split("/")[0]?.trim() ?? cell;
-                  return (
-                    <td key={j} className={cls}>
-                      <RO text={main} className="font-mono">{cell}</RO>
-                    </td>
-                  );
+                  return <td key={j} className={cls}><SpeakableCell raw={cell} /></td>;
                 }
                 return (
                   <td key={j} className={cls}>
@@ -379,6 +374,35 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
       </table>
     </div>
   );
+}
+
+/**
+ * Renders a table cell so every Romanian form inside it is individually
+ * clickable. Splits on " / " (variants like "un / o") and " → " (transforms
+ * like "a vorbi → vorbit"), preserving the separators for display.
+ *
+ * Previously, only the first variant became audible — clicking "bună" in
+ * "bun / bună / buni / bune" would play "bun". Now each form gets its own
+ * <RO> wrapper.
+ */
+function SpeakableCell({ raw }: { raw: string }) {
+  const parts: ReactNode[] = [];
+  // Split by " → " first (transformation), then each side by " / " (variants).
+  const arrowSplit = raw.split(/\s*→\s*/);
+  arrowSplit.forEach((segment, sIdx) => {
+    const variants = segment.split(/\s*\/\s*/);
+    variants.forEach((variant, vIdx) => {
+      const trimmed = variant.trim();
+      if (trimmed) {
+        parts.push(
+          <RO key={`${sIdx}-${vIdx}`} text={trimmed} className="font-mono">{trimmed}</RO>
+        );
+      }
+      if (vIdx < variants.length - 1) parts.push(<span key={`${sIdx}-${vIdx}-sep`} className="text-[var(--ink-4)] mx-1">/</span>);
+    });
+    if (sIdx < arrowSplit.length - 1) parts.push(<span key={`${sIdx}-arrow`} className="text-[var(--ink-4)] mx-2">→</span>);
+  });
+  return <>{parts}</>;
 }
 
 // ─── PhraseGrid ─────────────────────────────────────────────────
@@ -449,6 +473,15 @@ export function NumberGrid({ items }: { items: NumberItem[] }) {
 }
 
 // ─── SoundGrid ──────────────────────────────────────────────────
+//
+// Each row shows a Romanian symbol/digraph plus an example word. Both are
+// clickable: tap the big symbol to hear the sound itself; tap the example
+// word to hear it in context. The symbol's primary speakable form is the
+// first variant before "/" (e.g. "ă / Ă" → speaks "ă").
+
+function symbolSpeakable(symbol: string): string {
+  return symbol.split("/")[0]?.trim() ?? symbol;
+}
 
 export function SoundGrid({ items }: { items: SoundItem[] }) {
   const { t } = useTranslation();
@@ -457,7 +490,7 @@ export function SoundGrid({ items }: { items: SoundItem[] }) {
       {items.map((s, i) => (
         <div key={i} className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius)] py-3 px-4 flex items-center gap-4 hover:border-[var(--border-2)] transition-colors">
           <div className="font-mono text-[1.4rem] font-semibold text-[var(--gold)] min-w-[44px] text-center">
-            {s.symbol}
+            <RO text={symbolSpeakable(s.symbol)} bare>{s.symbol}</RO>
           </div>
           <div className="flex-1 text-[0.85rem]">
             <div className="text-[var(--ink)]">{t(s.pronunciation)}</div>

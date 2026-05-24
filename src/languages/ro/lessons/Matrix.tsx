@@ -59,6 +59,7 @@ export function Lesson3() {
           ["ei / ele", "vor", "vor face", "vor merge", "vor vorbi"],
         ]}
         highlightCols={[1]}
+        speakableCols={[1, 2, 3, 4]}
       />
 
       <SectionHeading>lesson_3_h_word_order</SectionHeading>

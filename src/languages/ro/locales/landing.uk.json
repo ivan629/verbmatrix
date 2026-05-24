@@ -10,7 +10,7 @@
   "landing_speak_followup": "Ось і весь секрет. Тепер уяви, що робиш це ще для дев'яноста дев'яти речень, впорядкованих у систему. Це і є курс.",
   "landing_loss_kicker": "Чесна частина",
   "landing_loss_title": "Більшість людей, які вирішують вивчити румунську, так і не роблять цього.",
-  "landing_loss_body": "Вони завантажують додаток. Вчать «привіт» і «дякую». Втрачають серію через вісім днів. Три роки потому — все ще завмирають, коли офіціант питає, що вони хочуть. Тут ти вирішуєш — бути одним із них чи ні.",
+  "landing_loss_body": "Вони завантажують додаток. Вчать «привіт» і «дякую». Втрачають серію через вісім днів. Три роки потому — все ще завмирають під час звичайної телефонної розмови. Тут ти вирішуєш — бути одним із них чи ні.",
   "landing_loss_cta": "Обрати інакше",
   "landing_guarantee_signature_name": "Стеліан",
   "landing_guarantee_signature_role": "Засновник, VerbMatrix",
@@ -56,5 +56,6 @@
   "landing_tl_demo_verb_3_p_n": "Eu nu merg.",
   "landing_tl_demo_verb_3_pa_q": "Am mers eu?",
   "landing_tl_demo_verb_3_pa_a": "Eu am mers.",
-  "landing_tl_demo_verb_3_pa_n": "Nu am mers."
+  "landing_tl_demo_verb_3_pa_n": "Nu am mers.",
+  "landing_speak_celebration": "Felicitări. Ти щойно говорив(ла) румунською."
 }

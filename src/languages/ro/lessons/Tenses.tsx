@@ -36,7 +36,7 @@ export function Lesson12() {
           ["ei / ele", "erau", "aveau", "mergeau", "vorbeau", "lucrau"],
         ]}
         highlightCols={[1, 2, 3, 4, 5]}
-        speakableCols={[1]}
+        speakableCols={[1, 2, 3, 4, 5]}
       />
 
       <InfoBox variant="blue" title="lesson_12_pattern_title">
@@ -73,10 +73,10 @@ export function Lesson12() {
         title="lesson_12_drill_title"
         examples={
           <>
-            Când eram mic, <b>___</b> (a locui) la / în <b>___</b>.<br />
-            <b>___</b> (a merge) la școală în fiecare zi.<br />
-            Bunica mea <b>___</b> (a face) mâncare bună.<br />
-            <b>___</b> (a fi) fericit(ă) când <b>___</b> (a juca) afară.
+            <RO text="Când eram mic, locuiam la sat.">Când eram mic, <b>___</b> (a locui) la / în <b>___</b>.</RO><br />
+            <RO text="Mergeam la școală în fiecare zi."><b>___</b> (a merge) la școală în fiecare zi.</RO><br />
+            <RO text="Bunica mea făcea mâncare bună.">Bunica mea <b>___</b> (a face) mâncare bună.</RO><br />
+            <RO text="Eram fericit când jucam afară."><b>___</b> (a fi) fericit(ă) când <b>___</b> (a juca) afară.</RO>
           </>
         }
       >
@@ -120,7 +120,7 @@ export function Lesson13() {
           ["Listen!", "Ascultă!", "Ascultați!", "Nu asculta!"],
           ["Look!", "Uită-te!", "Uitați-vă!", "Nu te uita!"],
         ]}
-        speakableCols={[1, 2]}
+        speakableCols={[1, 2, 3]}
       />
 
       <InfoBox variant="green" title="lesson_13_polite_title">
@@ -172,7 +172,7 @@ export function Lesson14() {
           ["a putea", "poate", "să poată", "Vreau să poată veni."],
         ]}
         highlightCols={[2]}
-        speakableCols={[2]}
+        speakableCols={[0, 1, 2, 3]}
       />
 
       <DrillBox

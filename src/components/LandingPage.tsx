@@ -284,71 +284,6 @@ function FAQItem({ q, a, num }: { q: string; a: string; num: string }) {
   );
 }
 
-/**
- * Compact UI-language toggle for the top nav. EN | UK shown inline.
- * Replaces the FloatingUILanguage on landing — same functionality, no
- * overlap with the nav.
- */
-function NavLangToggle() {
-  const { i18n } = useTranslation();
-  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
-  const switchTo = current === "en" ? "uk" : "en";
-  const switchLabel = switchTo === "uk" ? "УК" : "EN";
-  return (
-      <button
-          type="button"
-          onClick={() => {
-            trackEvent("ui-language-switch", { from: i18n.language, to: switchTo, source: "nav" });
-            i18n.changeLanguage(switchTo);
-          }}
-          className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-white/55 hover:text-white transition-colors py-2 px-2"
-          aria-label={`Switch interface language to ${switchTo === "uk" ? "Ukrainian" : "English"}`}
-          title={`Switch to ${switchTo === "uk" ? "Українська" : "English"}`}
-      >
-        {switchLabel}
-      </button>
-  );
-}
-
-/**
- * Inline UI language switcher for the landing footer. Replaces the
- * FloatingUILanguage (which overlapped with the top nav). Shows the
- * current language and lets the user toggle to the other one.
- */
-function FooterLangSwitcher() {
-  const { i18n } = useTranslation();
-  const current = i18n.resolvedLanguage?.toLowerCase().startsWith("uk") ? "uk" : "en";
-  const langs: Array<{ code: string; label: string }> = [
-    { code: "en", label: "English" },
-    { code: "uk", label: "Українська" },
-  ];
-  return (
-      <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em]">
-        {langs.map((l, i) => (
-            <span key={l.code} className="flex items-center gap-2">
-          <button
-              type="button"
-              onClick={() => {
-                if (l.code !== current) {
-                  trackEvent("ui-language-switch", { from: i18n.language, to: l.code, source: "footer" });
-                  i18n.changeLanguage(l.code);
-                }
-              }}
-              className={
-                l.code === current
-                    ? "text-white"
-                    : "text-white/45 hover:text-white transition-colors"
-              }
-          >
-            {l.label}
-          </button>
-              {i < langs.length - 1 && <span className="text-white/25" aria-hidden="true">·</span>}
-        </span>
-        ))}
-      </div>
-  );
-}
-
 // ─── Language Card ──────────────────────────────────────────────
 
 function LanguageCard({ lang, isCurrent, onSelect, onActivate, hasAccess }: {
@@ -547,7 +482,6 @@ export function LandingPage() {
               <LogoLockup size={22} tone="light" />
             </button>
             <div className="flex items-center gap-2 md:gap-6">
-              <NavLangToggle />
               <button type="button"
                       onClick={() => startOnboarding("nav")}
                       className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-black bg-white px-4 py-2.5 rounded-full font-semibold hover:bg-white/90 transition-colors">
@@ -951,7 +885,6 @@ export function LandingPage() {
                 </span>
               </div>
               <div className="flex items-center gap-4">
-                <FooterLangSwitcher />
                 <ContactLink
                     source="footer-landing"
                     className="font-mono text-[10px] text-white/40 hover:text-white transition-colors"

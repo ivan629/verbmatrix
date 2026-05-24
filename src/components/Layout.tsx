@@ -182,11 +182,10 @@ export function Sidebar() {
                     </button>
                 </div>
 
-                {/* Interface-language toggle now floats in the top-right
-                    corner of the viewport — see <FloatingUILanguage />. The
-                    sidebar holds only navigation; switching learning
-                    languages happens at the home page ("/"), reachable via
-                    the brand link at the top of this sidebar. */}
+                {/* UI language + audio speed live in the bottom-right
+                    <SessionControls /> cluster. The sidebar holds only
+                    navigation; switching learning languages happens at the
+                    home page ("/"), reachable via the brand link above. */}
             </aside>
         </>
     );

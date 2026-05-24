@@ -3,14 +3,15 @@ import { ThemeProvider } from "./context/Theme";
 import { TargetLanguageProvider, useTargetLanguage } from "./context/TargetLanguage";
 import { AccessProvider, useAccess } from "./context/Access";
 import { LessonNavProvider } from "./context/LessonNav";
+import { PlaybackProvider } from "./context/Playback";
 import { Sidebar, Hero, Footer } from "./components/Layout";
 import { LandingPage } from "./components/LandingPage";
 import { Onboarding, useShouldShowOnboarding } from "./components/Onboarding";
-import { FloatingUILanguage } from "./components/FloatingUILanguage";
 import { PaywallCard } from "./components/PaywallCard";
 import { LessonProgressBar } from "./components/LessonProgressBar";
 import { PhaseHeader } from "./components/PhaseHeader";
 import { LegalPage } from "./components/LegalPage";
+import { SessionControls } from "./components/SessionControls";
 import { isFreeLessonId, FLAGS, trackEvent } from "./config";
 
 /** Path-based check for the three legal pages. They render outside the
@@ -201,6 +202,7 @@ function AppContent() {
   return (
       <>
         {body}
+        {!legalPage && <SessionControls />}
         <ActivationToast state={toast} onDismiss={() => setToast({ kind: "idle" })} />
       </>
   );
@@ -278,7 +280,6 @@ function TextbookView({
   return (
       <>
         <LessonProgressBar />
-        <FloatingUILanguage />
         <Sidebar />
         <div className="md:ml-[260px]">
           <div className="max-w-[880px] mx-auto px-6 md:px-12 lg:px-16">
@@ -298,9 +299,11 @@ export default function App() {
       <ThemeProvider>
         <AccessProvider>
           <TargetLanguageProvider>
-            <LessonNavProvider>
-              <AppContent />
-            </LessonNavProvider>
+            <PlaybackProvider>
+              <LessonNavProvider>
+                <AppContent />
+              </LessonNavProvider>
+            </PlaybackProvider>
           </TargetLanguageProvider>
         </AccessProvider>
       </ThemeProvider>
