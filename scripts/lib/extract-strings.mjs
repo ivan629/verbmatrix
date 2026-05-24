@@ -4,6 +4,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import * as fs from "node:fs";
 import path from "node:path";
 
 const RO_DIACRITICS = /[ăâîșțĂÂÎȘȚ]/;
@@ -186,6 +187,43 @@ export function extractTargetStrings(moduleDir) {
     if (!cleanedSet.has(k)) sourceMap.delete(k);
   }
   return { strings: cleanedSet, sourceMap };
+}
+
+/**
+ * Extract runtime-generated strings via the optional audio-extras.mjs hook.
+ *
+ * Some apps build target-language text at runtime via template literals
+ * (e.g., conjugating verbs in a Practice matrix). The static extractor can't
+ * see those — they don't exist as literals in source. Each language can ship
+ * an `audio-extras.mjs` exporting `getExtraStrings(): string[]` that
+ * replicates the runtime logic and returns the missing strings.
+ *
+ * Returns an empty array if no hook exists.
+ */
+export async function extractExtraStrings(moduleDir) {
+  const extrasPath = path.join(moduleDir, "audio-extras.mjs");
+  if (!fs.existsSync(extrasPath)) return [];
+  try {
+    // Dynamic import — convert to file URL for Windows compatibility
+    const url = "file://" + path.resolve(extrasPath);
+    const mod = await import(url);
+    if (typeof mod.getExtraStrings !== "function") {
+      console.warn(`⚠  ${extrasPath} doesn't export getExtraStrings()`);
+      return [];
+    }
+    const extras = await mod.getExtraStrings();
+    if (!Array.isArray(extras)) {
+      console.warn(`⚠  ${extrasPath} getExtraStrings() must return string[]`);
+      return [];
+    }
+    // Filter same way as static extraction
+    return extras
+      .map((s) => String(s).trim())
+      .filter((s) => s.length >= 1 && s.length <= 400 && /[\p{L}]/u.test(s));
+  } catch (err) {
+    console.warn(`⚠  Failed to load ${extrasPath}: ${err.message}`);
+    return [];
+  }
 }
 
 export function extractLandingStrings(localesDir) {

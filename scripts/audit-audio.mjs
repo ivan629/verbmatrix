@@ -29,7 +29,7 @@
 
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
-import { extractTargetStrings, extractLandingStrings } from "./lib/extract-strings.mjs";
+import { extractTargetStrings, extractExtraStrings, extractLandingStrings } from "./lib/extract-strings.mjs";
 
 const LANG_CODE = (process.argv[2] || "ro").trim();
 const FIX = process.argv.includes("--fix");
@@ -59,6 +59,9 @@ console.log(c.bold(`\nAudio coverage audit — ${LANG_CODE}\n`));
 
 // ── 1. Extract expected strings from source ──────────────────────────────
 const { strings: lessonStrings, sourceMap } = extractTargetStrings(MODULE_DIR);
+const extraStrings = await extractExtraStrings(MODULE_DIR);
+for (const s of extraStrings) lessonStrings.add(s);
+
 let landingStrings = new Set();
 try {
   landingStrings = extractLandingStrings(LOCALES_DIR);
@@ -68,7 +71,10 @@ try {
 const expected = new Set([...lessonStrings, ...landingStrings]);
 
 console.log(`  Strings expected from source:  ${c.bold(expected.size)}`);
-console.log(`    from lesson code:            ${lessonStrings.size}`);
+console.log(`    from lesson code:            ${lessonStrings.size - extraStrings.length}`);
+if (extraStrings.length > 0) {
+  console.log(`    from audio-extras.mjs:       ${extraStrings.length}`);
+}
 console.log(`    from landing locales:        ${landingStrings.size}`);
 
 // ── 2. Read manifest ──────────────────────────────────────────────────────

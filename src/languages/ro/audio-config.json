@@ -1,0 +1,13 @@
+{
+  "_comment": "Romanian voice config. Override via env vars: ELEVEN_VOICE_ID, ELEVEN_BITRATE, ELEVEN_CONCURRENCY.",
+  "voiceId": "b4bnZ9y3ZRH0myLzE2B5",
+  "modelId": "eleven_multilingual_v2",
+  "bitrate": "mp3_44100_64",
+  "voiceSettings": {
+    "stability": 0.7,
+    "similarity_boost": 0.85,
+    "style": 0,
+    "use_speaker_boost": true
+  },
+  "concurrency": 5
+}

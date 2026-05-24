@@ -1,23 +1,22 @@
 #!/usr/bin/env node
 /**
  * generate-landing-audio.mjs — pre-generate MP3s for landing-page
- * target-language strings.
+ * target-language strings, in parallel, with per-language voice config.
  *
  * Usage:
  *   node scripts/generate-landing-audio.mjs <code>     # e.g. ro, es
  *   node scripts/generate-landing-audio.mjs            # defaults to "ro"
  *
  * Reads landing_tl_* values from src/languages/<code>/locales/landing.*.json,
- * expands "/" / "→" / "·" variants, and ships MP3s. Merges into the
- * existing audio-manifest.ts (does not replace).
- *
- * Verify: node scripts/audit-audio.mjs <code>
+ * expands "/" / "→" / "·" variants, MERGES into existing audio-manifest.ts.
+ * See generate-audio.mjs for full config docs.
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { extractLandingStrings } from "./lib/extract-strings.mjs";
+import { loadAudioConfig, generateInParallel } from "./lib/synth.mjs";
 
 const LANG_CODE = (process.argv[2] || "ro").trim();
 if (!/^[a-z][a-z0-9-]*$/.test(LANG_CODE)) {
@@ -33,9 +32,8 @@ if (existsSync(".env")) {
   }
 }
 
-const API_KEY  = process.env.ELEVEN_API_KEY;
-const VOICE_ID = process.env.ELEVEN_VOICE_ID || "pNInz6obpgDQGcFmaJgB";
-const MODEL_ID = process.env.ELEVEN_MODEL_ID || "eleven_multilingual_v2";
+const API_KEY = process.env.ELEVEN_API_KEY;
+const config  = loadAudioConfig(LANG_CODE);
 
 const MODULE_DIR    = path.join("src", "languages", LANG_CODE);
 const LOCALES_DIR   = path.join(MODULE_DIR, "locales");
@@ -48,20 +46,24 @@ if (!existsSync(MODULE_DIR)) {
 }
 mkdirSync(AUDIO_DIR, { recursive: true });
 
-if (!API_KEY) console.warn("\n⚠  No ELEVEN_API_KEY — REBUILD-ONLY mode.\n");
+console.log(`→ Language:  ${LANG_CODE}`);
+console.log(`  Locales:   ${LOCALES_DIR}/landing.*.json`);
+console.log(`  Audio:     ${AUDIO_DIR}/`);
+console.log(`  Manifest:  ${MANIFEST_PATH} (merged)`);
+console.log(`  Voice ID:  ${config.voiceId}`);
+console.log(`  Bitrate:   ${config.bitrate}`);
+console.log(`  Parallel:  ${config.concurrency} concurrent`);
+console.log(`  Config:    ${config.configSource}\n`);
 
-console.log(`→ Language: ${LANG_CODE}`);
-console.log(`  Locales:  ${LOCALES_DIR}/landing.*.json`);
-console.log(`  Audio:    ${AUDIO_DIR}/`);
-console.log(`  Manifest: ${MANIFEST_PATH} (merged)\n`);
+if (!API_KEY) console.warn("⚠  No ELEVEN_API_KEY — REBUILD-ONLY mode.\n");
 
 // Extract
 const tlStrings = extractLandingStrings(LOCALES_DIR);
 const cleaned = [...tlStrings].sort();
-console.log(`  Total unique landing strings: ${cleaned.length}\n`);
+console.log(`  ${cleaned.length} unique landing strings\n`);
 if (cleaned.length === 0) { console.log("  Nothing to generate.\n"); process.exit(0); }
 
-// Hash + read existing manifest (merge)
+// Read existing manifest (merge, not replace)
 const hashOf = (t) => createHash("sha1").update(t, "utf8").digest("hex").slice(0, 12);
 
 const existingManifest = {};
@@ -74,53 +76,34 @@ if (existsSync(MANIFEST_PATH)) {
 console.log(`→ Existing manifest: ${Object.keys(existingManifest).length} entries\n`);
 
 const manifest = { ...existingManifest };
-let generated = 0, skipped = 0, failed = 0, charsThisRun = 0;
+const tasks = [];
+let skipped = 0;
 
-async function synthesize(text) {
-  const res = await fetch(
-    `https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}?output_format=mp3_44100_128`,
-    {
-      method: "POST",
-      headers: { "xi-api-key": API_KEY, "Content-Type": "application/json", Accept: "audio/mpeg" },
-      body: JSON.stringify({
-        text, model_id: MODEL_ID,
-        voice_settings: { stability: 0.7, similarity_boost: 0.85, style: 0, use_speaker_boost: true },
-      }),
-    }
-  );
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status}: ${detail.slice(0, 200)}`);
-  }
-  return Buffer.from(await res.arrayBuffer());
-}
-
-console.log(API_KEY ? "→ Generating audio…\n" : "→ Rebuilding manifest from existing MP3s…\n");
-const t0 = Date.now();
-
-for (let i = 0; i < cleaned.length; i++) {
-  const text = cleaned[i];
+for (const text of cleaned) {
   const hash = hashOf(text);
   const filepath = path.join(AUDIO_DIR, `${hash}.mp3`);
-  if (existsSync(filepath)) { manifest[text] = hash; skipped++; continue; }
-  if (!API_KEY) { if (!manifest[text]) failed++; continue; }
-
-  const display = text.length > 60 ? text.slice(0, 57) + "…" : text;
-  process.stdout.write(`  [${i + 1}/${cleaned.length}] ${display.padEnd(60)} `);
-  try {
-    const mp3 = await synthesize(text);
-    writeFileSync(filepath, mp3);
+  if (existsSync(filepath)) {
     manifest[text] = hash;
-    generated++;
-    charsThisRun += text.length;
-    process.stdout.write(`✓ ${(mp3.length / 1024).toFixed(1)}KB\n`);
-  } catch (err) {
-    failed++;
-    process.stdout.write(`✗ ${err.message}\n`);
-    if (/401|403/.test(String(err))) { console.error("\n⚠  Auth error. Stopping."); break; }
-    if (/429/.test(String(err))) { console.log("    (rate limited — sleeping 10s)"); await new Promise((r) => setTimeout(r, 10_000)); }
+    skipped++;
+  } else if (API_KEY) {
+    tasks.push({ text, hash, filepath });
   }
-  await new Promise((r) => setTimeout(r, 60));
+}
+
+console.log(`  ${skipped} already on disk`);
+console.log(`  ${tasks.length} to generate\n`);
+
+const t0 = Date.now();
+let generated = 0, failed = 0, charsThisRun = 0, aborted = false;
+
+if (tasks.length > 0 && API_KEY) {
+  console.log(`→ Generating with ${config.concurrency} workers…\n`);
+  const result = await generateInParallel({
+    tasks, config, apiKey: API_KEY, manifest, total: tasks.length,
+  });
+  ({ generated, failed, charsThisRun, aborted } = result);
+} else if (!API_KEY) {
+  failed = cleaned.length - skipped;
 }
 
 const sortedEntries = Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b));
@@ -138,8 +121,8 @@ ${body}
 writeFileSync(MANIFEST_PATH, manifestSource);
 
 const seconds = ((Date.now() - t0) / 1000).toFixed(1);
-console.log(`\n✓ Done in ${seconds}s`);
+console.log(`\n${aborted ? "⚠  Aborted" : "✓ Done"} in ${seconds}s`);
 console.log(`  Entries: ${Object.keys(manifest).length} total (was ${Object.keys(existingManifest).length})`);
-console.log(`  Generated this run: ${generated}, on disk: ${skipped}, missing: ${failed}`);
-if (charsThisRun) console.log(`  Characters used: ${charsThisRun.toLocaleString()}`);
-console.log("\n  Verify: node scripts/audit-audio.mjs " + LANG_CODE + "\n");
+console.log(`  Generated: ${generated}, on disk: ${skipped}, missing: ${failed}`);
+if (charsThisRun) console.log(`  Characters: ${charsThisRun.toLocaleString()}`);
+console.log(`\n  Verify: node scripts/audit-audio.mjs ${LANG_CODE}\n`);
