@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "generate-audio": "node scripts/generate-audio.mjs",
-    "generate-audio-landing": "node scripts/generate-landing-audio.mjs"
+    "generate-audio-landing": "node scripts/generate-landing-audio.mjs",
+    "audit-audio": "node scripts/audit-audio.mjs"
   },
   "dependencies": {
     "i18next": "^23.15.1",
