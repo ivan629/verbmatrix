@@ -963,7 +963,7 @@ export function LandingPage() {
             <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between flex-wrap gap-3">
               <div className="flex items-center gap-4 flex-wrap">
                 <span className="font-mono text-[10px] text-white/40">
-                  © {BRAND.launchYear} {BRAND.name}. {t("landing_footer_rights")}
+                  © {new Date().getFullYear()} {BRAND.name}. {t("landing_footer_rights")}
                 </span>
                 <span className="font-mono text-[10px] text-white/30">
                   {t("landing_footer_built_by")}
