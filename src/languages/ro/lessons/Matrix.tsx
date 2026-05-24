@@ -78,35 +78,35 @@ export function Lesson3() {
       <InfoBox variant="neutral" title="lesson_3_contracted_title">
         <p style={{ marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_negation" components={[<b />]} /></p>
         <MonoBlock>
-          nu am → <RO text="n-am" en="I don’t have" /> &nbsp;·&nbsp;
-          nu ai → <RO text="n-ai" en="you don’t have" /> &nbsp;·&nbsp;
-          nu are → <RO text="n-are" en="he/she doesn’t have" /><br />
-          nu este → <RO text="nu-i" en="it isn’t" /> &nbsp;·&nbsp;
-          nu o să → <RO text="n-o să" en="will not" /> &nbsp;·&nbsp;
-          este → <RO text="e" en="is" />
+          <RO text="nu am" /> → <RO text="n-am" en="I don’t have" /> &nbsp;·&nbsp;
+          <RO text="nu ai" /> → <RO text="n-ai" en="you don’t have" /> &nbsp;·&nbsp;
+          <RO text="nu are" /> → <RO text="n-are" en="he/she doesn’t have" /><br />
+          <RO text="nu este" /> → <RO text="nu-i" en="it isn’t" /> &nbsp;·&nbsp;
+          <RO text="nu o să" /> → <RO text="n-o să" en="will not" /> &nbsp;·&nbsp;
+          <RO text="este" /> → <RO text="e" en="is" />
         </MonoBlock>
 
         <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_pronoun" components={[<b />]} /></p>
         <MonoBlock>
-          mă a → <RO text="m-a" en="he/she … me" /> &nbsp;·&nbsp;
-          te a → <RO text="te-a" en="he/she … you" /> &nbsp;·&nbsp;
-          îl am → <RO text="l-am" en="I … him/it" /><br />
-          îmi a → <RO text="mi-a" en="he/she … to me" /> &nbsp;·&nbsp;
-          îți am → <RO text="ți-am" en="I … to you" /> &nbsp;·&nbsp;
-          ne am → <RO text="ne-am" en="we … (ourselves)" /><br />
-          se a → <RO text="s-a" en="he/she/it … (reflexive)" /> &nbsp;·&nbsp;
+          <RO text="mă a" /> → <RO text="m-a" en="he/she … me" /> &nbsp;·&nbsp;
+          <RO text="te a" /> → <RO text="te-a" en="he/she … you" /> &nbsp;·&nbsp;
+          <RO text="îl am" /> → <RO text="l-am" en="I … him/it" /><br />
+          <RO text="îmi a" /> → <RO text="mi-a" en="he/she … to me" /> &nbsp;·&nbsp;
+          <RO text="îți am" /> → <RO text="ți-am" en="I … to you" /> &nbsp;·&nbsp;
+          <RO text="ne am" /> → <RO text="ne-am" en="we … (ourselves)" /><br />
+          <RO text="se a" /> → <RO text="s-a" en="he/she/it … (reflexive)" /> &nbsp;·&nbsp;
           v-am → <RO text="v-am" en="I … you (pl.)" /> &nbsp;·&nbsp;
           i-am → <RO text="i-am" en="I … to him/her" />
         </MonoBlock>
 
         <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_subjunctive" components={[<b />, <i />]} /></p>
         <MonoBlock>
-          să îl → <RO text="să-l" en="(to) … him" /> &nbsp;·&nbsp;
-          să o → <RO text="s-o" en="(to) … her" /> &nbsp;·&nbsp;
-          să îi → <RO text="să-i" en="(to) … him / them" /><br />
-          nu îl → <RO text="nu-l" en="not him" /> &nbsp;·&nbsp;
-          nu o → <RO text="n-o" en="not her / it" /> &nbsp;·&nbsp;
-          ce este → <RO text="ce-i" en="what is" />
+          <RO text="să îl" /> → <RO text="să-l" en="(to) … him" /> &nbsp;·&nbsp;
+          <RO text="să o" /> → <RO text="s-o" en="(to) … her" /> &nbsp;·&nbsp;
+          <RO text="să îi" /> → <RO text="să-i" en="(to) … him / them" /><br />
+          <RO text="nu îl" /> → <RO text="nu-l" en="not him" /> &nbsp;·&nbsp;
+          <RO text="nu o" /> → <RO text="n-o" en="not her / it" /> &nbsp;·&nbsp;
+          <RO text="ce este" /> → <RO text="ce-i" en="what is" />
         </MonoBlock>
 
         <p style={{ marginTop: 12, marginBottom: 6 }}><Trans i18nKey="lesson_3_contracted_h_real" components={[<b />]} /></p>

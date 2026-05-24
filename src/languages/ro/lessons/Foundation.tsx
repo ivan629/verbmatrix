@@ -210,6 +210,7 @@ export function Lesson2() {
           ["voi", "vă", "vă", "voi"],
           ["ei / ele", "îi / le", "le", "ei / ele"],
         ]}
+        speakableCols={[0, 1, 2, 3]}
       />
 
       <SectionHeading>lesson_2_h_pe</SectionHeading>

@@ -76,10 +76,10 @@ export function Lesson7() {
       <SectionHeading>lesson_7_h_voc</SectionHeading>
       <InfoBox variant="green" title="lesson_7_voc_title">
         <MonoBlock>
-          mamă → <RO text="Mamo!" en="Mom!" /> &nbsp;·&nbsp;
-          Maria → <RO text="Mario!" en="Maria!" /> &nbsp;·&nbsp;
-          domn → <RO text="Domnule!" en="Sir!" /> &nbsp;·&nbsp;
-          frate → <RO text="Frate!" en="Brother! / Bro!" />
+          <RO text="mamă" /> → <RO text="Mamo!" en="Mom!" /> &nbsp;·&nbsp;
+          <RO text="Maria" /> → <RO text="Mario!" en="Maria!" /> &nbsp;·&nbsp;
+          <RO text="domn" /> → <RO text="Domnule!" en="Sir!" /> &nbsp;·&nbsp;
+          <RO text="frate" /> → <RO text="Frate!" en="Brother! / Bro!" />
         </MonoBlock>
       </InfoBox>
 

@@ -266,8 +266,8 @@ export function Lesson15() {
 
       <InfoBox variant="blue" title="lesson_15_reflexive_pron_title">
         <MonoBlock>
-          eu <b>mă</b> &nbsp;·&nbsp; tu <b>te</b> &nbsp;·&nbsp; el / ea <b>se</b> &nbsp;·&nbsp;
-          noi <b>ne</b> &nbsp;·&nbsp; voi <b>vă</b> &nbsp;·&nbsp; ei / ele <b>se</b>
+          eu <RO text="mă" /> &nbsp;·&nbsp; tu <RO text="te" /> &nbsp;·&nbsp; el / ea <RO text="se" /> &nbsp;·&nbsp;
+          noi <RO text="ne" /> &nbsp;·&nbsp; voi <RO text="vă" /> &nbsp;·&nbsp; ei / ele <RO text="se" />
         </MonoBlock>
       </InfoBox>
 
