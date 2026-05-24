@@ -138,6 +138,10 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
   const speak = useTTS();
   const [verbIdx, setVerbIdx] = useState(0);
   const [animKey, setAnimKey] = useState(0);
+  // Mobile-only — which tense tab is open (0=future, 1=present, 2=past).
+  // Defaults to Present because it's the most relatable starting point
+  // and feels less "advanced" than Future as the first thing a visitor sees.
+  const [mobileTense, setMobileTense] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const isVisibleRef = useRef(true);
   const lastInteractionRef = useRef(0);
@@ -195,14 +199,26 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
     trackEvent("matrix-demo-verb-click", { verb: demoVerbs[i].infinitive });
   }, [demoVerbs]);
 
+  const handleTenseTabClick = useCallback((i: number) => {
+    lastInteractionRef.current = performance.now();
+    setMobileTense(i);
+    trackEvent("matrix-demo-tense-click", { tense: ["future", "present", "past"][i] });
+  }, []);
+
   if (!verb) return null;
 
   const tenseLabels = [t("landing_grid_future"), t("landing_grid_present"), t("landing_grid_past")];
   const colSymbols = ["?", "+", "−"];
   const colSemantics = ["question", "affirm", "neg"] as const;
+  const colLabels = [
+    t("matrix_col_question"),
+    t("matrix_col_affirmative"),
+    t("matrix_col_negative"),
+  ];
 
   return (
       <div ref={containerRef} className="w-full max-w-[520px] mx-auto">
+        {/* Verb pills — same on every screen size */}
         <div className="flex items-center justify-center gap-2 mb-4 flex-wrap">
           {demoVerbs.map((v, i) => (
               <button
@@ -222,25 +238,25 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
           ))}
         </div>
 
-        <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
+        {/* ─── DESKTOP: full 9-cell matrix (sm and up) ─── */}
+        <div className={`hidden sm:block relative rounded-[var(--radius-lg)] border overflow-hidden ${
             dark ? "bg-[#0d0c11] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
         }`}>
-
-          <div className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+          <div className={`grid grid-cols-[96px_1fr_1fr_1fr] border-b ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
             <div className={dark ? "bg-white/[0.03]" : "bg-[var(--surface-2)]"} />
             {colSymbols.map((s, i) => (
                 <div key={s}
-                     className={`py-3.5 px-3 sm:px-4 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-                  <span className="hidden sm:inline">{s} </span>
-                  <span>{t(["matrix_col_question","matrix_col_affirmative","matrix_col_negative"][i] ?? "")}</span>
+                     className={`py-3.5 px-3 text-center font-mono text-[10.5px] uppercase tracking-[0.14em] font-semibold border-l text-[var(--${colSemantics[i]})] ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+                  <span>{s} </span>
+                  <span>{colLabels[i]}</span>
                 </div>
             ))}
           </div>
 
-          <div key={animKey} className="matrix-stagger revealed">
+          <div key={`d-${animKey}`} className="matrix-stagger revealed">
             {tenseLabels.map((tense, row) => (
-                <div key={tense} className={`grid grid-cols-[78px_1fr_1fr_1fr] sm:grid-cols-[88px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
-                  <div className={`py-5 px-3 sm:px-4 font-mono text-[10px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
+                <div key={tense} className={`grid grid-cols-[96px_1fr_1fr_1fr] border-b last:border-b-0 ${dark ? "border-white/10" : "border-[var(--border)]"}`}>
+                  <div className={`py-5 px-3 font-mono text-[10px] uppercase tracking-[0.12em] flex items-center ${dark ? "bg-white/[0.03] text-white/45" : "bg-[var(--surface-2)] text-[var(--ink-4)]"}`}>
                     {tense}
                   </div>
                   {verb.cells[row]?.map((text, col) => (
@@ -248,7 +264,7 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
                           key={`${row}-${col}`}
                           type="button"
                           onClick={() => speak(text)}
-                          className={`py-5 px-3 sm:px-4 font-mono text-[0.78rem] sm:text-[0.88rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                          className={`py-5 px-3 font-mono text-[0.82rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
                       >
                         {text}
                       </button>
@@ -258,6 +274,69 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
           </div>
         </div>
 
+        {/* ─── MOBILE: tabbed single-tense view (below sm) ─── */}
+        <div className="sm:hidden">
+          <div className={`relative rounded-[var(--radius-lg)] border overflow-hidden ${
+              dark ? "bg-[#0d0c11] border-white/12" : "bg-[var(--surface)] border-[var(--border)] shadow-soft"
+          }`}>
+            {/* Tense tabs */}
+            <div
+                role="tablist"
+                aria-label={t("landing_matrix_tense_aria") || "Tense"}
+                className={`flex items-stretch border-b ${dark ? "border-white/10 bg-white/[0.03]" : "border-[var(--border)] bg-[var(--surface-2)]"}`}
+            >
+              {tenseLabels.map((tense, i) => {
+                const active = i === mobileTense;
+                return (
+                    <button
+                        key={tense}
+                        type="button"
+                        role="tab"
+                        aria-selected={active}
+                        onClick={() => handleTenseTabClick(i)}
+                        className={`flex-1 py-3 font-mono text-[10.5px] uppercase tracking-[0.12em] transition-colors relative ${
+                            active
+                                ? (dark ? "text-white font-semibold" : "text-[var(--ink)] font-semibold")
+                                : (dark ? "text-white/40 hover:text-white/70" : "text-[var(--ink-4)] hover:text-[var(--ink-2)]")
+                        }`}
+                    >
+                      {tense}
+                      {active && (
+                          <span
+                              aria-hidden="true"
+                              className="absolute -bottom-px left-1/2 -translate-x-1/2 w-8 h-[2px] bg-[var(--gold)]"
+                          />
+                      )}
+                    </button>
+                );
+              })}
+            </div>
+
+            {/* Selected tense's three cells. Re-keyed on verb change + tense
+                change so the stagger animation replays. */}
+            <div key={`m-${animKey}-${mobileTense}`} className="matrix-stagger revealed">
+              {verb.cells[mobileTense]?.map((text, col) => (
+                  <button
+                      key={`m-${col}`}
+                      type="button"
+                      onClick={() => speak(text)}
+                      className={`w-full grid grid-cols-[44px_1fr] items-center text-left py-4 px-4 border-b last:border-b-0 cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`font-mono text-[14px] font-semibold text-[var(--${colSemantics[col]})] leading-none`}>
+                        {colSymbols[col]}
+                      </span>
+                    </div>
+                    <span className={`font-mono text-[0.92rem] text-[var(--${colSemantics[col]})] leading-snug`}>
+                      {text}
+                    </span>
+                  </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer — same on every screen */}
         <p className={`text-center font-mono text-[10px] uppercase tracking-[0.16em] mt-4 ${dark ? "text-white/40" : "text-[var(--ink-4)]"}`}>
           <span className={dark ? "text-white/60" : "text-[var(--ink-3)]"}>{verb.infinitive}</span> — {verb.label}
         </p>
