@@ -64,6 +64,20 @@ export interface OnboardingData {
  * A complete learning-language module. Everything the engine needs to
  * present a language lives here.
  */
+/** Romanian content for the landing-page CinematicMatrix.
+ *  Each entry has `text` (the speakable string) and `weight` (visual size:
+ *  3 = largest/central, 2 = medium, 1 = smallest).
+ *  Using `text` (rather than a tuple) makes the audio extractor catch it
+ *  automatically via its TYPED_FIELDS pattern. */
+export interface CinematicEntry {
+  text: string;
+  weight: 1 | 2 | 3;
+}
+export interface CinematicData {
+  verbs: ReadonlyArray<CinematicEntry>;
+  vocab: ReadonlyArray<CinematicEntry>;
+}
+
 export interface LanguageModule {
   /** Short ISO-ish code, used for URLs, localStorage, audio paths. */
   code: string;
@@ -130,4 +144,7 @@ export interface LanguageModule {
   /** First-contact flow content. The engine reads this to render the 5-step
    *  onboarding once per (browser × language). */
   onboarding: OnboardingData;
+
+  /** Landing-page cinematic showcase content (verb cloud + vocab cloud). */
+  cinematic: CinematicData;
 }

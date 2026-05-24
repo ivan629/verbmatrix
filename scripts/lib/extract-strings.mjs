@@ -25,14 +25,20 @@ export function looksRomanian(text) {
 }
 
 export function expandVariants(text) {
+  // Strip trailing "(English gloss)" so the manifest key matches what
+  // SpeakableCell actually passes to speak() at runtime.
+  const stripGloss = (s) => {
+    const m = s.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+    return m && /[a-zA-Z]/.test(m[2]) ? m[1].trim() : s.trim();
+  };
   const out = new Set();
-  out.add(text.trim());
+  out.add(stripGloss(text));
   for (const seg of text.split(/\s*·\s*/)) {
-    out.add(seg.trim());
+    out.add(stripGloss(seg));
     for (const part of seg.split(/\s*→\s*/)) {
-      out.add(part.trim());
+      out.add(stripGloss(part));
       for (const variant of part.split(/\s*\/\s*/)) {
-        const v = variant.trim();
+        const v = stripGloss(variant);
         if (v && !/^-/.test(v)) out.add(v);
       }
     }

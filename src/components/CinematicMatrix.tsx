@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTTS } from "../lib/tts";
+import { useTargetLanguage } from "../context/TargetLanguage";
 
 /**
  * Scroll-driven cinematic section — v5, 10/10 pass.
@@ -44,29 +45,13 @@ const STAGES = [
 
 const HYSTERESIS = 0.025;
 
-// Weighted verb data — weight drives visual prominence in stage III.
-const VERB_DATA: ReadonlyArray<readonly [string, 1 | 2 | 3]> = [
-    ["a fi", 3], ["a avea", 3], ["a face", 3], ["a vorbi", 3],
-    ["a merge", 2], ["a veni", 2], ["a vrea", 2], ["a putea", 2],
-    ["a ști", 2], ["a vedea", 2], ["a da", 2], ["a lua", 2],
-    ["a mânca", 1], ["a bea", 1], ["a dormi", 1], ["a citi", 1],
-    ["a scrie", 1], ["a înțelege", 1], ["a plăcea", 1], ["a cumpăra", 1],
-    ["a pleca", 1], ["a sta", 1], ["a învăța", 1], ["a plăti", 1],
-    ["a lucra", 1], ["a locui", 1], ["a deschide", 1], ["a închide", 1],
-    ["a spune", 1], ["a ajunge", 1], ["a chema", 1], ["a suna", 1],
-];
-
-// Weighted vocab data — common words larger in stage IV.
-const VOCAB_DATA: ReadonlyArray<readonly [string, 1 | 2 | 3]> = [
-    ["apă", 3], ["pâine", 3], ["cafea", 3], ["timp", 3], ["om", 3],
-    ["casă", 2], ["lume", 2], ["zi", 2], ["noapte", 2], ["prieten", 2],
-    ["copil", 2], ["mare", 2], ["munte", 2], ["soare", 2], ["lună", 2],
-    ["fereastră", 1], ["pădure", 1], ["cer", 1], ["mâncare", 1], ["carte", 1],
-    ["scaun", 1], ["masă", 1], ["bere", 1], ["vin", 1], ["lapte", 1],
-    ["sat", 1], ["oraș", 1], ["drum", 1], ["tren", 1], ["mic", 1],
-    ["frumos", 1], ["rece", 1], ["cald", 1], ["bun", 1], ["nou", 1],
-    ["vechi", 1], ["greu", 1], ["ușor", 1], ["azi", 1], ["mâine", 1],
-];
+// VERB_DATA and VOCAB_DATA used to live here as hardcoded Romanian constants,
+// which made the cinematic permanently Romanian AND hid those strings from
+// the audio extractor (it walks src/languages/<code>/, not components/).
+//
+// They now live in each language's data/cinematic.ts and are consumed via
+// useTargetLanguage().module.cinematic — so adding Spanish just means
+// shipping a languages/es/data/cinematic.ts with Spanish picks.
 
 export function CinematicMatrix() {
     const sectionRef = useRef<HTMLElement>(null);
@@ -286,6 +271,8 @@ function StageMatrix() {
 function StageVerbs() {
     const { t } = useTranslation();
     const speak = useTTS();
+    const { module } = useTargetLanguage();
+    const VERB_DATA = module.cinematic.verbs;
     const sizeFor = (w: 1 | 2 | 3) =>
         w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
             w === 2 ? "text-[clamp(1.1rem,1.7vw,1.45rem)]" :
@@ -315,7 +302,7 @@ function StageVerbs() {
 
             <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-5 gap-y-3 px-4 stage-enter"
                  style={{ animationDelay: "0.45s" }}>
-                {VERB_DATA.map(([verb, weight], i) => (
+                {VERB_DATA.map(({ text: verb, weight }, i) => (
                     <button
                         key={i}
                         type="button"
@@ -334,6 +321,8 @@ function StageVerbs() {
 function StageVocab() {
     const { t } = useTranslation();
     const speak = useTTS();
+    const { module } = useTargetLanguage();
+    const VOCAB_DATA = module.cinematic.vocab;
     const sizeFor = (w: 1 | 2 | 3) =>
         w === 3 ? "text-[clamp(1.4rem,2.4vw,2rem)]" :
             w === 2 ? "text-[clamp(1.1rem,1.6vw,1.4rem)]" :
@@ -363,7 +352,7 @@ function StageVocab() {
 
             <div className="w-full max-w-[1200px] flex flex-wrap justify-center items-baseline gap-x-4 gap-y-2 px-4 stage-enter"
                  style={{ animationDelay: "0.45s" }}>
-                {VOCAB_DATA.map(([word, weight], i) => (
+                {VOCAB_DATA.map(({ text: word, weight }, i) => (
                     <button
                         key={i}
                         type="button"

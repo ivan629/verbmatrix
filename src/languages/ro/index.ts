@@ -3,6 +3,7 @@ import { pronounce } from "./pronounce";
 import { AUDIO_MANIFEST } from "./audio-manifest";
 import { NAV_GROUPS } from "./data/schedule";
 import { ONBOARDING } from "./data/onboarding";
+import { CINEMATIC } from "./data/cinematic";
 import enLocale from "./locales/en.json";
 import ukLocale from "./locales/uk.json";
 import landingEnLocale from "./locales/landing.en.json";
@@ -51,6 +52,8 @@ export const ro: LanguageModule = {
   footerBlessing: { text: "Mult succes!", en: "footer_blessing_meaning" },
 
   onboarding: ONBOARDING,
+
+  cinematic: CINEMATIC,
 
   lessons: [
     { id: "matrix",    Component: PracticeMatrix },

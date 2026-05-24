@@ -386,6 +386,17 @@ export function DataTable({ headers, rows, highlightCols = [], speakableCols = [
  * <RO> wrapper.
  */
 function SpeakableCell({ raw }: { raw: string }) {
+  // Strip a trailing "(English gloss)" so audio plays only the Romanian
+  // while the display keeps the parenthetical. Example:
+  //   raw = "apă (water)" → audio "apă", display "apă (water)"
+  function splitGloss(s: string): { audio: string; display: string } {
+    const m = s.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+    if (m && /[a-zA-Z]/.test(m[2])) {
+      return { audio: m[1].trim(), display: s };
+    }
+    return { audio: s, display: s };
+  }
+
   const parts: ReactNode[] = [];
   // Split by " → " first (transformation), then each side by " / " (variants).
   const arrowSplit = raw.split(/\s*→\s*/);
@@ -394,8 +405,9 @@ function SpeakableCell({ raw }: { raw: string }) {
     variants.forEach((variant, vIdx) => {
       const trimmed = variant.trim();
       if (trimmed) {
+        const { audio, display } = splitGloss(trimmed);
         parts.push(
-          <RO key={`${sIdx}-${vIdx}`} text={trimmed} className="font-mono">{trimmed}</RO>
+          <RO key={`${sIdx}-${vIdx}`} text={audio} className="font-mono">{display}</RO>
         );
       }
       if (vIdx < variants.length - 1) parts.push(<span key={`${sIdx}-${vIdx}-sep`} className="text-[var(--ink-4)] mx-1">/</span>);
