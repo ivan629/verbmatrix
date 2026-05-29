@@ -29,9 +29,14 @@
 
 import { existsSync, readFileSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import path from "node:path";
-import { extractTargetStrings, extractExtraStrings, extractLandingStrings } from "./lib/extract-strings.mjs";
+import { extractTargetStrings, extractExtraStrings, extractLandingStrings, loadModuleHooks } from "./lib/extract-strings.mjs";
+import { loadPronunciationOverrides } from "./lib/synth.mjs";
 
-const LANG_CODE = (process.argv[2] || "ro").trim();
+const LANG_CODE = (process.argv[2] || "").trim();
+if (!/^[a-z][a-z0-9-]*$/.test(LANG_CODE)) {
+  console.error(`✗ Usage: node scripts/audit-audio.mjs <code> [--fix]   (e.g. ro, es, fr)`);
+  process.exit(2);
+}
 const FIX = process.argv.includes("--fix");
 
 const MODULE_DIR    = path.join("src", "languages", LANG_CODE);
@@ -58,7 +63,8 @@ const c = {
 console.log(c.bold(`\nAudio coverage audit — ${LANG_CODE}\n`));
 
 // ── 1. Extract expected strings from source ──────────────────────────────
-const { strings: lessonStrings, sourceMap } = extractTargetStrings(MODULE_DIR);
+const hooks = await loadModuleHooks(MODULE_DIR);
+const { strings: lessonStrings, sourceMap } = extractTargetStrings(MODULE_DIR, hooks.looksTargetLanguage);
 const extraStrings = await extractExtraStrings(MODULE_DIR);
 for (const s of extraStrings) lessonStrings.add(s);
 
@@ -150,6 +156,18 @@ summary("Orphan entries (manifest → source)",  orphan.length,  "yellow");
 summary("Dead MP3 files (disk → manifest)",    dead.length,    "yellow");
 summary("Broken MP3 files (file/format bad)",  broken.length,  "red");
 
+// ── Pronunciation overrides sanity: keys that match no expected string ────
+const overrides = loadPronunciationOverrides(LANG_CODE);
+const unusedOverrides = Object.keys(overrides).filter((k) => !expected.has(k));
+if (Object.keys(overrides).length > 0) {
+  summary(
+    "Unused pronunciation overrides",
+    unusedOverrides.length,
+    "yellow",
+    `${Object.keys(overrides).length} total`
+  );
+}
+
 console.log();
 console.log(`  Coverage: ${c.bold(pct + "%")} (${covered}/${totalExpected})\n`);
 
@@ -194,6 +212,12 @@ showList(
   c.red("✗ BROKEN MP3s"),
   broken,
   ({ text, hash, reason }) => `${hash}.mp3 — ${reason} (${JSON.stringify(text)})`
+);
+
+showList(
+  c.yellow("✗ UNUSED OVERRIDES (key matches no current string)"),
+  unusedOverrides,
+  (key) => JSON.stringify(key)
 );
 
 // ── 7. Fix mode: delete orphan + dead files ──────────────────────────────

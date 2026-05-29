@@ -47,6 +47,37 @@ const DEFAULTS = {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * Load the per-language pronunciation override map, if present.
+ *
+ * File: src/languages/<code>/pronunciation.json
+ *   { "<exact target text>": "<respelling fed to the TTS>", ... }
+ *
+ * Purpose: some words (international loanwords spelled the same as English,
+ * homographs, names) are read by the English-biased multilingual model with
+ * the wrong pronunciation. The override gives the engine a respelling that
+ * yields the correct native sound. The manifest key and content hash stay
+ * based on the ORIGINAL text, so the app still looks the word up unchanged —
+ * only the audio the engine generates is affected.
+ *
+ * Keys beginning with "_" (e.g. "_README") are ignored. Returns {} if absent.
+ */
+export function loadPronunciationOverrides(langCode) {
+  const overridePath = path.join("src", "languages", langCode, "pronunciation.json");
+  if (!existsSync(overridePath)) return {};
+  try {
+    const raw = JSON.parse(readFileSync(overridePath, "utf8"));
+    const out = {};
+    for (const [k, v] of Object.entries(raw)) {
+      if (!k.startsWith("_") && typeof v === "string" && v.trim()) out[k] = v;
+    }
+    return out;
+  } catch (err) {
+    console.warn(`⚠  Could not parse ${overridePath}: ${err.message}`);
+    return {};
+  }
+}
+
 /** Load and merge config for a given language code. */
 export function loadAudioConfig(langCode) {
   const configPath = path.join("src", "languages", langCode, "audio-config.json");
@@ -131,7 +162,7 @@ function writeAtomic(filepath, buffer) {
  *
  * Updates `manifest` in-place as each one succeeds.
  */
-export async function generateInParallel({ tasks, config, apiKey, manifest, total }) {
+export async function generateInParallel({ tasks, config, apiKey, manifest, total, overrides = {} }) {
   let generated = 0;
   let failed = 0;
   let charsThisRun = 0;
@@ -147,12 +178,16 @@ export async function generateInParallel({ tasks, config, apiKey, manifest, tota
       const task = queue.shift();
       if (!task) break;
 
+      // The text SPOKEN may be a respelling (override), but the manifest key
+      // and content hash always stay the original task.text.
+      const spokenText = overrides[task.text] ?? task.text;
+
       try {
-        const mp3 = await synthesizeWithRetry(task.text, config, apiKey);
+        const mp3 = await synthesizeWithRetry(spokenText, config, apiKey);
         writeAtomic(task.filepath, mp3);
         manifest[task.text] = task.hash;
         generated++;
-        charsThisRun += task.text.length;
+        charsThisRun += spokenText.length;
 
         completed++;
         const elapsed = (Date.now() - startedAt) / 1000;

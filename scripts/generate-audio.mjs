@@ -33,13 +33,13 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { extractTargetStrings, extractExtraStrings } from "./lib/extract-strings.mjs";
-import { loadAudioConfig, generateInParallel } from "./lib/synth.mjs";
+import { extractTargetStrings, extractExtraStrings, loadModuleHooks } from "./lib/extract-strings.mjs";
+import { loadAudioConfig, loadPronunciationOverrides, generateInParallel } from "./lib/synth.mjs";
 
 // ─── 0. Args + .env ────────────────────────────────────────────────────────
-const LANG_CODE = (process.argv[2] || "ro").trim();
+const LANG_CODE = (process.argv[2] || "").trim();
 if (!/^[a-z][a-z0-9-]*$/.test(LANG_CODE)) {
-  console.error(`✗ Bad language code: "${LANG_CODE}".`);
+  console.error(`✗ Usage: node scripts/generate-audio.mjs <code>   (e.g. ro, es, fr)`);
   process.exit(1);
 }
 
@@ -55,6 +55,7 @@ if (existsSync(".env")) {
 
 const API_KEY  = process.env.ELEVEN_API_KEY;
 const config   = loadAudioConfig(LANG_CODE);
+const overrides = loadPronunciationOverrides(LANG_CODE);
 
 const MODULE_DIR    = path.join("src", "languages", LANG_CODE);
 const AUDIO_DIR     = path.join("public", "audio", LANG_CODE);
@@ -74,7 +75,8 @@ console.log(`  Voice ID:  ${config.voiceId}`);
 console.log(`  Model:     ${config.modelId}`);
 console.log(`  Bitrate:   ${config.bitrate}`);
 console.log(`  Parallel:  ${config.concurrency} concurrent`);
-console.log(`  Config:    ${config.configSource}\n`);
+console.log(`  Config:    ${config.configSource}`);
+console.log(`  Overrides: ${Object.keys(overrides).length} pronunciation override(s)\n`);
 
 if (!API_KEY) {
   console.warn("⚠  No ELEVEN_API_KEY — running in REBUILD-ONLY mode.\n");
@@ -82,7 +84,8 @@ if (!API_KEY) {
 
 // ─── 1. Extract ────────────────────────────────────────────────────────────
 console.log("→ Scanning module for target-language text…");
-const { strings } = extractTargetStrings(MODULE_DIR);
+const hooks = await loadModuleHooks(MODULE_DIR);
+const { strings } = extractTargetStrings(MODULE_DIR, hooks.looksTargetLanguage);
 console.log(`  static extraction:  ${strings.size} strings`);
 
 const extras = await extractExtraStrings(MODULE_DIR);
@@ -125,6 +128,7 @@ if (tasks.length > 0 && API_KEY) {
     apiKey: API_KEY,
     manifest,
     total: tasks.length,
+    overrides,
   });
   generated = result.generated;
   failed = result.failed;

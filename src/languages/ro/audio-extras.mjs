@@ -99,3 +99,23 @@ export function getExtraStrings() {
   }
   return [...out];
 }
+
+/**
+ * Optional fallback detector for <DataTable> cells that don't declare
+ * `speakableCols`. This module always declares speakableCols, so this is
+ * effectively unused here — it's provided so the language-agnostic extractor
+ * has Romanian-specific knowledge available if a table ever omits the prop.
+ */
+const RO_DIACRITICS = /[ăâîșțĂÂÎȘȚ]/;
+export function looksTargetLanguage(text) {
+  const t = String(text).trim();
+  if (!t) return false;
+  if (RO_DIACRITICS.test(t)) return true;
+  if (/^a\s+(se\s+)?[a-z]{2,}/i.test(t)) return true;
+  if (/^(voi|vei|va|vom|veți|vor)\s+[a-zăâîșț]/i.test(t)) return true;
+  if (/^(am|ai|au)\s+[a-zăâîșț]+(at|it|ut|ât|s)\b/i.test(t)) return true;
+  if (/^(eu|tu|el|ea|noi|voi|ei|ele)\s+[a-zăâîșț]/i.test(t)) return true;
+  if (/\bsă\s+[a-zăâîșț]/i.test(t)) return true;
+  if (/^(mă|te|se|ne|vă|îmi|îți|îi|le)\s+[a-zăâîșț]/i.test(t)) return true;
+  return false;
+}

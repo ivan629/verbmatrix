@@ -7,21 +7,45 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import * as fs from "node:fs";
 import path from "node:path";
 
-const RO_DIACRITICS = /[ăâîșțĂÂÎȘȚ]/;
+// Engine-level data fields whose values are always target-language text and
+// should be spoken. These are *conventions of the engine*, not of any one
+// language — every language module authors content with the same field names.
 const TYPED_FIELDS = ["word", "exampleWord", "infinitive", "euForm", "elForm",
                       "participle", "text", "symbol"];
 
-export function looksRomanian(text) {
-  const t = text.trim();
-  if (!t) return false;
-  if (RO_DIACRITICS.test(t)) return true;
-  if (/^a\s+(se\s+)?[a-z]{2,}/i.test(t)) return true;
-  if (/^(voi|vei|va|vom|veți|vor)\s+[a-zăâîșț]/i.test(t)) return true;
-  if (/^(am|ai|au)\s+[a-zăâîșț]+(at|it|ut|ât|s)\b/i.test(t)) return true;
-  if (/^(eu|tu|el|ea|noi|voi|ei|ele)\s+[a-zăâîșț]/i.test(t)) return true;
-  if (/\bsă\s+[a-zăâîșț]/i.test(t)) return true;
-  if (/^(mă|te|se|ne|vă|îmi|îți|îi|le)\s+[a-zăâîșț]/i.test(t)) return true;
-  return false;
+/**
+ * Optional per-language detector used ONLY as a fallback for <DataTable> blocks
+ * that don't declare `speakableCols`. Languages that always declare
+ * speakableCols (recommended) never need this. A module can supply one by
+ * exporting `looksTargetLanguage(text): boolean` from its audio-extras.mjs.
+ *
+ * Default is strict: with neither speakableCols nor a hook, we do NOT guess
+ * which cells are speakable (guessing produced language-specific code here).
+ */
+const NEVER = () => false;
+
+/**
+ * Load optional per-language extraction hooks from audio-extras.mjs:
+ *   - getExtraStrings(): string[]            (runtime-built strings)
+ *   - looksTargetLanguage(text): boolean     (DataTable fallback detector)
+ * Returns {} for any hook the module doesn't export. Safe if the file is absent.
+ */
+export async function loadModuleHooks(moduleDir) {
+  const extrasPath = path.join(moduleDir, "audio-extras.mjs");
+  if (!fs.existsSync(extrasPath)) return {};
+  try {
+    const url = "file://" + path.resolve(extrasPath);
+    const mod = await import(url);
+    return {
+      getExtraStrings:
+        typeof mod.getExtraStrings === "function" ? mod.getExtraStrings : undefined,
+      looksTargetLanguage:
+        typeof mod.looksTargetLanguage === "function" ? mod.looksTargetLanguage : undefined,
+    };
+  } catch (err) {
+    console.warn(`⚠  Failed to load ${extrasPath}: ${err.message}`);
+    return {};
+  }
 }
 
 export function expandVariants(text) {
@@ -141,7 +165,7 @@ function walk(dir, exts, found = []) {
   return found;
 }
 
-function extractFromFile(file, results, sourceMap) {
+function extractFromFile(file, results, sourceMap, looksTargetLanguage) {
   const src = readFileSync(file, "utf8");
   const add = (text) => {
     if (!text) return;
@@ -172,17 +196,17 @@ function extractFromFile(file, results, sourceMap) {
       }
     } else {
       for (const row of rows) {
-        for (const cell of row) { if (cell && looksRomanian(cell)) add(cell); }
+        for (const cell of row) { if (cell && looksTargetLanguage(cell)) add(cell); }
       }
     }
   }
 }
 
-export function extractTargetStrings(moduleDir) {
+export function extractTargetStrings(moduleDir, looksTargetLanguage = NEVER) {
   const strings = new Set();
   const sourceMap = new Map();
   for (const f of walk(moduleDir, [".ts", ".tsx"])) {
-    extractFromFile(f, strings, sourceMap);
+    extractFromFile(f, strings, sourceMap, looksTargetLanguage);
   }
   const cleaned = [...strings]
     .map((s) => s.trim())

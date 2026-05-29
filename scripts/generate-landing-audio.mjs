@@ -16,11 +16,11 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { extractLandingStrings } from "./lib/extract-strings.mjs";
-import { loadAudioConfig, generateInParallel } from "./lib/synth.mjs";
+import { loadAudioConfig, loadPronunciationOverrides, generateInParallel } from "./lib/synth.mjs";
 
-const LANG_CODE = (process.argv[2] || "ro").trim();
+const LANG_CODE = (process.argv[2] || "").trim();
 if (!/^[a-z][a-z0-9-]*$/.test(LANG_CODE)) {
-  console.error(`✗ Bad language code: "${LANG_CODE}".`);
+  console.error(`✗ Usage: node scripts/generate-landing-audio.mjs <code>   (e.g. ro, es, fr)`);
   process.exit(1);
 }
 
@@ -34,6 +34,7 @@ if (existsSync(".env")) {
 
 const API_KEY = process.env.ELEVEN_API_KEY;
 const config  = loadAudioConfig(LANG_CODE);
+const overrides = loadPronunciationOverrides(LANG_CODE);
 
 const MODULE_DIR    = path.join("src", "languages", LANG_CODE);
 const LOCALES_DIR   = path.join(MODULE_DIR, "locales");
@@ -53,7 +54,8 @@ console.log(`  Manifest:  ${MANIFEST_PATH} (merged)`);
 console.log(`  Voice ID:  ${config.voiceId}`);
 console.log(`  Bitrate:   ${config.bitrate}`);
 console.log(`  Parallel:  ${config.concurrency} concurrent`);
-console.log(`  Config:    ${config.configSource}\n`);
+console.log(`  Config:    ${config.configSource}`);
+console.log(`  Overrides: ${Object.keys(overrides).length} pronunciation override(s)\n`);
 
 if (!API_KEY) console.warn("⚠  No ELEVEN_API_KEY — REBUILD-ONLY mode.\n");
 
@@ -99,7 +101,7 @@ let generated = 0, failed = 0, charsThisRun = 0, aborted = false;
 if (tasks.length > 0 && API_KEY) {
   console.log(`→ Generating with ${config.concurrency} workers…\n`);
   const result = await generateInParallel({
-    tasks, config, apiKey: API_KEY, manifest, total: tasks.length,
+    tasks, config, apiKey: API_KEY, manifest, total: tasks.length, overrides,
   });
   ({ generated, failed, charsThisRun, aborted } = result);
 } else if (!API_KEY) {

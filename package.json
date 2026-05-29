@@ -1,7 +1,7 @@
 {
-  "name": "verbmatrix",
+  "name": "language-study",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,19 +14,16 @@
     "audio:fresh": "rm -rf public/audio/ro && npm run audio:sync"
   },
   "dependencies": {
-    "i18next": "^23.15.1",
+    "i18next": "^23.11.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-i18next": "^15.0.2"
+    "react-i18next": "^14.1.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6",
     "typescript": "^5.5.3",
-    "vite": "^5.3.4"
+    "vite": "^5.3.3"
   }
 }
