@@ -234,19 +234,19 @@ function StageMatrix() {
                 </div>
 
                 <div className="max-w-[680px] mx-auto stage-enter" style={{ animationDelay: "0.45s" }}>
-                    <div className="grid grid-cols-[52px_1fr_1fr_1fr] gap-2 mb-2">
+                    <div className="grid grid-cols-[40px_1fr_1fr_1fr] sm:grid-cols-[52px_1fr_1fr_1fr] gap-1.5 sm:gap-2 mb-2">
                         <div />
                         {colSymbols.map((s, i) => (
                             <div key={s}
-                                 className={`text-center font-mono text-[11px] uppercase tracking-[0.16em] font-semibold text-[var(--${colSemantics[i]})]`}>
+                                 className={`text-center font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.14em] sm:tracking-[0.16em] font-semibold text-[var(--${colSemantics[i]})]`}>
                                 {s}
                             </div>
                         ))}
                     </div>
 
                     {[0, 1, 2].map((row) => (
-                        <div key={row} className="grid grid-cols-[52px_1fr_1fr_1fr] gap-2 mb-2">
-                            <div className="flex items-center justify-end pr-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/40">
+                        <div key={row} className="grid grid-cols-[40px_1fr_1fr_1fr] sm:grid-cols-[52px_1fr_1fr_1fr] gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                            <div className="flex items-center justify-end pr-1.5 sm:pr-2 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.14em] text-white/40">
                                 {tenseLabels[row]}
                             </div>
                             {cells[row]?.map((text, col) => (
@@ -254,7 +254,7 @@ function StageMatrix() {
                                     key={col}
                                     type="button"
                                     onClick={() => speak(text)}
-                                    className={`bg-white/[0.04] border border-white/10 rounded-lg p-3.5 text-center font-mono text-[11.5px] md:text-[12.5px] leading-tight text-[var(--${colSemantics[col]})] cursor-pointer hover:opacity-70 transition-opacity w-full`}>
+                                    className={`bg-white/[0.04] border border-white/10 rounded-lg p-2.5 sm:p-3.5 text-center font-mono text-[10px] sm:text-[11.5px] md:text-[12.5px] leading-tight text-[var(--${colSemantics[col]})] cursor-pointer hover:opacity-70 transition-opacity w-full`}>
                                     {text}
                                 </button>
                             ))}

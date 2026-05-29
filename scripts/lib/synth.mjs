@@ -31,19 +31,44 @@
 
 import { readFileSync, writeFileSync, renameSync, existsSync } from "node:fs";
 import path from "node:path";
+import { loadPronunciationOverrides, applyOverrides } from "./overrides.mjs";
 
 const DEFAULTS = {
-  voiceId: "pNInz6obpgDQGcFmaJgB",
-  modelId: "eleven_multilingual_v2",
-  bitrate: "mp3_44100_64",
+  voiceId: "b4bnZ9y3ZRH0myLzE2B5",   // Robert Mihai — native Romanian
+  // Turbo v2.5 ENFORCES the language passed in `language_code`. That means
+  // words spelled like English (radio, weekend, computer, brand names, and —
+  // crucially — single-word vocab drills that have no surrounding sentence to
+  // disambiguate from) are still spoken with the target language's phonetics.
+  // The old default, eleven_multilingual_v2, only AUTO-DETECTS language per
+  // word and cannot be forced — which is exactly why English-looking Romanian
+  // words were coming out sounding English. Latency is irrelevant for an
+  // offline batch job, so there's no downside to Turbo here.
+  // (eleven_flash_v2_5 is functionally identical and also valid.)
+  modelId: "eleven_turbo_v2_5",
+  bitrate: "mp3_44100_128",           // 128kbps — clean for speech
+  languageCode: "ro",
+  // Offline batch → we can afford full text normalization, so numbers, dates
+  // and currencies are read as words in the target language ("123" →
+  // "o sută douăzeci și trei") instead of being spelled out oddly. "auto" lets
+  // the model decide and never errors; set to "on" to force it where allowed.
+  applyTextNormalization: "auto",
   voiceSettings: {
-    stability: 0.7,
-    similarity_boost: 0.85,
+    stability: 0.5,
+    similarity_boost: 0.8,
     style: 0,
     use_speaker_boost: true,
   },
-  concurrency: 5,
+  concurrency: 4,
 };
+
+// Models that accept the `language_code` enforcement parameter. Sending it to
+// any other model (e.g. multilingual_v2) is rejected with HTTP 400 — and those
+// models can't be forced to a language anyway — so we gate on this set. To add
+// a model that supports enforcement in the future, add its id here.
+const LANGUAGE_ENFORCING_MODELS = new Set([
+  "eleven_turbo_v2_5",
+  "eleven_flash_v2_5",
+]);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -61,18 +86,67 @@ export function loadAudioConfig(langCode) {
   const envConcurrency = process.env.ELEVEN_CONCURRENCY
     ? parseInt(process.env.ELEVEN_CONCURRENCY, 10)
     : undefined;
+  // Per-language pronunciation overrides (applied to text just before TTS).
+  const { words: overrideWords, configSource: overrideSource } =
+    loadPronunciationOverrides(langCode);
+
+  const modelId = process.env.ELEVEN_MODEL_ID || fileConfig.modelId || DEFAULTS.modelId;
+  const languageCode =
+    process.env.ELEVEN_LANGUAGE_CODE || fileConfig.languageCode || DEFAULTS.languageCode || null;
+
+  // Loud warning if a language is configured but the chosen model can't enforce
+  // it. This is the #1 cause of "Romanian words sound English": the model just
+  // auto-detects and guesses English for English-looking spellings.
+  if (languageCode && !LANGUAGE_ENFORCING_MODELS.has(modelId)) {
+    console.warn(
+      `⚠  Model "${modelId}" does NOT enforce language_code="${languageCode}".\n` +
+      `   It will auto-detect language per word, so words spelled like English\n` +
+      `   may be pronounced in English. Use one of: ${[...LANGUAGE_ENFORCING_MODELS].join(", ")}.`
+    );
+  }
+
   return {
     voiceId: process.env.ELEVEN_VOICE_ID || fileConfig.voiceId || DEFAULTS.voiceId,
-    modelId: process.env.ELEVEN_MODEL_ID || fileConfig.modelId || DEFAULTS.modelId,
+    modelId,
     bitrate: process.env.ELEVEN_BITRATE  || fileConfig.bitrate || DEFAULTS.bitrate,
+    languageCode,
+    applyTextNormalization:
+      process.env.ELEVEN_TEXT_NORMALIZATION ||
+      fileConfig.applyTextNormalization ||
+      DEFAULTS.applyTextNormalization ||
+      null,
     voiceSettings: { ...DEFAULTS.voiceSettings, ...(fileConfig.voiceSettings || {}) },
     concurrency: envConcurrency || fileConfig.concurrency || DEFAULTS.concurrency,
+    pronunciationOverrides: overrideWords,
+    overrideCount: Object.keys(overrideWords).length,
+    overrideSource,
     configSource: existsSync(configPath) ? configPath : "defaults + env",
   };
 }
 
 /** Synthesize one phrase with retry-on-429. Throws on auth error or final failure. */
 async function synthesizeOnce(text, config, apiKey) {
+  // Transform the text via pronunciation overrides (no-op if none defined).
+  // The UI string and the manifest key both stay as `text`; only what
+  // ElevenLabs receives is rewritten to coax correct pronunciation.
+  const synthesisText = applyOverrides(text, config.pronunciationOverrides || {});
+
+  // Build request body. `language_code` enforces the language, but ONLY on
+  // models that support it (see LANGUAGE_ENFORCING_MODELS). Sending it to a
+  // model that doesn't (e.g. multilingual_v2) returns HTTP 400, so we gate on
+  // both: a configured languageCode AND a model that accepts it.
+  const body = {
+    text: synthesisText,
+    model_id: config.modelId,
+    voice_settings: config.voiceSettings,
+  };
+  if (config.languageCode && LANGUAGE_ENFORCING_MODELS.has(config.modelId)) {
+    body.language_code = config.languageCode;
+  }
+  if (config.applyTextNormalization) {
+    body.apply_text_normalization = config.applyTextNormalization;
+  }
+
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}?output_format=${config.bitrate}`,
     {
@@ -82,11 +156,7 @@ async function synthesizeOnce(text, config, apiKey) {
         "Content-Type": "application/json",
         Accept: "audio/mpeg",
       },
-      body: JSON.stringify({
-        text,
-        model_id: config.modelId,
-        voice_settings: config.voiceSettings,
-      }),
+      body: JSON.stringify(body),
     }
   );
   if (!res.ok) {

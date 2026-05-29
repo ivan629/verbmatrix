@@ -1,13 +1,19 @@
 {
-  "_comment": "Romanian voice config. Override via env vars: ELEVEN_VOICE_ID, ELEVEN_BITRATE, ELEVEN_CONCURRENCY.",
+  "_comment": "Romanian audio config. Uses a NATIVE Romanian voice + Turbo v2.5, which ENFORCES language_code so words spelled like English are still spoken in Romanian. (multilingual_v2 only auto-detects and cannot be forced — that was the bug.) eleven_flash_v2_5 is functionally identical and also valid. See scripts/list-voices.mjs to discover/verify Romanian voices in your account.",
+  "_recommended_voices": {
+    "Robert Mihai (native RO, calm/clear/friendly — your original)": "b4bnZ9y3ZRH0myLzE2B5",
+    "_note": "If you want to audition alternatives, run: node scripts/audition-voices.mjs ro"
+  },
   "voiceId": "b4bnZ9y3ZRH0myLzE2B5",
-  "modelId": "eleven_multilingual_v2",
-  "bitrate": "mp3_44100_64",
+  "modelId": "eleven_turbo_v2_5",
+  "languageCode": "ro",
+  "applyTextNormalization": "auto",
+  "bitrate": "mp3_44100_128",
   "voiceSettings": {
-    "stability": 0.7,
-    "similarity_boost": 0.85,
-    "style": 0,
+    "stability": 0.5,
+    "similarity_boost": 0.8,
+    "style": 0.0,
     "use_speaker_boost": true
   },
-  "concurrency": 5
+  "concurrency": 4
 }

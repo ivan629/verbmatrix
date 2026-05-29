@@ -264,7 +264,7 @@ function InteractiveMatrix({ dark = false }: { dark?: boolean }) {
                           key={`${row}-${col}`}
                           type="button"
                           onClick={() => speak(text)}
-                          className={`py-5 px-3 font-mono text-[0.82rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity whitespace-nowrap ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
+                          className={`py-5 px-3 font-mono text-[0.82rem] text-[var(--${colSemantics[col]})] border-l cell-transition leading-tight text-left w-full cursor-pointer hover:opacity-70 transition-opacity ${dark ? "border-white/10" : "border-[var(--border)] bg-[var(--surface)]"}`}
                       >
                         {text}
                       </button>

@@ -53,6 +53,7 @@ console.log(`  Manifest:  ${MANIFEST_PATH} (merged)`);
 console.log(`  Voice ID:  ${config.voiceId}`);
 console.log(`  Bitrate:   ${config.bitrate}`);
 console.log(`  Parallel:  ${config.concurrency} concurrent`);
+console.log(`  Overrides: ${config.overrideCount} (${config.overrideSource})`);
 console.log(`  Config:    ${config.configSource}\n`);
 
 if (!API_KEY) console.warn("⚠  No ELEVEN_API_KEY — REBUILD-ONLY mode.\n");

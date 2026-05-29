@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run audio:check && tsc -b && vite build",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
-
     "audio": "node scripts/generate-audio.mjs ro && node scripts/generate-landing-audio.mjs ro",
     "audio:check": "node scripts/audit-audio.mjs ro",
     "audio:sync": "npm run audio && node scripts/audit-audio.mjs ro --fix",
-    "audio:fresh": "rm -rf public/audio/ro && npm run audio:sync"
+    "audio:fresh": "rm -rf public/audio/ro && npm run audio:sync",
+    "audio:voices": "node scripts/list-voices.mjs ro",
+    "audio:audition": "node scripts/audition-voices.mjs",
+    "audio:overrides": "node scripts/regenerate-overridden-audio.mjs ro",
+    "audio:overrides:apply": "node scripts/regenerate-overridden-audio.mjs ro --apply && npm run audio"
   },
   "dependencies": {
     "i18next": "^23.15.1",

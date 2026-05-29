@@ -11,7 +11,7 @@
  *   Create src/languages/<code>/audio-config.json with:
  *     {
  *       "voiceId":       "b4bnZ9y3ZRH0myLzE2B5",   // ElevenLabs voice ID
- *       "modelId":       "eleven_multilingual_v2",
+ *       "modelId":       "eleven_turbo_v2_5",        // enforces languageCode
  *       "bitrate":       "mp3_44100_64",           // 64kbps is fine for speech
  *       "voiceSettings": { ... },
  *       "concurrency":   5                          // parallel requests
@@ -38,6 +38,7 @@ import { loadAudioConfig, generateInParallel } from "./lib/synth.mjs";
 
 // ─── 0. Args + .env ────────────────────────────────────────────────────────
 const LANG_CODE = (process.argv[2] || "ro").trim();
+const FORCE = process.argv.includes("--force") || process.argv.includes("-f");
 if (!/^[a-z][a-z0-9-]*$/.test(LANG_CODE)) {
   console.error(`✗ Bad language code: "${LANG_CODE}".`);
   process.exit(1);
@@ -72,8 +73,12 @@ console.log(`  Audio:     ${AUDIO_DIR}/`);
 console.log(`  Manifest:  ${MANIFEST_PATH}`);
 console.log(`  Voice ID:  ${config.voiceId}`);
 console.log(`  Model:     ${config.modelId}`);
+console.log(`  Language:  ${config.languageCode ?? "(auto-detect)"}` +
+  `${config.languageCode && !["eleven_turbo_v2_5","eleven_flash_v2_5"].includes(config.modelId) ? "  ⚠ NOT ENFORCED by this model" : "  (enforced)"}`);
+console.log(`  Normalize: ${config.applyTextNormalization ?? "off"}`);
 console.log(`  Bitrate:   ${config.bitrate}`);
 console.log(`  Parallel:  ${config.concurrency} concurrent`);
+console.log(`  Overrides: ${config.overrideCount} (${config.overrideSource})`);
 console.log(`  Config:    ${config.configSource}\n`);
 
 if (!API_KEY) {
@@ -102,12 +107,17 @@ let skipped = 0;
 for (const text of cleaned) {
   const hash = hashOf(text);
   const filepath = path.join(AUDIO_DIR, `${hash}.mp3`);
-  if (existsSync(filepath)) {
+  if (existsSync(filepath) && !FORCE) {
     manifest[text] = hash;
     skipped++;
   } else if (API_KEY) {
     tasks.push({ text, hash, filepath });
   }
+}
+
+if (FORCE) {
+  console.log("  --force: ignoring existing MP3s; everything will be re-synthesized.");
+  console.log("  (Use this after changing voice, model, languageCode, or overrides.)");
 }
 
 console.log(`  ${skipped} already on disk`);
